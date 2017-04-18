@@ -1,4 +1,4 @@
-package com.weizilla.workouts.entity;
+package com.weizilla.workouts.api;
 
 import java.time.Duration;
 import java.time.LocalDate;

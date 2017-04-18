@@ -1,4 +1,4 @@
-package com.weizilla.workouts.db;
+package com.weizilla.workouts.jdbi;
 
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.Argument;

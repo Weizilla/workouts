@@ -1,7 +1,8 @@
 package com.weizilla.workouts;
 
-import com.weizilla.workouts.db.LocalDateArgumentFactory;
-import com.weizilla.workouts.db.RecordDao;
+import com.weizilla.workouts.api.ObjectMappers;
+import com.weizilla.workouts.jdbi.LocalDateArgumentFactory;
+import com.weizilla.workouts.jdbi.RecordDao;
 import com.weizilla.workouts.resouces.RecordResource;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
@@ -22,7 +23,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<WorkoutsConfiguration> bootstrap) {
-        // TODO: application initialization
+        bootstrap.setObjectMapper(ObjectMappers.OBJECT_MAPPER);
     }
 
     @Override
