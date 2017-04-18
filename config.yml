@@ -1,3 +1,9 @@
+database:
+  driverClass: org.sqlite.JDBC
+  url: "jdbc:sqlite:test.db"
+  properties:
+    date_string_format: "yyyy-MM-dd"
+
 logging:
   level: INFO
   loggers:

@@ -1,8 +1,13 @@
 package com.weizilla.workouts;
 
+import com.weizilla.workouts.db.LocalDateArgumentFactory;
+import com.weizilla.workouts.db.RecordDao;
+import com.weizilla.workouts.resouces.RecordResource;
 import io.dropwizard.Application;
+import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.skife.jdbi.v2.DBI;
 
 public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
 
@@ -23,7 +28,12 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
     @Override
     public void run(final WorkoutsConfiguration configuration,
                     final Environment environment) {
-        // TODO: implement application
+        DBIFactory factory = new DBIFactory();
+        DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "sqlite");
+        jdbi.registerArgumentFactory(new LocalDateArgumentFactory());
+        RecordDao recordDao = jdbi.onDemand(RecordDao.class);
+        recordDao.createTable();
+        environment.jersey().register(new RecordResource(recordDao));
     }
 
 }
