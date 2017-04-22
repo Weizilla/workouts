@@ -1,7 +1,7 @@
 package com.weizilla.workouts.resouces;
 
 import com.weizilla.workouts.jdbi.RecordDao;
-import com.weizilla.workouts.api.Record;
+import com.weizilla.workouts.entity.Record;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;

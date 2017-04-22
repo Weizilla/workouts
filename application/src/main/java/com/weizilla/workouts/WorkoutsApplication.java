@@ -1,6 +1,6 @@
 package com.weizilla.workouts;
 
-import com.weizilla.workouts.api.ObjectMappers;
+import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.jdbi.LocalDateArgumentFactory;
 import com.weizilla.workouts.jdbi.RecordDao;
 import com.weizilla.workouts.resouces.RecordResource;

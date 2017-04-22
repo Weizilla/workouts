@@ -1,4 +1,4 @@
-package com.weizilla.workouts.api;
+package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

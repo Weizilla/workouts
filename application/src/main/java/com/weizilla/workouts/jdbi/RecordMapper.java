@@ -1,6 +1,6 @@
 package com.weizilla.workouts.jdbi;
 
-import com.weizilla.workouts.api.Record;
+import com.weizilla.workouts.entity.Record;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 

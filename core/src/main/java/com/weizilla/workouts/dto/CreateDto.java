@@ -1,28 +1,17 @@
-package com.weizilla.workouts.api;
+package com.weizilla.workouts.dto;
+
+import com.google.common.base.Strings;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.Optional;
 
-//TODO replace getters with Optionals
-public class Record {
-    private UUID id;
+public class CreateDto {
     private String type;
     private LocalDate date;
     private Duration duration;
     private Integer rating;
     private String comment;
-
-    public Record() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getType() {
         return type;
@@ -40,15 +29,15 @@ public class Record {
         this.date = date;
     }
 
-    public Duration getDuration() {
-        return duration;
+    public Optional<Duration> getDuration() {
+        return Optional.ofNullable(duration);
     }
 
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
-    public Integer getRating() {
+    public int getRating() {
         return rating;
     }
 
@@ -56,8 +45,8 @@ public class Record {
         this.rating = rating;
     }
 
-    public String getComment() {
-        return comment;
+    public Optional<String> getComment() {
+        return Optional.ofNullable(Strings.emptyToNull(comment));
     }
 
     public void setComment(String comment) {
