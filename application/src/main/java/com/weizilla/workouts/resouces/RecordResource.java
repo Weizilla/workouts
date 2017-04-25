@@ -26,7 +26,6 @@ public class RecordResource {
     @POST
     public void add(@NotNull Record record) {
         UUID id = UUID.randomUUID();
-        record.setId(id);
         dao.insert(record);
     }
 
