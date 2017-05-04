@@ -10,4 +10,6 @@ public interface RecordStore {
     void add(Record record);
     Record get(UUID id);
     List<Record> get(LocalDate date);
+    void update(Record record);
+    void delete(UUID id);
 }
