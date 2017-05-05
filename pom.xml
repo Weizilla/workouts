@@ -41,6 +41,16 @@
                 <artifactId>workouts-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.weizilla.workouts</groupId>
+                <artifactId>workouts-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.Weizilla</groupId>
+                <artifactId>garmin</artifactId>
+                <version>ced4dfa469</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -48,5 +58,12 @@
         <module>core</module>
         <module>application</module>
     </modules>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>
