@@ -1,22 +1,22 @@
 package com.weizilla.workouts.interactor;
 
+import com.weizilla.garmin.downloader.ActivityDownloader;
 import com.weizilla.garmin.entity.Activity;
-import com.weizilla.workouts.garmin.GarminSource;
 import com.weizilla.workouts.store.GarminStore;
 
 import java.util.List;
 
 public class UpdateGarminStore {
-    private final GarminSource garminSource;
+    private final ActivityDownloader activityDownloader;
     private final GarminStore garminStore;
 
-    public UpdateGarminStore(GarminSource garminSource, GarminStore garminStore) {
-        this.garminSource = garminSource;
+    public UpdateGarminStore(ActivityDownloader activityDownloader, GarminStore garminStore) {
+        this.activityDownloader = activityDownloader;
         this.garminStore = garminStore;
     }
 
-    public int update() {
-        List<Activity> downloaded = garminSource.fetch();
+    public int update() throws Exception {
+        List<Activity> downloaded = activityDownloader.download();
         garminStore.addAll(downloaded);
         return downloaded.size();
     }

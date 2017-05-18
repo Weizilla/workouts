@@ -49,7 +49,7 @@
             <dependency>
                 <groupId>com.github.Weizilla</groupId>
                 <artifactId>garmin</artifactId>
-                <version>ced4dfa469</version>
+                <version>master-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
