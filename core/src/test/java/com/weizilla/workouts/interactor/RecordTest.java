@@ -1,5 +1,6 @@
 package com.weizilla.workouts.interactor;
 
+import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.store.RecordStore;
 import org.junit.Before;
@@ -31,9 +32,14 @@ public abstract class RecordTest {
 
     @Before
     public void setUp() throws Exception {
-        record  = new Record(ID, TYPE, DATE, RATING);
-        record.setDuration(DURATION);
-        record.setDistance(DISTANCE);
-        record.setComment(COMMENT);
+        record = ImmutableRecord.builder()
+            .id(ID)
+            .type(TYPE)
+            .date(DATE)
+            .rating(RATING)
+            .duration(DURATION)
+            .distance(DISTANCE)
+            .comment(COMMENT)
+            .build();
     }
 }

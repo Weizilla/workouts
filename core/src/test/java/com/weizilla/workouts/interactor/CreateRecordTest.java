@@ -1,6 +1,7 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.workouts.dto.CreateRecordDto;
+import com.weizilla.workouts.dto.ImmutableCreateRecordDto;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.RecordAssert;
 import org.junit.Before;
@@ -15,19 +16,19 @@ public class CreateRecordTest extends RecordTest {
 
     @Before
     public void setUp() throws Exception {
-        createRecordDto = new CreateRecordDto();
+        createRecordDto = ImmutableCreateRecordDto.builder()
+            .type(TYPE)
+            .date(DATE)
+            .rating(RATING)
+            .comment(COMMENT)
+            .distance(DISTANCE)
+            .duration(DURATION)
+            .build();
         createRecord = new CreateRecord(recordStore);
     }
 
     @Test
     public void createShouldReturnNewRecordWithId() {
-        createRecordDto.setType(TYPE);
-        createRecordDto.setDate(DATE);
-        createRecordDto.setRating(RATING);
-        createRecordDto.setComment(COMMENT);
-        createRecordDto.setDuration(DURATION);
-        createRecordDto.setDistance(DISTANCE);
-
         Record actual = createRecord.create(createRecordDto);
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isNotNull();
@@ -41,13 +42,6 @@ public class CreateRecordTest extends RecordTest {
 
     @Test
     public void createShouldStoreNewRecordInStore() throws Exception {
-        createRecordDto.setType(TYPE);
-        createRecordDto.setDate(DATE);
-        createRecordDto.setRating(RATING);
-        createRecordDto.setComment(COMMENT);
-        createRecordDto.setDuration(DURATION);
-        createRecordDto.setDistance(DISTANCE);
-
         Record actual = createRecord.create(createRecordDto);
         verify(recordStore).add(actual);
     }

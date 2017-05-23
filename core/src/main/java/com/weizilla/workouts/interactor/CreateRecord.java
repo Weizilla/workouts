@@ -1,6 +1,7 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.workouts.dto.CreateRecordDto;
+import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.store.RecordStore;
 
@@ -14,12 +15,15 @@ public class CreateRecord {
     }
 
     public Record create(CreateRecordDto createRecordDto) {
-        UUID id = UUID.randomUUID();
-        Record record = new Record(id, createRecordDto.getType(), createRecordDto.getDate(), createRecordDto
-            .getRating());
-        record.setDuration(createRecordDto.getDuration());
-        record.setDistance(createRecordDto.getDistance());
-        record.setComment(createRecordDto.getComment());
+        Record record = ImmutableRecord.builder()
+            .id(UUID.randomUUID())
+            .type(createRecordDto.getType())
+            .date(createRecordDto.getDate())
+            .rating(createRecordDto.getRating())
+            .duration(createRecordDto.getDuration())
+            .distance(createRecordDto.getDistance())
+            .comment(createRecordDto.getComment())
+            .build();
         recordStore.add(record);
         return record;
     }

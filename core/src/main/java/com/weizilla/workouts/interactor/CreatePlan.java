@@ -1,6 +1,7 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.workouts.dto.CreatePlanDto;
+import com.weizilla.workouts.entity.ImmutablePlan;
 import com.weizilla.workouts.entity.Plan;
 import com.weizilla.workouts.store.PlanStore;
 
@@ -14,11 +15,15 @@ public class CreatePlan {
     }
 
     public Plan create(CreatePlanDto createDto) {
-        UUID id = UUID.randomUUID();
-        Plan plan = new Plan(id, createDto.getType(), createDto.getDate(), createDto.getTimeOfDay());
-        plan.setDistance(createDto.getDistance());
-        plan.setNotes(createDto.getNotes());
-        plan.setDuration(createDto.getDuration());
+        Plan plan = ImmutablePlan.builder()
+            .id(UUID.randomUUID())
+            .type(createDto.getType())
+            .date(createDto.getDate())
+            .timeOfDay(createDto.getTimeOfDay())
+            .notes(createDto.getNotes())
+            .duration(createDto.getDuration())
+            .distance(createDto.getDistance())
+            .build();
         planStore.add(plan);
         return plan;
     }

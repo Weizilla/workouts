@@ -1,6 +1,7 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.garmin.entity.Activity;
+import com.weizilla.workouts.entity.ImmutableWorkout;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.Workout;
 import com.weizilla.workouts.store.GarminStore;
@@ -69,16 +70,16 @@ public class GetWorkouts {
             .map(Activity::getId)
             .collect(Collectors.toList());
 
-        Workout workout = new Workout(
-            record.getId(),
-            record.getType(),
-            activities.get(0).getStart(),
-            record.getRating(),
-            duration,
-            distance,
-            garminIds,
-            record.getComment()
-        );
+        Workout workout = ImmutableWorkout.builder()
+            .recordId(record.getId())
+            .type(record.getType())
+            .startTime(activities.get(0).getStart())
+            .rating(record.getRating())
+            .duration(duration)
+            .distance(distance)
+            .garminIds(garminIds)
+            .comment(record.getComment())
+            .build();
 
         return Optional.of(workout);
     }

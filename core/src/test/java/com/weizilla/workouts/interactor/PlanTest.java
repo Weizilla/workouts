@@ -1,5 +1,6 @@
 package com.weizilla.workouts.interactor;
 
+import com.weizilla.workouts.entity.ImmutablePlan;
 import com.weizilla.workouts.entity.Plan;
 import com.weizilla.workouts.entity.TimeOfDay;
 import com.weizilla.workouts.store.PlanStore;
@@ -32,9 +33,14 @@ public abstract class PlanTest {
 
     @Before
     public void setUp() throws Exception {
-        plan = new Plan(ID, TYPE, DATE, TIME_OF_DAY);
-        plan.setDistance(DISTANCE);
-        plan.setDuration(DURATION);
-        plan.setNotes(NOTES);
+        plan = ImmutablePlan.builder()
+            .id(ID)
+            .type(TYPE)
+            .date(DATE)
+            .timeOfDay(TIME_OF_DAY)
+            .duration(DURATION)
+            .distance(DISTANCE)
+            .notes(NOTES)
+            .build();
     }
 }
