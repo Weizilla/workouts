@@ -1,6 +1,6 @@
 package com.weizilla.workouts.interactor;
 
-import com.weizilla.workouts.dto.CreateDto;
+import com.weizilla.workouts.dto.CreateRecordDto;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.store.RecordStore;
 
@@ -13,11 +13,13 @@ public class CreateRecord {
         this.recordStore = recordStore;
     }
 
-    public Record create(CreateDto createDto) {
+    public Record create(CreateRecordDto createRecordDto) {
         UUID id = UUID.randomUUID();
-        Record record = new Record(id, createDto.getType(), createDto.getDate(), createDto.getRating());
-        createDto.getDuration().ifPresent(record::setDuration);
-        createDto.getComment().ifPresent(record::setComment);
+        Record record = new Record(id, createRecordDto.getType(), createRecordDto.getDate(), createRecordDto
+            .getRating());
+        record.setDuration(createRecordDto.getDuration());
+        record.setDistance(createRecordDto.getDistance());
+        record.setComment(createRecordDto.getComment());
         recordStore.add(record);
         return record;
     }
