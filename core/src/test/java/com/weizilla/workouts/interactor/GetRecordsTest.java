@@ -44,4 +44,11 @@ public class GetRecordsTest extends RecordTest {
         List<Record> actual = getRecords.get(DATE);
         assertThat(actual).isEmpty();
     }
+
+    @Test
+    public void getShouldReturnAllRecords() throws Exception {
+        when(recordStore.getAll()).thenReturn(Collections.singletonList(record));
+        List<Record> actual = getRecords.getAll();
+        assertThat(actual).containsExactly(record);
+    }
 }

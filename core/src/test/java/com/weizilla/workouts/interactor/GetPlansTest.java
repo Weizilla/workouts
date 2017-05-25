@@ -44,4 +44,11 @@ public class GetPlansTest extends PlanTest {
         List<Plan> actual = getPlans.get(DATE);
         assertThat(actual).isEmpty();
     }
+
+    @Test
+    public void getReturnAllPlans() throws Exception {
+        when(planStore.getAll()).thenReturn(Collections.singletonList(plan));
+        List<Plan> actual = getPlans.getAll();
+        assertThat(actual).containsExactly(plan);
+    }
 }

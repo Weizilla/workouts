@@ -21,4 +21,8 @@ public class GetPlans {
     public List<Plan> get(LocalDate date) {
         return store.get(date);
     }
+
+    public List<Plan> getAll() {
+        return store.getAll();
+    }
 }

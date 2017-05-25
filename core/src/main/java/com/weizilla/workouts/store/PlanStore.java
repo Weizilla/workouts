@@ -9,6 +9,7 @@ import java.util.UUID;
 public interface PlanStore {
     void add(Plan plan);
     Plan get(UUID id);
+    List<Plan> getAll();
     List<Plan> get(LocalDate date);
     void update(Plan plan);
     void delete(UUID id);

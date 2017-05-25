@@ -21,4 +21,8 @@ public class GetRecords {
     public List<Record> get(LocalDate date) {
         return store.get(date);
     }
+
+    public List<Record> getAll() {
+        return store.getAll();
+    }
 }
