@@ -1,15 +1,21 @@
 package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.dropwizard.jackson.Jackson;
+import tec.uom.se.quantity.Quantities;
 
+import javax.measure.Quantity;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -27,6 +33,12 @@ public class ObjectMappers {
         module.addSerializer(Duration.class, new DurationSerializer());
         module.addSerializer(Instant.class, new InstantSerializer());
         objectMapper.registerModule(module);
+
+        SimpleModule quantityModule = new SimpleModule();
+        quantityModule.addSerializer(Quantity.class, new QuantitySerializer());
+        quantityModule.addDeserializer(Quantity.class, new QuantityDeserializer());
+        objectMapper.registerModule(quantityModule);
+
         objectMapper.registerModule(new Jdk8Module());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
@@ -61,6 +73,23 @@ public class ObjectMappers {
         public void serialize(Instant instant, JsonGenerator jsonGenerator,
             SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
             jsonGenerator.writeNumber(instant.getEpochSecond());
+        }
+    }
+
+    private static class QuantitySerializer extends JsonSerializer<Quantity> {
+        @Override
+        public void serialize(Quantity lengthQuantity, JsonGenerator jsonGenerator,
+            SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            jsonGenerator.writeString(lengthQuantity.toString());
+        }
+    }
+
+    private static class QuantityDeserializer extends JsonDeserializer<Quantity> {
+        @Override
+        public Quantity deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+                throws IOException, JsonProcessingException {
+            String input = jsonParser.getText();
+            return Quantities.getQuantity(input);
         }
     }
 }
