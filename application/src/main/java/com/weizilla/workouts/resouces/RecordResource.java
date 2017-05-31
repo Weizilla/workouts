@@ -6,17 +6,24 @@ import com.weizilla.workouts.interactor.CreateRecord;
 import com.weizilla.workouts.interactor.DeleteRecord;
 import com.weizilla.workouts.interactor.GetRecords;
 import com.weizilla.workouts.interactor.UpdateRecord;
+import io.dropwizard.jersey.jsr310.LocalDateParam;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-@Path("/records")
+@Path("/records/")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class RecordResource {
@@ -34,32 +41,29 @@ public class RecordResource {
     }
 
     @POST
-    public void add(@NotNull CreateRecordDto record) {
-        createRecord.create(record);
+    public Record add(@NotNull CreateRecordDto record) {
+        return createRecord.create(record);
     }
 
     @GET
-    public List<Record> getAll() {
-        return getRecords.getAll();
+    public List<Record> getByDate(@QueryParam("date") Optional<LocalDateParam> date) {
+        return date.map(d -> getRecords.get(d.get())).orElseGet(getRecords::getAll);
     }
 
-//    @GET
-//    public List<Record> getByDate(LocalDate date) {
-//        return getRecords.get(date);
-//    }
-//
-//    @GET
-//    public Record getById(UUID id) {
-//        return getRecords.get(id);
-//    }
-//
-//    @PUT
-//    public void update(@NotNull Record record) {
-//        updateRecord.updateRecord(record);
-//    }
-//
-//    @DELETE
-//    public void deleteById(UUID id) {
-//        deleteRecord.delete(id);
-//    }
+    @GET
+    @Path("{id}")
+    public Record getById(@PathParam("id") UUID id) {
+        return getRecords.get(id);
+    }
+
+    @PUT
+    public void update(@NotNull Record record) {
+        updateRecord.updateRecord(record);
+    }
+
+    @DELETE
+    @Path("{id}")
+    public void deleteById(@PathParam("id") UUID id) {
+        deleteRecord.delete(id);
+    }
 }
