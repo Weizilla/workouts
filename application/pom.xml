@@ -25,6 +25,10 @@
             <artifactId>dropwizard-jdbi</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.dropwizard-bundles</groupId>
+            <artifactId>dropwizard-configurable-assets-bundle</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
         </dependency>

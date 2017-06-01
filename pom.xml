@@ -32,6 +32,11 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>io.dropwizard-bundles</groupId>
+                <artifactId>dropwizard-configurable-assets-bundle</artifactId>
+                <version>1.0.5</version>
+            </dependency>
+            <dependency>
                 <groupId>org.xerial</groupId>
                 <artifactId>sqlite-jdbc</artifactId>
                 <version>3.16.1</version>

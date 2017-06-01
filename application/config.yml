@@ -2,6 +2,9 @@ database:
   driverClass: org.sqlite.JDBC
   url: "jdbc:sqlite:test.db"
 
+server:
+  rootPath: /api/
+
 logging:
   level: INFO
   loggers:

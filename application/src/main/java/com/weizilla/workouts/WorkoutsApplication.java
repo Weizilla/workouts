@@ -9,6 +9,7 @@ import com.weizilla.workouts.jdbi.LocalDateArgumentFactory;
 import com.weizilla.workouts.jdbi.RecordDao;
 import com.weizilla.workouts.resouces.RecordResource;
 import io.dropwizard.Application;
+import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -28,6 +29,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
     @Override
     public void initialize(final Bootstrap<WorkoutsConfiguration> bootstrap) {
         bootstrap.setObjectMapper(ObjectMappers.OBJECT_MAPPER);
+        bootstrap.addBundle(new ConfiguredAssetsBundle("/public/", "/"));
     }
 
     @Override
