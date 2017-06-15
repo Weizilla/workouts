@@ -7,6 +7,7 @@ import com.weizilla.workouts.interactor.GetRecords;
 import com.weizilla.workouts.interactor.UpdateRecord;
 import com.weizilla.workouts.jdbi.LocalDateArgumentFactory;
 import com.weizilla.workouts.jdbi.RecordDao;
+import com.weizilla.workouts.resouces.BuildResource;
 import com.weizilla.workouts.resouces.RecordResource;
 import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
@@ -48,6 +49,8 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         DeleteRecord deleteRecord = new DeleteRecord(recordDao);
         RecordResource recordResource = new RecordResource(createRecord, getRecords, deleteRecord, updateRecord);
         environment.jersey().register(recordResource);
+
+        environment.jersey().register(new BuildResource());
     }
 
 }
