@@ -1,0 +1,1 @@
+./clean-and-build-all && ./docker-push && ./upgrade-prod

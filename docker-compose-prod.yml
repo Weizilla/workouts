@@ -1,0 +1,9 @@
+version: "3"
+services:
+  workouts:
+    image: weizilla/workouts:latest
+    ports:
+      - "80:80"
+    volumes:
+      - /data:/data
+
