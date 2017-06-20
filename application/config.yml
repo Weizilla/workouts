@@ -1,6 +1,6 @@
 database:
   driverClass: org.sqlite.JDBC
-  url: "jdbc:sqlite:test.db"
+  url: "jdbc:sqlite:/data/workouts.db"
 
 server:
   rootPath: /api/

@@ -1,6 +1,7 @@
 #### Application specific ####
 
 conf/application.yaml
+data
 
 
 # Created by https://www.gitignore.io
