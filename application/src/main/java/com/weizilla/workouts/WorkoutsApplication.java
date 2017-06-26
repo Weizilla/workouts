@@ -50,6 +50,9 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         RecordResource recordResource = new RecordResource(createRecord, getRecords, deleteRecord, updateRecord);
         environment.jersey().register(recordResource);
 
+        //TODO
+//        ActivityDownloader downloader = new ActivityDownloader(parser, fetcher)
+
         environment.jersey().register(new BuildResource());
     }
 
