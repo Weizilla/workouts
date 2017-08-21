@@ -5,11 +5,15 @@ import com.weizilla.workouts.entity.ImmutablePlan;
 import com.weizilla.workouts.entity.Plan;
 import com.weizilla.workouts.store.PlanStore;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
+@Singleton
 public class CreatePlan {
     private final PlanStore planStore;
 
+    @Inject
     public CreatePlan(PlanStore planStore) {
         this.planStore = planStore;
     }

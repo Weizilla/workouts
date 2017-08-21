@@ -8,6 +8,8 @@ import com.weizilla.workouts.interactor.GetRecords;
 import com.weizilla.workouts.interactor.UpdateRecord;
 import io.dropwizard.jersey.jsr310.LocalDateParam;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -26,12 +28,14 @@ import java.util.UUID;
 @Path("/records/")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Singleton
 public class RecordResource {
     private final CreateRecord createRecord;
     private final GetRecords getRecords;
     private final DeleteRecord deleteRecord;
     private final UpdateRecord updateRecord;
 
+    @Inject
     public RecordResource(CreateRecord createRecord, GetRecords getRecords,
             DeleteRecord deleteRecord, UpdateRecord updateRecord) {
         this.createRecord = createRecord;

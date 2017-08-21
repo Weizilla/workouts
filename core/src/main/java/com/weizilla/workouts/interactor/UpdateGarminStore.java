@@ -4,12 +4,16 @@ import com.weizilla.garmin.downloader.ActivityDownloader;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.workouts.store.GarminStore;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class UpdateGarminStore {
     private final ActivityDownloader activityDownloader;
     private final GarminStore garminStore;
 
+    @Inject
     public UpdateGarminStore(ActivityDownloader activityDownloader, GarminStore garminStore) {
         this.activityDownloader = activityDownloader;
         this.garminStore = garminStore;

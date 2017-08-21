@@ -9,6 +9,8 @@ import com.weizilla.workouts.store.RecordStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.measure.Quantity;
 import javax.measure.quantity.Length;
 import java.time.Duration;
@@ -18,11 +20,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Singleton
 public class GetWorkouts {
     private static final Logger logger = LoggerFactory.getLogger(GetWorkouts.class);
     private final RecordStore recordStore;
     private final GarminStore garminStore;
 
+    @Inject
     public GetWorkouts(RecordStore recordStore, GarminStore garminStore) {
         this.recordStore = recordStore;
         this.garminStore = garminStore;

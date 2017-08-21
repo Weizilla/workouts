@@ -12,3 +12,13 @@ logging:
   level: INFO
   loggers:
     com.weizilla.workouts: DEBUG
+
+garmin:
+  credentials:
+    username:
+    password:
+  urlBases:
+    followTicket: https://connect.garmin.com
+    getActivities: https://connect.garmin.com
+    login: https://sso.garmin.com
+    ltLookup: https://sso.garmin.com

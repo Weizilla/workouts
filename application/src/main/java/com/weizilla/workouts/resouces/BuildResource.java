@@ -6,6 +6,7 @@ import com.weizilla.workouts.entity.ObjectMappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,6 +18,7 @@ import java.util.TreeMap;
 
 @Path("/build/")
 @Produces(MediaType.APPLICATION_JSON)
+@Singleton
 public class BuildResource {
     private static final Logger logger = LoggerFactory.getLogger(BuildResource.class);
     private static final Map<String, String> BUILD_INFO = createBuildInfo();

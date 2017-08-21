@@ -1,14 +1,14 @@
 package com.weizilla.workouts;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.weizilla.workouts.config.WorkoutsConfiguration;
 import com.weizilla.workouts.entity.ObjectMappers;
-import com.weizilla.workouts.interactor.CreateRecord;
-import com.weizilla.workouts.interactor.DeleteRecord;
-import com.weizilla.workouts.interactor.GetRecords;
-import com.weizilla.workouts.interactor.UpdateRecord;
+import com.weizilla.workouts.guice.WorkoutsModule;
 import com.weizilla.workouts.jdbi.LocalDateArgumentFactory;
 import com.weizilla.workouts.jdbi.RecordDao;
+import com.weizilla.workouts.resouces.ActivityResource;
 import com.weizilla.workouts.resouces.BuildResource;
-import com.weizilla.workouts.resouces.RecordResource;
 import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.jdbi.DBIFactory;
@@ -35,23 +35,19 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
 
     @Override
     public void run(final WorkoutsConfiguration configuration,
-                    final Environment environment) {
+                    final Environment environment) throws Exception {
         DBIFactory factory = new DBIFactory();
         DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "sqlite");
         jdbi.registerArgumentFactory(new LocalDateArgumentFactory());
         RecordDao recordDao = jdbi.onDemand(RecordDao.class);
         recordDao.createTable();
 
-        // TODO dependency injection
-        CreateRecord createRecord = new CreateRecord(recordDao);
-        GetRecords getRecords = new GetRecords(recordDao);
-        UpdateRecord updateRecord = new UpdateRecord(recordDao);
-        DeleteRecord deleteRecord = new DeleteRecord(recordDao);
-        RecordResource recordResource = new RecordResource(createRecord, getRecords, deleteRecord, updateRecord);
-        environment.jersey().register(recordResource);
+        WorkoutsModule module = new WorkoutsModule(configuration.getGarmin().getUrlBases(),
+            configuration.getGarmin().getCredentials());
+        Injector injector = Guice.createInjector(module);
 
-        //TODO
-//        ActivityDownloader downloader = new ActivityDownloader(parser, fetcher)
+        ActivityResource activityResource = injector.getInstance(ActivityResource.class);
+        environment.jersey().register(activityResource);
 
         environment.jersey().register(new BuildResource());
     }

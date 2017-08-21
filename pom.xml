@@ -52,9 +52,14 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.Weizilla</groupId>
-                <artifactId>garmin</artifactId>
-                <version>master-SNAPSHOT</version>
+                <groupId>com.github.Weizilla.garmin</groupId>
+                <artifactId>garmin-lib</artifactId>
+                <version>b4b7ac0606</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>4.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.immutables</groupId>

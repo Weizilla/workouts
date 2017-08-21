@@ -1,4 +1,4 @@
-package com.weizilla.workouts;
+package com.weizilla.workouts.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
@@ -19,6 +19,11 @@ public class WorkoutsConfiguration extends Configuration implements AssetsBundle
     @JsonProperty
     private final AssetsConfiguration assets = AssetsConfiguration.builder().build();
 
+    @Valid
+    @NotNull
+    @JsonProperty
+    private GarminConfiguration garmin;
+
     @JsonProperty("database")
     public void setDataSourceFactory(DataSourceFactory factory) {
         this.database = factory;
@@ -32,5 +37,13 @@ public class WorkoutsConfiguration extends Configuration implements AssetsBundle
     @Override
     public AssetsConfiguration getAssetsConfiguration() {
         return assets;
+    }
+
+    public GarminConfiguration getGarmin() {
+        return garmin;
+    }
+
+    public void setGarmin(GarminConfiguration garmin) {
+        this.garmin = garmin;
     }
 }

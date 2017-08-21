@@ -5,6 +5,8 @@ import com.weizilla.workouts.interactor.GetActivities;
 import com.weizilla.workouts.interactor.UpdateGarminStore;
 import io.dropwizard.jersey.jsr310.LocalDateParam;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,10 +21,12 @@ import java.util.Optional;
 @Path("/activities/")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Singleton
 public class ActivityResource {
     private final GetActivities getActivities;
     private final UpdateGarminStore updateGarminStore;
 
+    @Inject
     public ActivityResource(GetActivities getActivities, UpdateGarminStore updateGarminStore) {
         this.getActivities = getActivities;
         this.updateGarminStore = updateGarminStore;
