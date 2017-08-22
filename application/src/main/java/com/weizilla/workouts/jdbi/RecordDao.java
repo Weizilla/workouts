@@ -17,6 +17,7 @@ public interface RecordDao extends RecordStore {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS records (" +
         "id TEXT PRIMARY KEY, " +
         "type TEXT NOT NULL, " +
+        "outdoor INTEGER NOT NULL, " +
         "date TEXT NOT NULL, " +
         "duration TEXT, " +
         "distance TEXT, " +
@@ -30,8 +31,8 @@ public interface RecordDao extends RecordStore {
     List<Record> getAll();
 
     @Override
-    @SqlUpdate("INSERT INTO records (id, type, date, duration, distance, rating, comment) " +
-        "VALUES (:id, :type, :date, :duration, :distance, :rating, :comment)")
+    @SqlUpdate("INSERT INTO records (id, type, outdoor, date, duration, distance, rating, comment) " +
+        "VALUES (:id, :type, :outdoor, :date, :duration, :distance, :rating, :comment)")
     void add(@BindBean Record record);
 
     @Override
@@ -45,6 +46,7 @@ public interface RecordDao extends RecordStore {
     @Override
     @SqlUpdate("UPDATE records SET " +
         "type = :type," +
+        "outdoor = :outdoor," +
         "date = :date," +
         "duration = :duration," +
         "distance = :distance," +

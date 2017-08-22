@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @JsonDeserialize(as = ImmutableCreateRecordDto.class)
 public interface CreateRecordDto {
     String getType();
+    boolean isOutdoor();
     LocalDate getDate();
     int getRating();
     Quantity<Length> getDistance();

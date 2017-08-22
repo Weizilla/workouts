@@ -21,6 +21,7 @@ public class UpdateRecordTest extends RecordTest {
     public void updatesShouldUpdateRecordWithNewRecord() throws Exception {
         Record newRecord = ImmutableRecord.copyOf(record)
             .withType("NEW TYPE")
+            .withIsOutdoor(false)
             .withDate(DATE.plusDays(1))
             .withRating(5)
             .withComment("NEW COMMENT")

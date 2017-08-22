@@ -18,6 +18,7 @@ public class CreateRecordTest extends RecordTest {
     public void setUp() throws Exception {
         createRecordDto = ImmutableCreateRecordDto.builder()
             .type(TYPE)
+            .isOutdoor(OUTDOOR)
             .date(DATE)
             .rating(RATING)
             .comment(COMMENT)

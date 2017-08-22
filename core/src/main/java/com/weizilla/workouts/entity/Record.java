@@ -17,6 +17,7 @@ import java.util.UUID;
 public interface Record {
     UUID getId();
     String getType();
+    boolean isOutdoor();
     LocalDate getDate();
     Integer getRating();
     String getComment();

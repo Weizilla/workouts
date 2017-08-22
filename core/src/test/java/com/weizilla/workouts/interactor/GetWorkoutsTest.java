@@ -38,6 +38,7 @@ public class GetWorkoutsTest {
     private LocalDateTime start;
     private long garminId;
     private String type;
+    private boolean outdoor;
     private UUID recordId;
     private String comment;
     private LocalDate date;
@@ -53,6 +54,7 @@ public class GetWorkoutsTest {
 
         garminId = 1;
         type = "TYPE";
+        outdoor = true;
         start = LocalDateTime.now();
         duration = Duration.ofHours(1);
         distance = Quantities.getQuantity(10, MILE);
@@ -65,6 +67,7 @@ public class GetWorkoutsTest {
         record = ImmutableRecord.builder()
             .id(recordId)
             .type(type)
+            .isOutdoor(outdoor)
             .date(date)
             .rating(rating)
             .distance(distance)

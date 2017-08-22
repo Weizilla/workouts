@@ -19,6 +19,7 @@ public class RecordMapper implements ResultSetMapper<Record> {
         Record record = ImmutableRecord.builder()
             .id(UUID.fromString(resultSet.getString("id")))
             .type(resultSet.getString("type"))
+            .isOutdoor(resultSet.getBoolean("outdoor"))
             .comment(resultSet.getString("comment"))
             .date(LocalDate.parse(resultSet.getString("date")))
             .duration(Duration.parse(resultSet.getString("duration")))
