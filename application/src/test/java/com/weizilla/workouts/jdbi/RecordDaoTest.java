@@ -50,7 +50,7 @@ public class RecordDaoTest {
         record = ImmutableRecord.builder()
             .id(ID)
             .type(TYPE)
-            .isOutdoor(true)
+            .isOutdoor(OUTDOOR)
             .date(DATE)
             .rating(RATING)
             .duration(DURATION)
