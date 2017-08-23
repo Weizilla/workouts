@@ -1,6 +1,7 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.garmin.entity.Activity;
+import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.Workout;
@@ -58,7 +59,13 @@ public class GetWorkoutsTest {
         start = LocalDateTime.now();
         duration = Duration.ofHours(1);
         distance = Quantities.getQuantity(10, MILE);
-        activity = new Activity(garminId, type, duration, start, distance);
+        activity = ImmutableActivity.builder()
+            .id(garminId)
+            .type(type)
+            .start(start)
+            .duration(duration)
+            .distance(distance)
+            .build();
 
         recordId = UUID.randomUUID();
         comment = "COMMENT";
@@ -176,9 +183,9 @@ public class GetWorkoutsTest {
         List<Activity> activities = new ArrayList<>();
         List<Long> expectedIds = new ArrayList<>();
         for (long i = 0; i < 10; i++) {
-            Activity activity = new Activity(i, type, duration, start, distance);
+            Activity multiple = ImmutableActivity.copyOf(activity).withId(i);
             expectedIds.add(i);
-            activities.add(activity);
+            activities.add(multiple);
         }
 
         when(garminStore.get(date)).thenReturn(activities);
@@ -198,7 +205,10 @@ public class GetWorkoutsTest {
         List<Activity> activities = new ArrayList<>();
         int totalDuration = 0;
         for (int i = 1; i < 10; i++) {
-            activities.add(new Activity(i, type, Duration.ofHours(i), start, distance));
+            Activity multiple = ImmutableActivity.copyOf(activity)
+                .withId(i)
+                .withDuration(Duration.ofHours(i));
+            activities.add(multiple);
             totalDuration += i;
         }
         Duration expected = Duration.ofHours(totalDuration);
@@ -220,7 +230,9 @@ public class GetWorkoutsTest {
         List<Activity> activities = new ArrayList<>();
         double totalDistance = 0;
         for (int i = 1; i < 10; i++) {
-            activities.add(new Activity(i, type, duration, start, Quantities.getQuantity((double) i, MILE)));
+            Quantity<Length> dist = Quantities.getQuantity((double) i, MILE);
+            Activity multiple = ImmutableActivity.copyOf(activity).withId(i).withDistance(dist);
+            activities.add(multiple);
             totalDistance += i;
         }
         Quantity<Length> expected = Quantities.getQuantity(totalDistance, MILE);

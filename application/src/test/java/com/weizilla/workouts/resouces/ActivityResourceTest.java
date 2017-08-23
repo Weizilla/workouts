@@ -3,6 +3,7 @@ package com.weizilla.workouts.resouces;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.weizilla.garmin.entity.Activity;
+import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.interactor.GetActivities;
 import com.weizilla.workouts.interactor.UpdateGarminStore;
@@ -36,8 +37,13 @@ public class ActivityResourceTest {
     protected static final LocalDateTime START = LocalDateTime.now();
     protected static final Duration DURATION = Duration.ofHours(1);
     protected static final Quantity<Length> DISTANCE = Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE);
-    private static final Activity ACTIVITY = new Activity(
-        ID, TYPE, DURATION, START, DISTANCE);
+    private static final Activity ACTIVITY = ImmutableActivity.builder()
+        .id(ID)
+        .type(TYPE)
+        .start(START)
+        .duration(DURATION)
+        .distance(DISTANCE)
+        .build();
 
     private static final GetActivities getActivities = mock(GetActivities.class);
     private static final UpdateGarminStore updateGarminStore = mock(UpdateGarminStore.class);

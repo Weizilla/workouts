@@ -1,6 +1,7 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.garmin.entity.Activity;
+import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.store.GarminStore;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,13 @@ public class GetActivitiesTest {
     @Before
     public void setUp() throws Exception {
         getActivities = new GetActivities(garminStore);
-        activity = new Activity(1, "TYPE", Duration.ofHours(1), now(), getQuantity(1, MILE));
+        activity = ImmutableActivity.builder()
+            .id(1)
+            .type("TYPE")
+            .start(now())
+            .duration(Duration.ofHours(1))
+            .distance(getQuantity(1, MILE))
+            .build();
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.weizilla.workouts.interactor;
 
 import com.weizilla.garmin.downloader.ActivityDownloader;
 import com.weizilla.garmin.entity.Activity;
+import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.store.GarminStore;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +39,13 @@ public class UpdateGarminStoreTest {
         Duration duration = Duration.ofHours(1);
         LocalDateTime start = LocalDateTime.now();
         Quantity<Length> distance = Quantities.getQuantity(10.0, USCustomary.MILE);
-        Activity activity = new Activity(id, type, duration, start, distance);
+        Activity activity = ImmutableActivity.builder()
+            .id(id)
+            .type(type)
+            .start(start)
+            .duration(duration)
+            .distance(distance)
+            .build();
         activities = Collections.singletonList(activity);
         when(activityDownloader.download()).thenReturn(activities);
 
