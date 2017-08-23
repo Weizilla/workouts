@@ -8,15 +8,28 @@ import com.weizilla.workouts.store.GarminStore;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MemoryGarminStore implements GarminStore {
     private final ListMultimap<LocalDate, Activity> byDate = ArrayListMultimap.create();
+    private final Map<Long, Activity> byId = new HashMap<>();
+
+    @Override
+    public void add(Activity activity) {
+        byDate.put(activity.getStart().toLocalDate(), activity);
+        byId.put(activity.getId(), activity);
+    }
 
     @Override
     public void addAll(Collection<Activity> activities) {
-        activities.stream()
-            .forEach(a -> byDate.put(a.getStart().toLocalDate(), a));
+        activities.forEach(this::add);
+    }
+
+    @Override
+    public Activity get(long id) {
+        return byId.get(id);
     }
 
     @Override
