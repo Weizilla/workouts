@@ -28,7 +28,7 @@ import static systems.uom.common.USCustomary.MILE;
 public class ActivityDaoTest {
     protected static final long ID = 100;
     protected static final String TYPE = "TYPE";
-    protected static LocalDateTime START = LocalDateTime.now();
+    protected static final LocalDateTime START = LocalDateTime.now();
     protected static final Duration DURATION = Duration.ofHours(1);
     protected static final Quantity<Length> DISTANCE =
         Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE);
