@@ -39,8 +39,9 @@ public class ActivityResource {
 
     @GET
     @Path("update")
-    public Map<String, Integer> updateGarminStore() throws Exception {
-        int downloaded = updateGarminStore.update();
-        return Collections.singletonMap("downloaded", downloaded);
+    public Map<String, Object> updateGarminStore() throws Exception {
+        updateGarminStore.startUpdate();
+        //TODO job tracking
+        return Collections.singletonMap("success", "true");
     }
 }

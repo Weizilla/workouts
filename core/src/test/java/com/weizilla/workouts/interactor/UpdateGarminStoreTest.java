@@ -5,10 +5,11 @@ import com.weizilla.garmin.entity.Activity;
 import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.store.GarminStore;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import systems.uom.common.USCustomary;
 import tec.uom.se.quantity.Quantities;
 
@@ -18,18 +19,19 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Future;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class UpdateGarminStoreTest {
-    private UpdateGarminStore updateGarminStore;
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
     private ActivityDownloader activityDownloader;
     @Mock
     private GarminStore garminStore;
+    private UpdateGarminStore updateGarminStore;
     private List<Activity> activities;
 
     @Before
@@ -54,8 +56,8 @@ public class UpdateGarminStoreTest {
 
     @Test
     public void updateShouldGetActivitiesFromSourceAndAddToStore() throws Exception {
-        int actual = updateGarminStore.update();
+        Future<?> job = updateGarminStore.startUpdate();
+        job.get();
         verify(garminStore).addAll(activities);
-        assertThat(actual).isEqualTo(activities.size());
     }
 }
