@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.weizilla.garmin.configuration.Credentials;
 import com.weizilla.garmin.configuration.UrlBases;
-import com.weizilla.workouts.memory.MemoryGarminStore;
 import com.weizilla.workouts.store.GarminStore;
 
 import javax.inject.Singleton;
@@ -12,10 +11,13 @@ import javax.inject.Singleton;
 public class WorkoutsModule extends AbstractModule {
     private final UrlBases urlBases;
     private final Credentials credentials;
+    private final GarminStore garminStore;
 
-    public WorkoutsModule(UrlBases urlBases, Credentials credentials) {
+    public WorkoutsModule(UrlBases urlBases, Credentials credentials,
+            GarminStore garminStore) {
         this.urlBases = urlBases;
         this.credentials = credentials;
+        this.garminStore = garminStore;
     }
 
     @Override
@@ -38,6 +40,6 @@ public class WorkoutsModule extends AbstractModule {
     @Singleton
     @Provides
     public GarminStore getGarminStore() {
-        return new MemoryGarminStore();
+        return garminStore;
     }
 }

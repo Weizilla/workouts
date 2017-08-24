@@ -18,13 +18,15 @@ import javax.measure.quantity.Length;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Random;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static systems.uom.common.USCustomary.MILE;
 
 public class ActivityDaoTest {
-    protected static final long ID = new Random().nextInt(100);
+    protected static final long ID = 100;
     protected static final String TYPE = "TYPE";
     protected static LocalDateTime START = LocalDateTime.now();
     protected static final Duration DURATION = Duration.ofHours(1);
@@ -43,6 +45,7 @@ public class ActivityDaoTest {
         dataSourceFactory.setUrl("jdbc:sqlite::memory:");
         dbi = new DBIFactory().build(environment, dataSourceFactory, "sqlite");
         dbi.registerArgumentFactory(new LocalDateArgumentFactory());
+        dbi.registerArgumentFactory(new LocalDateTimeArgumentFactory());
         dao = dbi.onDemand(ActivityDao.class);
 
         activity = ImmutableActivity.builder()
@@ -71,5 +74,44 @@ public class ActivityDaoTest {
         dao.add(activity);
         Activity actual = dao.get(ID);
         assertThat(actual).isEqualTo(activity);
+    }
+
+    @Test
+    public void addAllAndGetById() throws Exception {
+        int num = 3;
+        List<Activity> activities = IntStream.range(0, num)
+            .mapToObj(i -> ImmutableActivity.copyOf(activity).withId(ID + i))
+            .collect(Collectors.toList());
+
+        dao.createTable();
+        dao.addAll(activities);
+
+        for (int i = 0; i < num; i++) {
+            Activity actual = dao.get(ID + i);
+            assertThat(actual).isEqualTo(activities.get(i));
+        }
+    }
+
+    @Test
+    public void addAllAndGetAll() throws Exception {
+        int num = 3;
+        List<Activity> activities = IntStream.range(0, num)
+            .mapToObj(i -> ImmutableActivity.copyOf(activity).withId(ID + i))
+            .collect(Collectors.toList());
+
+        dao.createTable();
+        dao.addAll(activities);
+
+        List<Activity> actual = dao.getAll();
+        assertThat(actual).isEqualTo(activities);
+    }
+
+    @Test
+    public void getByDate() throws Exception {
+        dao.createTable();
+        dao.add(activity);
+
+        List<Activity> actual = dao.get(START.toLocalDate());
+        assertThat(actual).containsExactly(activity);
     }
 }

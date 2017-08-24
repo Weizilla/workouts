@@ -4,6 +4,7 @@ import com.weizilla.garmin.entity.Activity;
 import com.weizilla.workouts.store.GarminStore;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
+import org.skife.jdbi.v2.sqlobject.SqlBatch;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
@@ -18,17 +19,20 @@ public interface ActivityDao extends GarminStore {
         "id INTEGER PRIMARY KEY, " +
         "type TEXT NOT NULL, " +
         "start TEXT NOT NULL, " +
+        "date TEXT NOT NULL, " +
         "duration TEXT, " +
         "distance TEXT " +
         ")")
     void createTable();
 
     @Override
-    @SqlUpdate("INSERT INTO activities (id, type, start, duration, distance) " +
-        "VALUES (:id, :type, :start, :duration, :distance)")
+    @SqlUpdate("INSERT INTO activities (id, type, start, date, duration, distance) " +
+        "VALUES (:id, :type, :start, :date, :duration, :distance)")
     void add(@BindBean Activity activity);
 
-    void addAll(Collection<Activity> activities);
+    @SqlBatch("INSERT INTO activities (id, type, start, date, duration, distance) " +
+        "VALUES (:id, :type, :start, :date, :duration, :distance)")
+    void addAll(@BindBean Collection<Activity> activities);
 
     @Override
     @SqlQuery("SELECT * FROM activities WHERE date = :date")
