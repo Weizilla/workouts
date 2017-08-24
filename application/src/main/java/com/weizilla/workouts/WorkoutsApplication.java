@@ -5,7 +5,9 @@ import com.google.inject.Injector;
 import com.weizilla.workouts.config.WorkoutsConfiguration;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.guice.WorkoutsModule;
+import com.weizilla.workouts.jdbi.ActivityDao;
 import com.weizilla.workouts.jdbi.LocalDateArgumentFactory;
+import com.weizilla.workouts.jdbi.LocalDateTimeArgumentFactory;
 import com.weizilla.workouts.jdbi.RecordDao;
 import com.weizilla.workouts.resouces.ActivityResource;
 import com.weizilla.workouts.resouces.BuildResource;
@@ -39,11 +41,17 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         DBIFactory factory = new DBIFactory();
         DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "sqlite");
         jdbi.registerArgumentFactory(new LocalDateArgumentFactory());
+        jdbi.registerArgumentFactory(new LocalDateTimeArgumentFactory());
+
         RecordDao recordDao = jdbi.onDemand(RecordDao.class);
         recordDao.createTable();
 
+        ActivityDao activityDao = jdbi.onDemand(ActivityDao.class);
+        activityDao.createTable();
+
         WorkoutsModule module = new WorkoutsModule(configuration.getGarmin().getUrlBases(),
-            configuration.getGarmin().getCredentials());
+            configuration.getGarmin().getCredentials(), activityDao);
+
         Injector injector = Guice.createInjector(module);
 
         ActivityResource activityResource = injector.getInstance(ActivityResource.class);
