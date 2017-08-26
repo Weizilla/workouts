@@ -15,8 +15,8 @@ logging:
 
 garmin:
   credentials:
-    username:
-    password:
+    username: ${GARMIN_USERNAME}
+    password: ${GARMIN_PASSWORD}
   urlBases:
     followTicket: https://connect.garmin.com
     getActivities: https://connect.garmin.com

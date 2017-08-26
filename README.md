@@ -9,7 +9,7 @@ Plans and logs workouts
 1. Run `clean-and-build-all` to build the application, including Docker image
 
 ## Running local
-1. Update the configuration file by copying the default `application/config/default.yml` to `~/.config/workouts/config.yml`
+1. Update the configuration file by copying the default `application/config.yml` to `~/.config/workouts/config.yml`
 1. Start application with `start-local`
 1. To check that your application is running enter url `http://localhost:8080`
 

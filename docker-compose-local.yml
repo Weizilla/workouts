@@ -3,7 +3,9 @@ services:
   workouts:
     image: weizilla/workouts:latest
     ports:
-      - "8080:80"
+      - "8080:8080"
     volumes:
       - ./data:/data
-
+    environment:
+      GARMIN_USERNAME:
+      GARMIN_PASSWORD:
