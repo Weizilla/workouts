@@ -30,13 +30,13 @@ public class UpdateGarminStore {
     public Future<?> startUpdate() throws Exception {
         //TODO track jobs
         return executorService.submit(() -> {
-            List<Activity> downloaded = null;
             try {
-                downloaded = activityDownloader.download();
+                List<Activity> downloaded = activityDownloader.download();
+                garminStore.addAll(downloaded);
+                logger.info("Downloaded {} activities", downloaded.size());
             } catch (Exception e) {
                 logger.error("Error download Garmin activities", e);
             }
-            garminStore.addAll(downloaded);
         });
     }
 }

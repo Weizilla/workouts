@@ -27,7 +27,7 @@ To see your applications health enter url `http://localhost:8081/healthcheck`
  1. Asset jar? Can Dropwizard read this?
  2. Build directly into resources/public directory? 
  3. Configure hitting localhost:8080 running local, no host when packaged
- 
+2. Support multi sport 
 
 ## To Do (Imported from workout-logger)
 1. Improve UI
