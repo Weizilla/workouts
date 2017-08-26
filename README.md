@@ -22,6 +22,13 @@ Plans and logs workouts
 ## Health Check
 To see your applications health enter url `http://localhost:8081/healthcheck`
 
+## To Do
+1. Use proper Vue Webpack build
+ 1. Asset jar? Can Dropwizard read this?
+ 2. Build directly into resources/public directory? 
+ 3. Configure hitting localhost:8080 running local, no host when packaged
+ 
+
 ## To Do (Imported from workout-logger)
 1. Improve UI
  1. Improve workout day, today, selected styles
@@ -70,5 +77,3 @@ To see your applications health enter url `http://localhost:8081/healthcheck`
 20. Integration/Robot tests
  1. Manual entry's matched workout id
  2. Updating workout
-21. React instead of Angular for front end
-22. Sqlite instead of MongoDb
