@@ -5,10 +5,11 @@ var app = new Vue({
     data: {
         world: "WORLD!",
         buildTime: null,
-        commitId: null
+        commitId: null,
+        host: ""
     },
     created: function () {
-        this.$http.get("/api/build").then(response => {
+        this.$http.get(this.host + "/api/build").then(response => {
             let buildInfo = response.data;
             this.buildTime = utcToChicago(buildInfo["git.build.time"]);
             this.commitId = buildInfo["git.commit.id.abbrev"];

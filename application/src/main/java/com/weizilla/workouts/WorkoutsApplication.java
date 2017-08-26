@@ -16,11 +16,16 @@ import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.skife.jdbi.v2.DBI;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration.Dynamic;
+import java.util.EnumSet;
 
 public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         new WorkoutsApplication().run(args);
     }
 
@@ -30,14 +35,22 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
     }
 
     @Override
-    public void initialize(final Bootstrap<WorkoutsConfiguration> bootstrap) {
+    public void initialize(Bootstrap<WorkoutsConfiguration> bootstrap) {
         bootstrap.setObjectMapper(ObjectMappers.OBJECT_MAPPER);
         bootstrap.addBundle(new ConfiguredAssetsBundle("/public/", "/"));
     }
 
     @Override
-    public void run(final WorkoutsConfiguration configuration,
-                    final Environment environment) throws Exception {
+    public void run(WorkoutsConfiguration configuration,
+                    Environment environment) throws Exception {
+        // Configure CORS parameters
+        Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+        cors.setInitParameter("allowedOrigins", "http://localhost:8000");
+        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+        cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+
+
         DBIFactory factory = new DBIFactory();
         DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "sqlite");
         jdbi.registerArgumentFactory(new LocalDateArgumentFactory());
