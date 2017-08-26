@@ -1,1 +1,2 @@
+#!/usr/bin/env bash
 docker-compose -f docker-compose-prod.yml stop && docker pull weizilla/workouts && ./docker-compose-up-prod
