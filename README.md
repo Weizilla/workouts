@@ -28,6 +28,7 @@ To see your applications health enter url `http://localhost:8081/healthcheck`
  2. Build directly into resources/public directory? 
  3. Configure hitting localhost:8080 running local, no host when packaged
 2. Support multi sport 
+3. Fix deploy script. Needs Garmin credentials as env var which isn't passed into ssh remote command
 
 ## To Do (Imported from workout-logger)
 1. Improve UI
