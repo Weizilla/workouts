@@ -74,7 +74,7 @@ public class GetWorkoutsTest {
         record = ImmutableRecord.builder()
             .id(recordId)
             .type(type)
-            .isOutdoor(outdoor)
+            .outdoor(outdoor)
             .date(date)
             .rating(rating)
             .distance(distance)

@@ -25,7 +25,7 @@ public class ObjectMappersTest {
     private static Record record = ImmutableRecord.builder()
         .id(ID)
         .type(TYPE)
-        .isOutdoor(OUTDOOR)
+        .outdoor(OUTDOOR)
         .date(DATE)
         .rating(RATING)
         .duration(DURATION)

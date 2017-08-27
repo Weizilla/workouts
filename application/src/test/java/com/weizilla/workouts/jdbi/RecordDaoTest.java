@@ -50,7 +50,7 @@ public class RecordDaoTest {
         record = ImmutableRecord.builder()
             .id(ID)
             .type(TYPE)
-            .isOutdoor(OUTDOOR)
+            .outdoor(OUTDOOR)
             .date(DATE)
             .rating(RATING)
             .duration(DURATION)
@@ -113,7 +113,7 @@ public class RecordDaoTest {
 
         Record updated = ImmutableRecord.copyOf(record)
             .withType("NEW TYPE")
-            .withIsOutdoor(false)
+            .withOutdoor(false)
             .withDate(DATE.plusMonths(1))
             .withDuration(DURATION.plusHours(1))
             .withDistance(DISTANCE.multiply(2))

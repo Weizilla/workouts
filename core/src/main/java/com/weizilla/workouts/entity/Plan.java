@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Immutable
+@WorkoutsStyle
 public interface Plan {
     UUID getId();
     String getType();

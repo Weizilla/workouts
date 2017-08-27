@@ -22,7 +22,7 @@ public class CreateRecord {
         Record record = ImmutableRecord.builder()
             .id(UUID.randomUUID())
             .type(createRecordDto.getType())
-            .isOutdoor(createRecordDto.isOutdoor())
+            .outdoor(createRecordDto.isOutdoor())
             .date(createRecordDto.getDate())
             .rating(createRecordDto.getRating())
             .duration(createRecordDto.getDuration())

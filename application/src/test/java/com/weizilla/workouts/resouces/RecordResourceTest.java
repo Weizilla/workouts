@@ -49,7 +49,7 @@ public class RecordResourceTest {
     private static final Record record = ImmutableRecord.builder()
         .id(ID)
         .type(TYPE)
-        .isOutdoor(OUTDOOR)
+        .outdoor(OUTDOOR)
         .date(DATE)
         .rating(RATING)
         .duration(DURATION)
@@ -79,7 +79,7 @@ public class RecordResourceTest {
     public void addsRecord() throws Exception {
         CreateRecordDto create = ImmutableCreateRecordDto.builder()
             .type(TYPE)
-            .isOutdoor(OUTDOOR)
+            .outdoor(OUTDOOR)
             .date(DATE)
             .rating(RATING)
             .duration(DURATION)

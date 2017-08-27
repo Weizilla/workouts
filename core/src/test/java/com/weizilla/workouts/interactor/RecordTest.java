@@ -36,7 +36,7 @@ public abstract class RecordTest {
         record = ImmutableRecord.builder()
             .id(ID)
             .type(TYPE)
-            .isOutdoor(OUTDOOR)
+            .outdoor(OUTDOOR)
             .date(DATE)
             .rating(RATING)
             .duration(DURATION)

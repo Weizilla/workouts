@@ -14,6 +14,7 @@ import java.util.UUID;
 @Immutable
 @JsonSerialize(as = ImmutableRecord.class)
 @JsonDeserialize(as = ImmutableRecord.class)
+@WorkoutsStyle
 public interface Record {
     UUID getId();
     String getType();

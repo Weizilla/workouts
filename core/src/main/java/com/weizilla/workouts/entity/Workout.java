@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Immutable
+@WorkoutsStyle
 public interface Workout {
     UUID getRecordId();
     String getType();

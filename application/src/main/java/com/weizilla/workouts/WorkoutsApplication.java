@@ -13,6 +13,7 @@ import com.weizilla.workouts.jdbi.LocalDateTimeArgumentFactory;
 import com.weizilla.workouts.jdbi.RecordDao;
 import com.weizilla.workouts.resouces.ActivityResource;
 import com.weizilla.workouts.resouces.BuildResource;
+import com.weizilla.workouts.resouces.RecordResource;
 import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -77,11 +78,13 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         Credentials credentials = configuration.getGarmin().getCredentials();
         checkGarminCredentials(credentials);
         WorkoutsModule module = new WorkoutsModule(configuration.getGarmin().getUrlBases(),
-            credentials, activityDao);
+            credentials, activityDao, recordDao);
+
+        environment.jersey().register(new BuildResource());
 
         Injector injector = Guice.createInjector(module);
         environment.jersey().register(injector.getInstance(ActivityResource.class));
-        environment.jersey().register(new BuildResource());
+        environment.jersey().register(injector.getInstance(RecordResource.class));
     }
 
     private static void checkGarminCredentials(Credentials credentials) {
