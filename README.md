@@ -29,6 +29,9 @@ To see your applications health enter url `http://localhost:8081/healthcheck`
  3. Configure hitting localhost:8080 running local, no host when packaged
 2. Support multi sport 
 3. Fix deploy script. Needs Garmin credentials as env var which isn't passed into ssh remote command
+4. Refactor tests
+ 1. Move test instance of POJOs to single place
+ 2. Use memory backed stores instead of complicated mocks
 
 ## To Do (Imported from workout-logger)
 1. Improve UI

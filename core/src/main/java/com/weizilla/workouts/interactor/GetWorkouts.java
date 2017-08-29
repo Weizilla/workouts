@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -32,7 +34,21 @@ public class GetWorkouts {
         this.garminStore = garminStore;
     }
 
-    public List<Workout> getWorkouts(LocalDate date) {
+    public List<Workout> getAll() {
+        Set<LocalDate> allDates = new TreeSet<>();
+        recordStore.getAll().stream()
+            .map(Record::getDate)
+            .forEach(allDates::add);
+        garminStore.getAll().stream()
+            .map(Activity::getDate)
+            .forEach(allDates::add);
+
+        return allDates.stream()
+            .flatMap(d -> get(d).stream())
+            .collect(Collectors.toList());
+    }
+
+    public List<Workout> get(LocalDate date) {
         Map<String, List<Record>> records = recordStore.get(date).stream()
             .collect(Collectors.groupingBy(Record::getType, Collectors.toList()));
         Map<String, List<Activity>> activities = garminStore.get(date).stream()
@@ -67,8 +83,6 @@ public class GetWorkouts {
             : activities.stream()
                 .map(Activity::getDistance)
                 .reduce(Quantity::add).get();
-
-
 
         List<Long> garminIds = activities.stream()
             .map(Activity::getId)
