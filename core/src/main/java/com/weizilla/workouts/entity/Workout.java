@@ -2,25 +2,28 @@ package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.weizilla.distance.Distance;
-import org.immutables.value.Value.Immutable;
+import org.immutables.value.Value.Default;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static org.immutables.value.Value.Immutable;
 
 @Immutable
 @JsonSerialize(as = ImmutableWorkout.class)
 @JsonDeserialize(as = ImmutableWorkout.class)
 @WorkoutsStyle
-public interface Workout {
+public interface Workout extends Entry<UUID> {
+    @Override
+    @Default
+    default UUID getId() {
+        return UUID.randomUUID();
+    }
+
     UUID getRecordId();
-    String getType();
     LocalDateTime getStartTime();
     int getRating();
-    Duration getDuration();
-    Distance getDistance();
     List<Long> getGarminIds();
     String getComment();
 }

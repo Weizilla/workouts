@@ -54,14 +54,14 @@ public class GetWorkouts {
             .collect(Collectors.groupingBy(Activity::getType, Collectors.toList()));
 
         List<Workout> workouts = records.entrySet().stream()
-            .map(e -> create(e.getValue(), activities.get(e.getKey())))
+            .map(e -> create(date, e.getValue(), activities.get(e.getKey())))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .collect(Collectors.toList());
         return workouts;
     }
 
-    private static Optional<Workout> create(List<Record> records, List<Activity> activities) {
+    private static Optional<Workout> create(LocalDate date, List<Record> records, List<Activity> activities) {
         if (activities == null || activities.isEmpty()) {
             return Optional.empty();
         }
@@ -90,6 +90,7 @@ public class GetWorkouts {
         Workout workout = ImmutableWorkout.builder()
             .recordId(record.getId())
             .type(record.getType())
+            .date(date)
             .startTime(activities.get(0).getStart())
             .rating(record.getRating())
             .duration(duration)
