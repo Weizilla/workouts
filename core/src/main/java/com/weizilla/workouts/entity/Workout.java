@@ -2,8 +2,11 @@ package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.weizilla.distance.Distance;
 import org.immutables.value.Value.Default;
 
+import javax.annotation.Nullable;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,15 +25,41 @@ public interface Workout extends Entry<UUID> {
         return UUID.randomUUID();
     }
 
-    UUID getRecordId();
-    LocalDateTime getStartTime();
-    int getRating();
-    List<Long> getGarminIds();
-    String getComment();
-
     @Default
     @Override
     default LocalDate getDate() {
         return getStartTime().toLocalDate();
     }
+
+    // from Record
+    UUID getRecordId();
+
+    int getRating();
+
+    @Nullable
+    String getComment();
+
+    // from Garmin activity
+
+    LocalDateTime getStartTime();
+
+    List<Long> getGarminIds();
+
+    // from Goal
+
+    @Nullable
+    UUID getGoalId();
+
+    @Nullable
+    Distance getGoalDistance();
+
+    @Nullable
+    Duration getGoalDuration();
+
+    @Nullable
+    TimeOfDay getTimeOfDay();
+
+    @Nullable
+    String getNotes();
+
 }

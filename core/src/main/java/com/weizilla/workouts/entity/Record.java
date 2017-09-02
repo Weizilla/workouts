@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value.Default;
 import org.immutables.value.Value.Immutable;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 @Immutable
@@ -19,6 +20,9 @@ public interface Record extends Entry<UUID> {
     }
 
     boolean isOutdoor();
+
     Integer getRating();
+
+    @Nullable
     String getComment();
 }

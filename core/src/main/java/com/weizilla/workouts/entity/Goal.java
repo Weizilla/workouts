@@ -19,5 +19,6 @@ public interface Goal extends Entry<UUID> {
     }
 
     TimeOfDay getTimeOfDay();
+
     String getNotes();
 }
