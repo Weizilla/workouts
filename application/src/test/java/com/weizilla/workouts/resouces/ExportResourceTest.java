@@ -8,10 +8,11 @@ import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.store.GarminStore;
+import com.weizilla.workouts.store.MemoryGarminStore;
+import com.weizilla.workouts.store.MemoryRecordStore;
 import com.weizilla.workouts.store.RecordStore;
 import io.dropwizard.testing.junit.ResourceTestRule;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -19,13 +20,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
 
 public class ExportResourceTest {
     private static final Activity ACTIVITY = ImmutableActivity.builder()
@@ -47,8 +44,8 @@ public class ExportResourceTest {
         .comment("COMMENT")
         .build();
 
-    private static final GarminStore GARMIN_STORE = mock(GarminStore.class);
-    private static final RecordStore RECORD_STORE = mock(RecordStore.class);
+    private static final GarminStore GARMIN_STORE = new MemoryGarminStore();
+    private static final RecordStore RECORD_STORE = new MemoryRecordStore();
 
     @ClassRule
     public static final ResourceTestRule RESOURCES = ResourceTestRule.builder()
@@ -56,15 +53,10 @@ public class ExportResourceTest {
         .setMapper(ObjectMappers.OBJECT_MAPPER)
         .build();
 
-    @Before
-    public void setUp() throws Exception {
-        when(GARMIN_STORE.getAll()).thenReturn(Collections.singletonList(ACTIVITY));
-        when(RECORD_STORE.getAll()).thenReturn(Collections.singletonList(RECORD));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        reset(GARMIN_STORE, RECORD_STORE);
+    @BeforeClass
+    public static void setUp() throws Exception {
+        GARMIN_STORE.add(ACTIVITY);
+        RECORD_STORE.add(RECORD);
     }
 
     @Test

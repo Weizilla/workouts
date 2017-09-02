@@ -8,12 +8,12 @@ import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.Workout;
 import com.weizilla.workouts.entity.WorkoutAssert;
 import com.weizilla.workouts.store.GarminStore;
+import com.weizilla.workouts.store.MemoryGarminStore;
+import com.weizilla.workouts.store.MemoryRecordStore;
 import com.weizilla.workouts.store.RecordStore;
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.Duration;
@@ -23,15 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetWorkoutsTest {
-    @Mock
     private RecordStore recordStore;
-    @Mock
     private GarminStore garminStore;
     private GetWorkouts getWorkouts;
     private LocalDateTime start;
@@ -49,6 +45,8 @@ public class GetWorkoutsTest {
 
     @Before
     public void setUp() throws Exception {
+        garminStore = new MemoryGarminStore();
+        recordStore = new MemoryRecordStore();
         getWorkouts = new GetWorkouts(recordStore, garminStore);
 
         garminId = 1;
@@ -88,8 +86,8 @@ public class GetWorkoutsTest {
 
     @Test
     public void returnsMatchedWorkout() throws Exception {
-        when(garminStore.get(date)).thenReturn(singletonList(activity));
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.add(activity);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.get(date);
         assertThat(workouts).hasSize(1);
@@ -110,8 +108,8 @@ public class GetWorkoutsTest {
         Record mismatchRecord = ImmutableRecord.copyOf(record)
             .withType("NEW TYPE");
 
-        when(garminStore.get(date)).thenReturn(singletonList(activity));
-        when(recordStore.get(date)).thenReturn(singletonList(mismatchRecord));
+        garminStore.add(activity);
+        recordStore.add(mismatchRecord);
 
         assertThat(getWorkouts.get(date)).isEmpty();
     }
@@ -121,8 +119,8 @@ public class GetWorkoutsTest {
         Duration recordDuration = duration.plusHours(1);
         record = ImmutableRecord.copyOf(record).withDuration(recordDuration);
 
-        when(garminStore.get(date)).thenReturn(singletonList(activity));
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.add(activity);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.get(date);
         assertThat(workouts).hasSize(1);
@@ -136,8 +134,8 @@ public class GetWorkoutsTest {
     public void usesActivityDurationIfNoneInRecord() throws Exception {
         record = ImmutableRecord.copyOf(record).withDuration(null);
 
-        when(garminStore.get(date)).thenReturn(singletonList(activity));
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.add(activity);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.get(date);
         assertThat(workouts).hasSize(1);
@@ -151,8 +149,8 @@ public class GetWorkoutsTest {
         Distance recordDistance = distance.multipliedBy(2);
         record = ImmutableRecord.copyOf(record).withDistance(recordDistance);
 
-        when(garminStore.get(date)).thenReturn(singletonList(activity));
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.add(activity);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.get(date);
         assertThat(workouts).hasSize(1);
@@ -166,8 +164,8 @@ public class GetWorkoutsTest {
     public void useActivityDistanceIfNoneInRecord() throws Exception {
         record = ImmutableRecord.copyOf(record).withDistance(null);
 
-        when(garminStore.get(date)).thenReturn(singletonList(activity));
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.add(activity);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.get(date);
         assertThat(workouts).hasSize(1);
@@ -186,8 +184,8 @@ public class GetWorkoutsTest {
             activities.add(multiple);
         }
 
-        when(garminStore.get(date)).thenReturn(activities);
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.addAll(activities);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.get(date);
         assertThat(workouts).hasSize(1);
@@ -211,8 +209,8 @@ public class GetWorkoutsTest {
         }
         Duration expected = Duration.ofHours(totalDuration);
 
-        when(garminStore.get(date)).thenReturn(activities);
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.addAll(activities);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.get(date);
         assertThat(workouts).hasSize(1);
@@ -235,8 +233,8 @@ public class GetWorkoutsTest {
         }
         Distance expected = Distance.ofKilometers(totalDistance);
 
-        when(garminStore.get(date)).thenReturn(activities);
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.addAll(activities);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.get(date);
         assertThat(workouts).hasSize(1);
@@ -262,11 +260,8 @@ public class GetWorkoutsTest {
 
     @Test
     public void getsAllWorkoutsBySingleDate() throws Exception {
-        when(garminStore.get(date)).thenReturn(singletonList(activity));
-        when(recordStore.get(date)).thenReturn(singletonList(record));
-
-        when(garminStore.getAll()).thenReturn(Lists.newArrayList(activity));
-        when(recordStore.getAll()).thenReturn(Lists.newArrayList(record));
+        garminStore.add(activity);
+        recordStore.add(record);
 
         List<Workout> workouts = getWorkouts.getAll();
         assertThat(workouts).hasSize(1);
@@ -284,8 +279,8 @@ public class GetWorkoutsTest {
 
     @Test
     public void getsAllWorkoutsByMultipleDates() throws Exception {
-        when(garminStore.get(date)).thenReturn(singletonList(activity));
-        when(recordStore.get(date)).thenReturn(singletonList(record));
+        garminStore.add(activity);
+        recordStore.add(record);
 
         UUID newRecordId = UUID.randomUUID();
         LocalDateTime newStart = start.plusDays(10);
@@ -293,16 +288,13 @@ public class GetWorkoutsTest {
         Record newRecord = ImmutableRecord.copyOf(record)
             .withId(newRecordId)
             .withDate(newDate);
-        when(recordStore.get(newDate)).thenReturn(singletonList(newRecord));
+        recordStore.add(newRecord);
 
         long newGarminId = garminId + 100;
         Activity newActivity = ImmutableActivity.copyOf(activity)
             .withId(newGarminId)
             .withStart(newStart);
-        when(garminStore.get(newDate)).thenReturn(singletonList(newActivity));
-
-        when(garminStore.getAll()).thenReturn(Lists.newArrayList(activity, newActivity));
-        when(recordStore.getAll()).thenReturn(Lists.newArrayList(record, newRecord));
+        garminStore.add(newActivity);
 
         List<Workout> workouts = getWorkouts.getAll();
         assertThat(workouts).hasSize(2);

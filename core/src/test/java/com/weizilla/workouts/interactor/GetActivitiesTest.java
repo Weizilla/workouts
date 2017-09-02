@@ -4,31 +4,29 @@ import com.weizilla.distance.Distance;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.store.GarminStore;
+import com.weizilla.workouts.store.MemoryGarminStore;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetActivitiesTest {
     private static final LocalDate DATE = LocalDate.now();
-    @Mock
     private GarminStore garminStore;
     private GetActivities getActivities;
     private Activity activity;
 
     @Before
     public void setUp() throws Exception {
+        garminStore = new MemoryGarminStore();
         getActivities = new GetActivities(garminStore);
         activity = ImmutableActivity.builder()
             .id(1)
@@ -41,7 +39,7 @@ public class GetActivitiesTest {
 
     @Test
     public void getShouldReturnActivityByDate() throws Exception {
-        when(garminStore.get(DATE)).thenReturn(Collections.singletonList(activity));
+        garminStore.add(activity);
         List<Activity> actual = getActivities.get(DATE);
         assertThat(actual).containsExactly(activity);
     }
@@ -54,7 +52,7 @@ public class GetActivitiesTest {
 
     @Test
     public void getReturnAllActivities() throws Exception {
-        when(garminStore.getAll()).thenReturn(Collections.singletonList(activity));
+        garminStore.add(activity);
         List<Activity> actual = getActivities.getAll();
         assertThat(actual).containsExactly(activity);
     }

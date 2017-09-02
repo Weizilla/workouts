@@ -37,6 +37,11 @@
             <artifactId>workouts-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.weizilla.workouts</groupId>
+            <artifactId>workouts-core</artifactId>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
         </dependency>
