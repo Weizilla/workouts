@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value.Default;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -26,4 +27,10 @@ public interface Workout extends Entry<UUID> {
     int getRating();
     List<Long> getGarminIds();
     String getComment();
+
+    @Default
+    @Override
+    default LocalDate getDate() {
+        return getStartTime().toLocalDate();
+    }
 }

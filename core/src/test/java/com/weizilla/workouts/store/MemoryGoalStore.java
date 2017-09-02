@@ -4,5 +4,5 @@ import com.weizilla.workouts.entity.Goal;
 
 import java.util.UUID;
 
-public interface GoalStore extends EntryStore<UUID, Goal> {
+public class MemoryGoalStore extends MemoryEntryStore<UUID, Goal> implements GoalStore {
 }

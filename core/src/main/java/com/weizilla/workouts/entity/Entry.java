@@ -9,9 +9,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 
-public interface Entry<T> {
+public interface Entry<K> extends Comparable<Entry<K>> {
 
-    T getId();
+    K getId();
 
     String getType();
 
@@ -29,4 +29,13 @@ public interface Entry<T> {
     //TODO use optional
     @Nullable
     Distance getDistance();
+
+    @Override
+    default int compareTo(Entry<K> o) {
+        int result = getDate().compareTo(o.getDate());
+        if (result == 0) {
+            result = getCreatedTime().compareTo(o.getCreatedTime());
+        }
+        return result;
+    }
 }

@@ -2,8 +2,8 @@ package com.weizilla.workouts.resouces;
 
 import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
-import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.Export;
+import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExportResourceTest {
     private static final Activity ACTIVITY = ImmutableActivity.builder()
-        .id(100)
+        .id(100L)
         .type("TYPE")
         .start(LocalDateTime.now())
         .duration(Duration.ofHours(1))

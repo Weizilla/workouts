@@ -40,7 +40,7 @@ public interface ActivityDao extends GarminStore {
 
     @Override
     @SqlQuery("SELECT * FROM activities WHERE id = :id")
-    Activity get(@Bind("id") long id);
+    Activity get(@Bind("id") Long id);
 
     @Override
     @SqlQuery("SELECT * FROM activities")
