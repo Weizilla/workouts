@@ -22,13 +22,13 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Singleton
-public class GetWorkouts {
-    private static final Logger logger = LoggerFactory.getLogger(GetWorkouts.class);
+public class GenerateWorkoutStat {
+    private static final Logger logger = LoggerFactory.getLogger(GenerateWorkoutStat.class);
     private final RecordStore recordStore;
     private final GarminStore garminStore;
 
     @Inject
-    public GetWorkouts(RecordStore recordStore, GarminStore garminStore) {
+    public GenerateWorkoutStat(RecordStore recordStore, GarminStore garminStore) {
         this.recordStore = recordStore;
         this.garminStore = garminStore;
     }

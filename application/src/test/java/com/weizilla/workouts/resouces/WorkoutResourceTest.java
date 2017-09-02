@@ -5,7 +5,7 @@ import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.ImmutableWorkout;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Workout;
-import com.weizilla.workouts.interactor.GetWorkouts;
+import com.weizilla.workouts.interactor.GenerateWorkoutStat;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
 import org.junit.ClassRule;
@@ -48,11 +48,11 @@ public class WorkoutResourceTest {
         .addGarminIds(GARMIN_ID)
         .build();
 
-    private static final GetWorkouts getWorkouts = mock(GetWorkouts.class);
+    private static final GenerateWorkoutStat GENERATE_WORKOUT_STAT = mock(GenerateWorkoutStat.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-        .addResource(new WorkoutResource(getWorkouts))
+        .addResource(new WorkoutResource(GENERATE_WORKOUT_STAT))
         .setMapper(ObjectMappers.OBJECT_MAPPER)
         .build();
     private static final TypeReference<List<Workout>> TYPE_REF = new TypeReference<List<Workout>>() {
@@ -60,12 +60,12 @@ public class WorkoutResourceTest {
 
     @After
     public void tearDown() throws Exception {
-        reset(getWorkouts);
+        reset(GENERATE_WORKOUT_STAT);
     }
 
     @Test
     public void getsAllRecords() throws Exception {
-        when(getWorkouts.getAll()).thenReturn(singletonList(workout));
+        when(GENERATE_WORKOUT_STAT.getAll()).thenReturn(singletonList(workout));
         String jsonResult = resources.target("/workouts").request().get(String.class);
         List<Workout> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TYPE_REF);
         assertThat(results).containsExactly(workout);
@@ -73,7 +73,7 @@ public class WorkoutResourceTest {
 
     @Test
     public void getsRecordByDate() throws Exception {
-        when(getWorkouts.get(DATE)).thenReturn(singletonList(workout));
+        when(GENERATE_WORKOUT_STAT.get(DATE)).thenReturn(singletonList(workout));
 
         String jsonResult = resources.target("/workouts")
             .queryParam("date", DATE).request().get(String.class);

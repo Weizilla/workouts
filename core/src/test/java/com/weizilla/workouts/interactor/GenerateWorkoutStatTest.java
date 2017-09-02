@@ -26,10 +26,10 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GetWorkoutsTest {
+public class GenerateWorkoutStatTest {
     private RecordStore recordStore;
     private GarminStore garminStore;
-    private GetWorkouts getWorkouts;
+    private GenerateWorkoutStat generateWorkoutStat;
     private LocalDateTime start;
     private long garminId;
     private String type;
@@ -47,7 +47,7 @@ public class GetWorkoutsTest {
     public void setUp() throws Exception {
         garminStore = new MemoryGarminStore();
         recordStore = new MemoryRecordStore();
-        getWorkouts = new GetWorkouts(recordStore, garminStore);
+        generateWorkoutStat = new GenerateWorkoutStat(recordStore, garminStore);
 
         garminId = 1;
         type = "TYPE";
@@ -81,7 +81,7 @@ public class GetWorkoutsTest {
 
     @Test
     public void returnsEmptyListWithNothing() throws Exception {
-        assertThat(getWorkouts.get(date)).isEmpty();
+        assertThat(generateWorkoutStat.get(date)).isEmpty();
     }
 
     @Test
@@ -89,7 +89,7 @@ public class GetWorkoutsTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.get(date);
+        List<Workout> workouts = generateWorkoutStat.get(date);
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -111,7 +111,7 @@ public class GetWorkoutsTest {
         garminStore.add(activity);
         recordStore.add(mismatchRecord);
 
-        assertThat(getWorkouts.get(date)).isEmpty();
+        assertThat(generateWorkoutStat.get(date)).isEmpty();
     }
 
     @Test
@@ -122,7 +122,7 @@ public class GetWorkoutsTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.get(date);
+        List<Workout> workouts = generateWorkoutStat.get(date);
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -137,7 +137,7 @@ public class GetWorkoutsTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.get(date);
+        List<Workout> workouts = generateWorkoutStat.get(date);
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -152,7 +152,7 @@ public class GetWorkoutsTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.get(date);
+        List<Workout> workouts = generateWorkoutStat.get(date);
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -167,7 +167,7 @@ public class GetWorkoutsTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.get(date);
+        List<Workout> workouts = generateWorkoutStat.get(date);
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -187,7 +187,7 @@ public class GetWorkoutsTest {
         garminStore.addAll(activities);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.get(date);
+        List<Workout> workouts = generateWorkoutStat.get(date);
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -212,7 +212,7 @@ public class GetWorkoutsTest {
         garminStore.addAll(activities);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.get(date);
+        List<Workout> workouts = generateWorkoutStat.get(date);
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -236,7 +236,7 @@ public class GetWorkoutsTest {
         garminStore.addAll(activities);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.get(date);
+        List<Workout> workouts = generateWorkoutStat.get(date);
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -263,7 +263,7 @@ public class GetWorkoutsTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<Workout> workouts = getWorkouts.getAll();
+        List<Workout> workouts = generateWorkoutStat.getAll();
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
@@ -297,7 +297,7 @@ public class GetWorkoutsTest {
             .withStart(newStart);
         garminStore.add(newActivity);
 
-        List<Workout> workouts = getWorkouts.getAll();
+        List<Workout> workouts = generateWorkoutStat.getAll();
         assertThat(workouts).hasSize(2);
 
         Workout workout = workouts.get(0);

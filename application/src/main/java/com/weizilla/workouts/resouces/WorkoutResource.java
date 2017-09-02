@@ -1,7 +1,7 @@
 package com.weizilla.workouts.resouces;
 
 import com.weizilla.workouts.entity.Workout;
-import com.weizilla.workouts.interactor.GetWorkouts;
+import com.weizilla.workouts.interactor.GenerateWorkoutStat;
 import io.dropwizard.jersey.jsr310.LocalDateParam;
 
 import javax.inject.Inject;
@@ -20,15 +20,15 @@ import java.util.Optional;
 @Consumes(MediaType.APPLICATION_JSON)
 @Singleton
 public class WorkoutResource {
-    private final GetWorkouts getWorkouts;
+    private final GenerateWorkoutStat generateWorkoutStat;
 
     @Inject
-    public WorkoutResource(GetWorkouts getWorkouts) {
-        this.getWorkouts = getWorkouts;
+    public WorkoutResource(GenerateWorkoutStat generateWorkoutStat) {
+        this.generateWorkoutStat = generateWorkoutStat;
     }
 
     @GET
     public List<Workout> get(@QueryParam("date") Optional<LocalDateParam> date) {
-        return date.map(d -> getWorkouts.get(d.get())).orElse(getWorkouts.getAll());
+        return date.map(d -> generateWorkoutStat.get(d.get())).orElse(generateWorkoutStat.getAll());
     }
 }
