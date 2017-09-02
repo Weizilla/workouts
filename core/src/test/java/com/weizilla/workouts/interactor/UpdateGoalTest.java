@@ -31,7 +31,7 @@ public class UpdateGoalTest extends GoalTest {
             .withDistance(Distance.ofMiles(2))
             .withNotes("NOTES");
 
-        updateGoal.updatePlan(newGoal);
+        updateGoal.updateGoal(newGoal);
         verify(goalStore).update(newGoal);
         verify(goalStore, never()).update(goal);
     }
