@@ -2,11 +2,10 @@ package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.weizilla.distance.Distance;
 import org.immutables.value.Value.Immutable;
 
 import javax.annotation.Nullable;
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -23,5 +22,5 @@ public interface Record {
     Integer getRating();
     String getComment();
     @Nullable Duration getDuration();
-    @Nullable Quantity<Length> getDistance();
+    @Nullable Distance getDistance();
 }

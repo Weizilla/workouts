@@ -8,6 +8,7 @@ var app = new Vue({
         commitId: null,
         activities: [],
         records: [],
+        workouts: [],
         types: [],
         distanceUnits: ["mi", "km", "m", "yd"],
         newRecordType: null,
@@ -19,8 +20,8 @@ var app = new Vue({
         newRecordDistanceUnit: null,
         newRecordRating: null,
         newRecordComment: null,
-        //host: "http://localhost:8080",
-        host: ""
+        host: "http://localhost:8080",
+        //host: ""
     },
     created: function () {
         this.$http.get(this.host + "/api/build").then(response => {
@@ -60,10 +61,8 @@ var app = new Vue({
             })
         },
         addRecord: function() {
-            let durationHr = this.newRecordDurationHr !== null
-                ? this.newRecordDurationHr + "H" : "";
-            let durationMin = this.newRecordDurationMin !== null
-                ? this.newRecordDurationMin + "M" : "";
+            let durationHr = (this.newRecordDurationHr || "0") + "H";
+            let durationMin = (this.newRecordDurationMin || "0") + "M";
             let postData = {
                 type: this.newRecordType,
                 outdoor: this.newRecordOutdoor === true,
@@ -83,6 +82,16 @@ var app = new Vue({
                 console.log(msg);
                 this.message = msg;
             });
+        },
+        refreshWorkouts: function() {
+            this.$http.get(this.host + "/api/workouts").then(response => {
+                this.workouts = response.data;
+                this.message = "Got " + this.workouts.length + " workouts";
+            }, response => {
+                let msg = "Error: " + response.data;
+                console.log(msg);
+                this.message = msg;
+            })
         }
     }
 });

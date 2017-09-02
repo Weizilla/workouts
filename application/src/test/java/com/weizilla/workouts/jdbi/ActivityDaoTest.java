@@ -1,6 +1,7 @@
 package com.weizilla.workouts.jdbi;
 
 import com.codahale.metrics.MetricRegistry;
+import com.weizilla.distance.Distance;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ObjectMappers;
@@ -11,11 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.util.StringColumnMapper;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,15 +20,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static systems.uom.common.USCustomary.MILE;
 
 public class ActivityDaoTest {
     protected static final long ID = 100;
     protected static final String TYPE = "TYPE";
     protected static final LocalDateTime START = LocalDateTime.now();
     protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Quantity<Length> DISTANCE =
-        Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE);
+    protected static final Distance DISTANCE = Distance.ofMiles(1);
     private ActivityDao dao;
     private DBI dbi;
     private Activity activity;

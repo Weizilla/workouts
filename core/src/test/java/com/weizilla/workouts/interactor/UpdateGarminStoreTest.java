@@ -1,5 +1,6 @@
 package com.weizilla.workouts.interactor;
 
+import com.weizilla.distance.Distance;
 import com.weizilla.garmin.downloader.ActivityDownloader;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.garmin.entity.ImmutableActivity;
@@ -10,11 +11,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import systems.uom.common.USCustomary;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -40,7 +37,7 @@ public class UpdateGarminStoreTest {
         String type = "TYPE";
         Duration duration = Duration.ofHours(1);
         LocalDateTime start = LocalDateTime.now();
-        Quantity<Length> distance = Quantities.getQuantity(10.0, USCustomary.MILE);
+        Distance distance = Distance.ofMiles(10);
         Activity activity = ImmutableActivity.builder()
             .id(id)
             .type(type)

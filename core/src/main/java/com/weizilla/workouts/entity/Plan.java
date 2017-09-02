@@ -1,9 +1,8 @@
 package com.weizilla.workouts.entity;
 
+import com.weizilla.distance.Distance;
 import org.immutables.value.Value.Immutable;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -15,7 +14,7 @@ public interface Plan {
     String getType();
     LocalDate getDate();
     TimeOfDay getTimeOfDay();
-    Quantity<Length> getDistance();
+    Distance getDistance();
     Duration getDuration();
     String getNotes();
 }

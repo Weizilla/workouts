@@ -1,5 +1,6 @@
 package com.weizilla.workouts.interactor;
 
+import com.weizilla.distance.Distance;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.workouts.entity.ImmutableWorkout;
 import com.weizilla.workouts.entity.Record;
@@ -11,8 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -78,11 +77,11 @@ public class GetWorkouts {
                 .map(Activity::getDuration)
                 .reduce(Duration::plus).get();
 
-        Quantity<Length> distance = record.getDistance() != null
+        Distance distance = record.getDistance() != null
             ? record.getDistance()
             : activities.stream()
                 .map(Activity::getDistance)
-                .reduce(Quantity::add).get();
+                .reduce(Distance::plus).get();
 
         List<Long> garminIds = activities.stream()
             .map(Activity::getId)

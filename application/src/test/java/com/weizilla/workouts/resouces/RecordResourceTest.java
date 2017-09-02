@@ -1,6 +1,7 @@
 package com.weizilla.workouts.resouces;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.weizilla.distance.Distance;
 import com.weizilla.workouts.dto.CreateRecordDto;
 import com.weizilla.workouts.dto.ImmutableCreateRecordDto;
 import com.weizilla.workouts.entity.ImmutableRecord;
@@ -16,13 +17,9 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +31,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static systems.uom.common.USCustomary.MILE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RecordResourceTest {
@@ -44,7 +40,7 @@ public class RecordResourceTest {
     protected static final LocalDate DATE = LocalDate.now();
     protected static final int RATING = 3;
     protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Quantity<Length> DISTANCE = Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE);
+    protected static final Distance DISTANCE = Distance.ofMiles(1);
     protected static final String COMMENT = "COMMENT";
     private static final Record record = ImmutableRecord.builder()
         .id(ID)

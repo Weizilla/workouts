@@ -2,10 +2,9 @@ package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.weizilla.distance.Distance;
 import org.immutables.value.Value.Immutable;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +20,7 @@ public interface Workout {
     LocalDateTime getStartTime();
     int getRating();
     Duration getDuration();
-    Quantity<Length> getDistance();
+    Distance getDistance();
     List<Long> getGarminIds();
     String getComment();
 }

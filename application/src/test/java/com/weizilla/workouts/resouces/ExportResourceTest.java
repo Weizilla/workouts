@@ -1,5 +1,6 @@
 package com.weizilla.workouts.resouces;
 
+import com.weizilla.distance.Distance;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.Export;
@@ -13,9 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
-import tec.uom.se.quantity.Quantities;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -27,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static systems.uom.common.USCustomary.MILE;
 
 public class ExportResourceTest {
     private static final Activity ACTIVITY = ImmutableActivity.builder()
@@ -35,7 +33,7 @@ public class ExportResourceTest {
         .type("TYPE")
         .start(LocalDateTime.now())
         .duration(Duration.ofHours(1))
-        .distance(Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE))
+        .distance(Distance.ofMiles(1))
         .build();
 
     private static final Record RECORD = ImmutableRecord.builder()
@@ -44,7 +42,7 @@ public class ExportResourceTest {
         .date(LocalDate.now())
         .outdoor(true)
         .duration(Duration.ofHours(1))
-        .distance(Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE))
+        .distance(Distance.ofMiles(1))
         .rating(3)
         .comment("COMMENT")
         .build();

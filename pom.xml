@@ -55,7 +55,7 @@
             <dependency>
                 <groupId>com.github.Weizilla.garmin</groupId>
                 <artifactId>garmin-lib</artifactId>
-                <version>5339cdeeeb</version>
+                <version>a090e4c0dc</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject</groupId>

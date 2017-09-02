@@ -1,12 +1,11 @@
 package com.weizilla.workouts.jdbi;
 
+import com.weizilla.distance.Distance;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.garmin.entity.ImmutableActivity;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.quantity.Length;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
@@ -20,7 +19,7 @@ public class ActivityMapper implements ResultSetMapper<Activity> {
             .type(resultSet.getString("type"))
             .start(LocalDateTime.parse(resultSet.getString("start")))
             .duration(Duration.parse(resultSet.getString("duration")))
-            .distance(Quantities.getQuantity(resultSet.getString("distance")).asType(Length.class))
+            .distance(Distance.parse(resultSet.getString("distance")))
             .build();
     }
 }

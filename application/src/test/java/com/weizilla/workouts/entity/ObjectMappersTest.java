@@ -1,17 +1,13 @@
 package com.weizilla.workouts.entity;
 
+import com.weizilla.distance.Distance;
 import org.junit.Test;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static systems.uom.common.USCustomary.MILE;
 
 public class ObjectMappersTest {
     protected static final UUID ID = UUID.randomUUID();
@@ -20,7 +16,7 @@ public class ObjectMappersTest {
     protected static final LocalDate DATE = LocalDate.now();
     protected static final int RATING = 3;
     protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Quantity<Length> DISTANCE = Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE);
+    protected static final Distance DISTANCE = Distance.ofMiles(1);
     protected static final String COMMENT = "COMMENT";
     private static Record record = ImmutableRecord.builder()
         .id(ID)

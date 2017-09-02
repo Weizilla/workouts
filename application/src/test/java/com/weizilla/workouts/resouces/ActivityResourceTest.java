@@ -1,6 +1,7 @@
 package com.weizilla.workouts.resouces;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.weizilla.distance.Distance;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ObjectMappers;
@@ -12,11 +13,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static systems.uom.common.USCustomary.MILE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityResourceTest {
@@ -35,7 +31,7 @@ public class ActivityResourceTest {
     protected static final String TYPE = "TYPE";
     protected static final LocalDateTime START = LocalDateTime.now();
     protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Quantity<Length> DISTANCE = Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE);
+    protected static final Distance DISTANCE = Distance.ofMiles(1);
     private static final Activity ACTIVITY = ImmutableActivity.builder()
         .id(ID)
         .type(TYPE)

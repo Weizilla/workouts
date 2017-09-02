@@ -26,7 +26,7 @@ public class UpdateRecordTest extends RecordTest {
             .withRating(5)
             .withComment("NEW COMMENT")
             .withDuration(DURATION.plusHours(2))
-            .withDistance(DISTANCE.multiply(2));
+            .withDistance(DISTANCE.multipliedBy(2));
 
         updateRecord.updateRecord(newRecord);
         verify(recordStore).update(newRecord);

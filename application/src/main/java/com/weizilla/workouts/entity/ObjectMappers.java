@@ -12,10 +12,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.weizilla.distance.Distance;
 import io.dropwizard.jackson.Jackson;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.Quantity;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -35,8 +34,8 @@ public class ObjectMappers {
         objectMapper.registerModule(module);
 
         SimpleModule quantityModule = new SimpleModule();
-        quantityModule.addSerializer(Quantity.class, new QuantitySerializer());
-        quantityModule.addDeserializer(Quantity.class, new QuantityDeserializer());
+        quantityModule.addSerializer(Distance.class, new DistanceSerializer());
+        quantityModule.addDeserializer(Distance.class, new DistanceDeserializer());
         objectMapper.registerModule(quantityModule);
 
         objectMapper.registerModule(new Jdk8Module());
@@ -76,20 +75,20 @@ public class ObjectMappers {
         }
     }
 
-    private static class QuantitySerializer extends JsonSerializer<Quantity> {
+    private static class DistanceSerializer extends JsonSerializer<Distance> {
         @Override
-        public void serialize(Quantity lengthQuantity, JsonGenerator jsonGenerator,
+        public void serialize(Distance distance, JsonGenerator jsonGenerator,
             SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
-            jsonGenerator.writeString(lengthQuantity.toString());
+            jsonGenerator.writeString(distance.toString());
         }
     }
 
-    private static class QuantityDeserializer extends JsonDeserializer<Quantity> {
+    private static class DistanceDeserializer extends JsonDeserializer<Distance> {
         @Override
-        public Quantity deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+        public Distance deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
                 throws IOException, JsonProcessingException {
             String input = jsonParser.getText();
-            return Quantities.getQuantity(input);
+            return Distance.parse(input);
         }
     }
 }

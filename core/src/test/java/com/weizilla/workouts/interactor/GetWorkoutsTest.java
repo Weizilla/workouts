@@ -1,5 +1,6 @@
 package com.weizilla.workouts.interactor;
 
+import com.weizilla.distance.Distance;
 import com.weizilla.garmin.entity.Activity;
 import com.weizilla.garmin.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ImmutableRecord;
@@ -14,10 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,7 +26,6 @@ import java.util.UUID;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static systems.uom.common.USCustomary.MILE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetWorkoutsTest {
@@ -45,7 +42,7 @@ public class GetWorkoutsTest {
     private String comment;
     private LocalDate date;
     private int rating;
-    private Quantity<Length> distance;
+    private Distance distance;
     private Duration duration;
     private Activity activity;
     private Record record;
@@ -59,7 +56,7 @@ public class GetWorkoutsTest {
         outdoor = true;
         start = LocalDateTime.now();
         duration = Duration.ofHours(1);
-        distance = Quantities.getQuantity(10, MILE);
+        distance = Distance.ofMiles(2);
         activity = ImmutableActivity.builder()
             .id(garminId)
             .type(type)
@@ -151,7 +148,7 @@ public class GetWorkoutsTest {
 
     @Test
     public void useRecordDistanceIfExists() throws Exception {
-        Quantity<Length> recordDistance = distance.multiply(2);
+        Distance recordDistance = distance.multipliedBy(2);
         record = ImmutableRecord.copyOf(record).withDistance(recordDistance);
 
         when(garminStore.get(date)).thenReturn(singletonList(activity));
@@ -231,12 +228,12 @@ public class GetWorkoutsTest {
         List<Activity> activities = new ArrayList<>();
         double totalDistance = 0;
         for (int i = 1; i < 10; i++) {
-            Quantity<Length> dist = Quantities.getQuantity((double) i, MILE);
+            Distance dist = Distance.ofKilometers(i);
             Activity multiple = ImmutableActivity.copyOf(activity).withId(i).withDistance(dist);
             activities.add(multiple);
             totalDistance += i;
         }
-        Quantity<Length> expected = Quantities.getQuantity(totalDistance, MILE);
+        Distance expected = Distance.ofKilometers(totalDistance);
 
         when(garminStore.get(date)).thenReturn(activities);
         when(recordStore.get(date)).thenReturn(singletonList(record));

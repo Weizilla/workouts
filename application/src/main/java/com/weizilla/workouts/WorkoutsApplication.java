@@ -15,6 +15,7 @@ import com.weizilla.workouts.resouces.ActivityResource;
 import com.weizilla.workouts.resouces.BuildResource;
 import com.weizilla.workouts.resouces.ExportResource;
 import com.weizilla.workouts.resouces.RecordResource;
+import com.weizilla.workouts.resouces.WorkoutResource;
 import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -29,6 +30,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 import java.util.EnumSet;
 
 public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
@@ -87,6 +93,8 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         environment.jersey().register(injector.getInstance(ActivityResource.class));
         environment.jersey().register(injector.getInstance(RecordResource.class));
         environment.jersey().register(injector.getInstance(ExportResource.class));
+        environment.jersey().register(injector.getInstance(WorkoutResource.class));
+        environment.jersey().register(new ExceptionManager());
     }
 
     private static void checkGarminCredentials(Credentials credentials) {
@@ -102,5 +110,20 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
                 logger.warn("Garmin password is not set");
             }
         }
+    }
+
+    @Provider
+    public static class ExceptionManager implements ExceptionMapper<BadRequestException> {
+        private static final Logger logger = LoggerFactory.getLogger(ExceptionManager.class);
+        @Override
+        public Response toResponse(BadRequestException exception) {
+            logger.error("Error", exception);
+            return Response
+                .status(Response.Status.BAD_REQUEST)
+                .entity(exception.getMessage())
+                .type(MediaType.TEXT_PLAIN)
+                .build();
+        }
+
     }
 }

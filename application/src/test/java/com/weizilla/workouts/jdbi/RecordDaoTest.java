@@ -1,6 +1,7 @@
 package com.weizilla.workouts.jdbi;
 
 import com.codahale.metrics.MetricRegistry;
+import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
@@ -11,18 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.util.StringColumnMapper;
-import tec.uom.se.quantity.Quantities;
 
-import javax.measure.Quantity;
-import javax.measure.quantity.Length;
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static systems.uom.common.USCustomary.MILE;
 
 public class RecordDaoTest {
     protected static final UUID ID = UUID.randomUUID();
@@ -31,7 +27,7 @@ public class RecordDaoTest {
     protected static final LocalDate DATE = LocalDate.now();
     protected static final int RATING = 3;
     protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Quantity<Length> DISTANCE = Quantities.getQuantity(BigDecimal.valueOf(1.0), MILE);
+    protected static final Distance DISTANCE = Distance.ofMiles(1);
     protected static final String COMMENT = "COMMENT";
     private RecordDao dao;
     private DBI dbi;
@@ -116,7 +112,7 @@ public class RecordDaoTest {
             .withOutdoor(false)
             .withDate(DATE.plusMonths(1))
             .withDuration(DURATION.plusHours(1))
-            .withDistance(DISTANCE.multiply(2))
+            .withDistance(DISTANCE.multipliedBy(2))
             .withRating(RATING + 1)
             .withComment("NEW COMMENT");
         dao.update(updated);
