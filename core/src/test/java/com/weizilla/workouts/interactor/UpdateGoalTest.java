@@ -1,8 +1,8 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.distance.Distance;
-import com.weizilla.workouts.entity.ImmutablePlan;
-import com.weizilla.workouts.entity.Plan;
+import com.weizilla.workouts.entity.Goal;
+import com.weizilla.workouts.entity.ImmutableGoal;
 import com.weizilla.workouts.entity.TimeOfDay;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,18 +12,18 @@ import java.time.Duration;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-public class UpdatePlanTest extends PlanTest {
-    private UpdatePlan updatePlan;
+public class UpdateGoalTest extends GoalTest {
+    private UpdateGoal updateGoal;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        updatePlan = new UpdatePlan(planStore);
+        updateGoal = new UpdateGoal(goalStore);
     }
 
     @Test
     public void updatesShouldUpdatePlanWithNewPlan() throws Exception {
-        Plan newPlan = ImmutablePlan.copyOf(plan)
+        Goal newGoal = ImmutableGoal.copyOf(goal)
             .withType("NEW TYPE")
             .withDate(DATE.plusDays(1))
             .withTimeOfDay(TimeOfDay.AFTERNOON)
@@ -31,9 +31,9 @@ public class UpdatePlanTest extends PlanTest {
             .withDistance(Distance.ofMiles(2))
             .withNotes("NOTES");
 
-        updatePlan.updatePlan(newPlan);
-        verify(planStore).update(newPlan);
-        verify(planStore, never()).update(plan);
+        updateGoal.updatePlan(newGoal);
+        verify(goalStore).update(newGoal);
+        verify(goalStore, never()).update(goal);
     }
 
 }

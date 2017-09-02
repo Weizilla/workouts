@@ -1,17 +1,17 @@
 package com.weizilla.workouts.interactor;
 
-import com.weizilla.workouts.store.PlanStore;
+import com.weizilla.workouts.store.GoalStore;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.UUID;
 
 @Singleton
-public class DeletePlan {
-    private final PlanStore store;
+public class DeleteGoal {
+    private final GoalStore store;
 
     @Inject
-    public DeletePlan(PlanStore store) {
+    public DeleteGoal(GoalStore store) {
         this.store = store;
     }
 

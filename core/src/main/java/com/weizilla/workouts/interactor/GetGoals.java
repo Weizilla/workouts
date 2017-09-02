@@ -1,7 +1,7 @@
 package com.weizilla.workouts.interactor;
 
-import com.weizilla.workouts.entity.Plan;
-import com.weizilla.workouts.store.PlanStore;
+import com.weizilla.workouts.entity.Goal;
+import com.weizilla.workouts.store.GoalStore;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,23 +10,23 @@ import java.util.List;
 import java.util.UUID;
 
 @Singleton
-public class GetPlans {
-    private final PlanStore store;
+public class GetGoals {
+    private final GoalStore store;
 
     @Inject
-    public GetPlans(PlanStore store) {
+    public GetGoals(GoalStore store) {
         this.store = store;
     }
 
-    public Plan get(UUID id) {
+    public Goal get(UUID id) {
         return store.get(id);
     }
 
-    public List<Plan> get(LocalDate date) {
+    public List<Goal> get(LocalDate date) {
         return store.get(date);
     }
 
-    public List<Plan> getAll() {
+    public List<Goal> getAll() {
         return store.getAll();
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Immutable
 @WorkoutsStyle
-public interface CreatePlanDto {
+public interface CreateGoalDto {
     String getType();
     LocalDate getDate();
     Duration getDuration();

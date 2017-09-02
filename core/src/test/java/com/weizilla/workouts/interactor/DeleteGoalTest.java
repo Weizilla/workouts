@@ -5,18 +5,18 @@ import org.junit.Test;
 
 import static org.mockito.Mockito.verify;
 
-public class DeletePlanTest extends PlanTest {
-    private DeletePlan deletePlan;
+public class DeleteGoalTest extends GoalTest {
+    private DeleteGoal deleteGoal;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        deletePlan = new DeletePlan(planStore);
+        deleteGoal = new DeleteGoal(goalStore);
     }
 
     @Test
     public void deletePlanShouldDeletePlanFromStore() throws Exception {
-        deletePlan.delete(ID);
-        verify(planStore).delete(ID);
+        deleteGoal.delete(ID);
+        verify(goalStore).delete(ID);
     }
 }

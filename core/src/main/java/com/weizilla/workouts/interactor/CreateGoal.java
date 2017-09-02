@@ -1,25 +1,25 @@
 package com.weizilla.workouts.interactor;
 
-import com.weizilla.workouts.dto.CreatePlanDto;
-import com.weizilla.workouts.entity.ImmutablePlan;
-import com.weizilla.workouts.entity.Plan;
-import com.weizilla.workouts.store.PlanStore;
+import com.weizilla.workouts.dto.CreateGoalDto;
+import com.weizilla.workouts.entity.ImmutableGoal;
+import com.weizilla.workouts.entity.Goal;
+import com.weizilla.workouts.store.GoalStore;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.UUID;
 
 @Singleton
-public class CreatePlan {
-    private final PlanStore planStore;
+public class CreateGoal {
+    private final GoalStore goalStore;
 
     @Inject
-    public CreatePlan(PlanStore planStore) {
-        this.planStore = planStore;
+    public CreateGoal(GoalStore goalStore) {
+        this.goalStore = goalStore;
     }
 
-    public Plan create(CreatePlanDto createDto) {
-        Plan plan = ImmutablePlan.builder()
+    public Goal create(CreateGoalDto createDto) {
+        Goal goal = ImmutableGoal.builder()
             .id(UUID.randomUUID())
             .type(createDto.getType())
             .date(createDto.getDate())
@@ -28,7 +28,7 @@ public class CreatePlan {
             .duration(createDto.getDuration())
             .distance(createDto.getDistance())
             .build();
-        planStore.add(plan);
-        return plan;
+        goalStore.add(goal);
+        return goal;
     }
 }

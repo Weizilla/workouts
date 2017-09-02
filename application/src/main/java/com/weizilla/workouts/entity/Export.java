@@ -15,6 +15,6 @@ import java.util.List;
 public interface Export {
     List<Activity> getActivities();
     List<Record> getRecords();
-    List<Plan> getPlans();
+    List<Goal> getGoals();
     Instant getGenerated();
 }
