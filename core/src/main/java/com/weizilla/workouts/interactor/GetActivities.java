@@ -1,6 +1,6 @@
 package com.weizilla.workouts.interactor;
 
-import com.weizilla.garmin.entity.Activity;
+import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.store.GarminStore;
 
 import javax.inject.Inject;

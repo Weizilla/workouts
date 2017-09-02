@@ -2,7 +2,7 @@ package com.weizilla.workouts.store;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.weizilla.garmin.entity.Activity;
+import com.weizilla.workouts.entity.Activity;
 
 import java.time.LocalDate;
 import java.util.Collection;

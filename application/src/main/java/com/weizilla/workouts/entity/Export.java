@@ -2,7 +2,6 @@ package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.weizilla.garmin.entity.Activity;
 import org.immutables.value.Value.Immutable;
 
 import java.time.Instant;

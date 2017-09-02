@@ -1,8 +1,8 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.distance.Distance;
-import com.weizilla.garmin.entity.Activity;
-import com.weizilla.garmin.entity.ImmutableActivity;
+import com.weizilla.workouts.entity.Activity;
+import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.Workout;
@@ -200,7 +200,7 @@ public class GetWorkoutsTest {
 
         List<Activity> activities = new ArrayList<>();
         int totalDuration = 0;
-        for (int i = 1; i < 10; i++) {
+        for (long i = 1; i < 10; i++) {
             Activity multiple = ImmutableActivity.copyOf(activity)
                 .withId(i)
                 .withDuration(Duration.ofHours(i));
@@ -225,7 +225,7 @@ public class GetWorkoutsTest {
 
         List<Activity> activities = new ArrayList<>();
         double totalDistance = 0;
-        for (int i = 1; i < 10; i++) {
+        for (long i = 1; i < 10; i++) {
             Distance dist = Distance.ofKilometers(i);
             Activity multiple = ImmutableActivity.copyOf(activity).withId(i).withDistance(dist);
             activities.add(multiple);
@@ -293,6 +293,7 @@ public class GetWorkoutsTest {
         long newGarminId = garminId + 100;
         Activity newActivity = ImmutableActivity.copyOf(activity)
             .withId(newGarminId)
+            .withDate(newDate)
             .withStart(newStart);
         garminStore.add(newActivity);
 

@@ -2,8 +2,8 @@ package com.weizilla.workouts.resouces;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.weizilla.distance.Distance;
-import com.weizilla.garmin.entity.Activity;
-import com.weizilla.garmin.entity.ImmutableActivity;
+import com.weizilla.workouts.entity.Activity;
+import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.interactor.GetActivities;
 import com.weizilla.workouts.interactor.UpdateGarminStore;

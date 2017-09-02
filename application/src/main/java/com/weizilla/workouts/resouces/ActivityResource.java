@@ -1,6 +1,6 @@
 package com.weizilla.workouts.resouces;
 
-import com.weizilla.garmin.entity.Activity;
+import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.interactor.GetActivities;
 import com.weizilla.workouts.interactor.UpdateGarminStore;
 import io.dropwizard.jersey.jsr310.LocalDateParam;

@@ -1,7 +1,7 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.distance.Distance;
-import com.weizilla.garmin.entity.Activity;
+import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.entity.ImmutableWorkout;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.Workout;

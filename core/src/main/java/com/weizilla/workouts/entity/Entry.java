@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 
 public interface Entry<T> {
 
@@ -18,7 +19,7 @@ public interface Entry<T> {
 
     @Default
     default Instant getCreatedTime() {
-        return Instant.now();
+        return Instant.now().with(ChronoField.NANO_OF_SECOND, 0);
     }
 
     //TODO use optional

@@ -2,8 +2,8 @@ package com.weizilla.workouts.jdbi;
 
 import com.codahale.metrics.MetricRegistry;
 import com.weizilla.distance.Distance;
-import com.weizilla.garmin.entity.Activity;
-import com.weizilla.garmin.entity.ImmutableActivity;
+import com.weizilla.workouts.entity.Activity;
+import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ObjectMappers;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;

@@ -1,6 +1,6 @@
 package com.weizilla.workouts.jdbi;
 
-import com.weizilla.garmin.entity.Activity;
+import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.store.GarminStore;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;

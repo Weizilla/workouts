@@ -1,8 +1,8 @@
 package com.weizilla.workouts.interactor;
 
 import com.weizilla.distance.Distance;
-import com.weizilla.garmin.entity.Activity;
-import com.weizilla.garmin.entity.ImmutableActivity;
+import com.weizilla.workouts.entity.Activity;
+import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.store.GarminStore;
 import com.weizilla.workouts.store.MemoryGarminStore;
 import org.junit.Before;
@@ -29,7 +29,7 @@ public class GetActivitiesTest {
         garminStore = new MemoryGarminStore();
         getActivities = new GetActivities(garminStore);
         activity = ImmutableActivity.builder()
-            .id(1)
+            .id(1L)
             .type("TYPE")
             .start(now())
             .duration(Duration.ofHours(1))

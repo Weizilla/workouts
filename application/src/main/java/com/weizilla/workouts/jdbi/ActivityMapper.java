@@ -1,8 +1,8 @@
 package com.weizilla.workouts.jdbi;
 
 import com.weizilla.distance.Distance;
-import com.weizilla.garmin.entity.Activity;
-import com.weizilla.garmin.entity.ImmutableActivity;
+import com.weizilla.workouts.entity.Activity;
+import com.weizilla.workouts.entity.ImmutableActivity;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
