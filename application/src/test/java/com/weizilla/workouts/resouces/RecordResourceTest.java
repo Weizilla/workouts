@@ -2,8 +2,6 @@ package com.weizilla.workouts.resouces;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.weizilla.distance.Distance;
-import com.weizilla.workouts.dto.CreateRecordDto;
-import com.weizilla.workouts.dto.ImmutableCreateRecordDto;
 import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
@@ -73,7 +71,7 @@ public class RecordResourceTest {
 
     @Test
     public void addsRecord() throws Exception {
-        CreateRecordDto create = ImmutableCreateRecordDto.builder()
+        Record create = ImmutableRecord.builder()
             .type(TYPE)
             .outdoor(OUTDOOR)
             .date(DATE)

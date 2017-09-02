@@ -1,7 +1,6 @@
 package com.weizilla.workouts.interactor;
 
-import com.weizilla.workouts.dto.CreateRecordDto;
-import com.weizilla.workouts.dto.ImmutableCreateRecordDto;
+import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.RecordAssert;
 import org.junit.Before;
@@ -12,11 +11,11 @@ import static org.mockito.Mockito.verify;
 
 public class CreateRecordTest extends RecordTest {
     private CreateRecord createRecord;
-    private CreateRecordDto createRecordDto;
+    private Record createRecordDto;
 
     @Before
     public void setUp() throws Exception {
-        createRecordDto = ImmutableCreateRecordDto.builder()
+        createRecordDto = ImmutableRecord.builder()
             .type(TYPE)
             .outdoor(OUTDOOR)
             .date(DATE)

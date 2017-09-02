@@ -1,13 +1,10 @@
 package com.weizilla.workouts.interactor;
 
-import com.weizilla.workouts.dto.CreateRecordDto;
-import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.store.RecordStore;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.UUID;
 
 @Singleton
 public class CreateRecord {
@@ -18,17 +15,7 @@ public class CreateRecord {
         this.recordStore = recordStore;
     }
 
-    public Record create(CreateRecordDto createRecordDto) {
-        Record record = ImmutableRecord.builder()
-            .id(UUID.randomUUID())
-            .type(createRecordDto.getType())
-            .outdoor(createRecordDto.isOutdoor())
-            .date(createRecordDto.getDate())
-            .rating(createRecordDto.getRating())
-            .duration(createRecordDto.getDuration())
-            .distance(createRecordDto.getDistance())
-            .comment(createRecordDto.getComment())
-            .build();
+    public Record create(Record record) {
         recordStore.add(record);
         return record;
     }

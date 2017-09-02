@@ -1,6 +1,5 @@
 package com.weizilla.workouts.resouces;
 
-import com.weizilla.workouts.dto.CreateRecordDto;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.interactor.CreateRecord;
 import com.weizilla.workouts.interactor.DeleteRecord;
@@ -45,7 +44,7 @@ public class RecordResource {
     }
 
     @POST
-    public Record add(@NotNull CreateRecordDto record) {
+    public Record add(@NotNull Record record) {
         return createRecord.create(record);
     }
 
