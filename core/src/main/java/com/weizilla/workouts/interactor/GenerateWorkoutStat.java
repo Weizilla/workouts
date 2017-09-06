@@ -71,32 +71,25 @@ public class GenerateWorkoutStat {
             logger.warn("Can only match one record per type for {}", record.getDate());
         }
 
-        Duration duration = record.getDuration() != null
+        Duration totalDuration = record.getDuration() != null
             ? record.getDuration()
             : activities.stream()
                 .map(Activity::getDuration)
                 .reduce(Duration::plus).get();
 
-        Distance distance = record.getDistance() != null
+        Distance totalDistance = record.getDistance() != null
             ? record.getDistance()
             : activities.stream()
                 .map(Activity::getDistance)
                 .reduce(Distance::plus).get();
 
-        List<Long> garminIds = activities.stream()
-            .map(Activity::getId)
-            .collect(Collectors.toList());
-
         Workout workout = ImmutableWorkout.builder()
-            .recordId(record.getId())
+            .record(record)
             .type(record.getType())
             .date(date)
-            .startTime(activities.get(0).getStart())
-            .rating(record.getRating())
-            .duration(duration)
-            .distance(distance)
-            .garminIds(garminIds)
-            .comment(record.getComment())
+            .totalDuration(totalDuration)
+            .totalDistance(totalDistance)
+            .addAllActivities(activities)
             .build();
 
         return Optional.of(workout);

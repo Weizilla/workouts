@@ -38,14 +38,10 @@ public class WorkoutResourceTest {
     protected static final String COMMENT = "COMMENT";
     protected static final long GARMIN_ID = 1000;
     private static final Workout workout = ImmutableWorkout.builder()
-        .recordId(ID)
         .type(TYPE)
-        .startTime(START)
-        .rating(RATING)
-        .duration(DURATION)
-        .distance(DISTANCE)
-        .comment(COMMENT)
-        .addGarminIds(GARMIN_ID)
+        .date(DATE)
+        .totalDuration(DURATION)
+        .totalDistance(DISTANCE)
         .build();
 
     private static final GenerateWorkoutStat GENERATE_WORKOUT_STAT = mock(GenerateWorkoutStat.class);

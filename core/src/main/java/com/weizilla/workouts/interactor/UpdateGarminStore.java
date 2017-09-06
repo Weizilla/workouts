@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,7 +48,6 @@ public class UpdateGarminStore {
         return ImmutableActivity.builder()
             .id(fromGarmin.getId())
             .type(fromGarmin.getType())
-            .date(fromGarmin.getDate())
             .start(fromGarmin.getStart())
             .distance(fromGarmin.getDistance())
             .duration(fromGarmin.getDuration())

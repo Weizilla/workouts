@@ -93,14 +93,12 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasRecordId(recordId);
         WorkoutAssert.assertThat(workout).hasType(type);
-        WorkoutAssert.assertThat(workout).hasStartTime(start);
-        WorkoutAssert.assertThat(workout).hasRating(rating);
-        WorkoutAssert.assertThat(workout).hasDuration(duration);
-        WorkoutAssert.assertThat(workout).hasDistance(distance);
-        WorkoutAssert.assertThat(workout).hasOnlyGarminIds(garminId);
-        WorkoutAssert.assertThat(workout).hasComment(comment);
+        WorkoutAssert.assertThat(workout).hasDate(date);
+        WorkoutAssert.assertThat(workout).hasRecord(record);
+        WorkoutAssert.assertThat(workout).hasActivities(activity);
+        WorkoutAssert.assertThat(workout).hasTotalDistance(distance);
+        WorkoutAssert.assertThat(workout).hasTotalDuration(duration);
     }
 
     @Test
@@ -126,8 +124,8 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasDuration(recordDuration);
-        assertThat(workout.getDuration()).isNotEqualTo(duration);
+        WorkoutAssert.assertThat(workout).hasTotalDuration(recordDuration);
+        assertThat(workout.getTotalDuration()).isNotEqualTo(duration);
     }
 
     @Test
@@ -141,7 +139,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasDuration(duration);
+        WorkoutAssert.assertThat(workout).hasTotalDuration(duration);
     }
 
     @Test
@@ -156,8 +154,8 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasDistance(recordDistance);
-        assertThat(workout.getDistance()).isNotEqualTo(distance);
+        WorkoutAssert.assertThat(workout).hasTotalDistance(recordDistance);
+        assertThat(workout.getTotalDistance()).isNotEqualTo(distance);
     }
 
     @Test
@@ -171,7 +169,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasDistance(distance);
+        WorkoutAssert.assertThat(workout).hasTotalDistance(distance);
     }
 
     @Test
@@ -191,7 +189,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasOnlyGarminIds(expectedIds.toArray(new Long[]{}));
+        assertThat(workout.getActivities()).isEqualTo(activities);
     }
 
     @Test
@@ -216,7 +214,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasDuration(expected);
+        WorkoutAssert.assertThat(workout).hasTotalDuration(expected);
     }
 
     @Test
@@ -240,7 +238,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasDistance(expected);
+        WorkoutAssert.assertThat(workout).hasTotalDistance(expected);
     }
 
     @Test
@@ -267,14 +265,12 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasRecordId(recordId);
         WorkoutAssert.assertThat(workout).hasType(type);
-        WorkoutAssert.assertThat(workout).hasStartTime(start);
-        WorkoutAssert.assertThat(workout).hasRating(rating);
-        WorkoutAssert.assertThat(workout).hasDuration(duration);
-        WorkoutAssert.assertThat(workout).hasDistance(distance);
-        WorkoutAssert.assertThat(workout).hasOnlyGarminIds(garminId);
-        WorkoutAssert.assertThat(workout).hasComment(comment);
+        WorkoutAssert.assertThat(workout).hasDate(date);
+        WorkoutAssert.assertThat(workout).hasActivities(activity);
+        WorkoutAssert.assertThat(workout).hasRecord(record);
+        WorkoutAssert.assertThat(workout).hasTotalDuration(duration);
+        WorkoutAssert.assertThat(workout).hasTotalDistance(distance);
     }
 
     @Test
@@ -293,7 +289,6 @@ public class GenerateWorkoutStatTest {
         long newGarminId = garminId + 100;
         Activity newActivity = ImmutableActivity.copyOf(activity)
             .withId(newGarminId)
-            .withDate(newDate)
             .withStart(newStart);
         garminStore.add(newActivity);
 
@@ -301,23 +296,19 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(2);
 
         Workout workout = workouts.get(0);
-        WorkoutAssert.assertThat(workout).hasRecordId(recordId);
         WorkoutAssert.assertThat(workout).hasType(type);
-        WorkoutAssert.assertThat(workout).hasStartTime(start);
-        WorkoutAssert.assertThat(workout).hasRating(rating);
-        WorkoutAssert.assertThat(workout).hasDuration(duration);
-        WorkoutAssert.assertThat(workout).hasDistance(distance);
-        WorkoutAssert.assertThat(workout).hasOnlyGarminIds(garminId);
-        WorkoutAssert.assertThat(workout).hasComment(comment);
+        WorkoutAssert.assertThat(workout).hasDate(date);
+        WorkoutAssert.assertThat(workout).hasActivities(activity);
+        WorkoutAssert.assertThat(workout).hasRecord(record);
+        WorkoutAssert.assertThat(workout).hasTotalDuration(duration);
+        WorkoutAssert.assertThat(workout).hasTotalDistance(distance);
 
         workout = workouts.get(1);
-        WorkoutAssert.assertThat(workout).hasRecordId(newRecordId);
         WorkoutAssert.assertThat(workout).hasType(type);
-        WorkoutAssert.assertThat(workout).hasStartTime(newStart);
-        WorkoutAssert.assertThat(workout).hasRating(rating);
-        WorkoutAssert.assertThat(workout).hasDuration(duration);
-        WorkoutAssert.assertThat(workout).hasDistance(distance);
-        WorkoutAssert.assertThat(workout).hasOnlyGarminIds(newGarminId);
-        WorkoutAssert.assertThat(workout).hasComment(comment);
+        WorkoutAssert.assertThat(workout).hasDate(newDate);
+        WorkoutAssert.assertThat(workout).hasRecord(newRecord);
+        WorkoutAssert.assertThat(workout).hasActivities(newActivity);
+        WorkoutAssert.assertThat(workout).hasTotalDuration(duration);
+        WorkoutAssert.assertThat(workout).hasTotalDistance(distance);
     }
 }

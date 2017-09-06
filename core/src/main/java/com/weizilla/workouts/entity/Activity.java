@@ -2,9 +2,11 @@ package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.immutables.value.Value.Default;
+import com.weizilla.distance.Distance;
+import org.immutables.value.Value.Derived;
 import org.immutables.value.Value.Immutable;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,11 +16,16 @@ import java.time.LocalDateTime;
 @JsonDeserialize(as = ImmutableActivity.class)
 @WorkoutsStyle
 public interface Activity extends Entry<Long> {
+
     LocalDateTime getStart();
 
-    @Default
+    @Derived
     @Override
     default LocalDate getDate() {
         return getStart().toLocalDate();
     }
+
+    Duration getDuration();
+
+    Distance getDistance();
 }

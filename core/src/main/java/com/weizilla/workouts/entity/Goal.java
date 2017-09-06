@@ -2,9 +2,12 @@ package com.weizilla.workouts.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.weizilla.distance.Distance;
 import org.immutables.value.Value.Default;
 import org.immutables.value.Value.Immutable;
 
+import javax.annotation.Nullable;
+import java.time.Duration;
 import java.util.UUID;
 
 @Immutable
@@ -12,8 +15,9 @@ import java.util.UUID;
 @JsonDeserialize(as = ImmutableGoal.class)
 @WorkoutsStyle
 public interface Goal extends Entry<UUID> {
-    @Override
+
     @Default
+    @Override
     default UUID getId() {
         return UUID.randomUUID();
     }
@@ -21,4 +25,12 @@ public interface Goal extends Entry<UUID> {
     TimeOfDay getTimeOfDay();
 
     String getNotes();
+
+    //TODO use optional
+    @Nullable
+    Duration getDuration();
+
+    //TODO use optional
+    @Nullable
+    Distance getDistance();
 }
