@@ -1,11 +1,9 @@
 package com.weizilla.workouts.resouces;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.weizilla.distance.Distance;
-import com.weizilla.workouts.entity.ImmutableGoal;
-import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Goal;
-import com.weizilla.workouts.entity.TimeOfDay;
+import com.weizilla.workouts.entity.ObjectMappers;
+import com.weizilla.workouts.entity.TestEntity;
 import com.weizilla.workouts.interactor.CreateGoal;
 import com.weizilla.workouts.interactor.DeleteGoal;
 import com.weizilla.workouts.interactor.GetGoals;
@@ -19,11 +17,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
+import static com.weizilla.workouts.entity.TestEntity.DATE;
+import static com.weizilla.workouts.entity.TestEntity.GOAL_ID;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -33,97 +30,71 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GoalResourceTest {
-    protected static final UUID ID = UUID.randomUUID();
-    protected static final String TYPE = "TYPE";
-    protected static final TimeOfDay TIME_OF_DAY = TimeOfDay.MORNING;
-    protected static final LocalDate DATE = LocalDate.now();
-    protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Distance DISTANCE = Distance.ofMiles(1);
-    protected static final String NOTES = "NOTES";
-    private static final Goal goal = ImmutableGoal.builder()
-        .id(ID)
-        .type(TYPE)
-        .date(DATE)
-        .duration(DURATION)
-        .timeOfDay(TIME_OF_DAY)
-        .distance(DISTANCE)
-        .notes(NOTES)
-        .build();
-
-    private static final CreateGoal createGoal = mock(CreateGoal.class);
-    private static final GetGoals getGoals = mock(GetGoals.class);
-    private static final UpdateGoal updateGoal = mock(UpdateGoal.class);
-    private static final DeleteGoal deleteGoal = mock(DeleteGoal.class);
+    private static final Goal GOAL = TestEntity.createGoal();
+    private static final CreateGoal CREATE_GOAL = mock(CreateGoal.class);
+    private static final GetGoals GET_GOALS = mock(GetGoals.class);
+    private static final UpdateGoal UPDATE_GOAL = mock(UpdateGoal.class);
+    private static final DeleteGoal DELETE_GOAL = mock(DeleteGoal.class);
+    private static final TypeReference<List<Goal>> TYPE_REF = new TypeReference<List<Goal>>() { };
 
     @ClassRule
-    public static final ResourceTestRule resources = ResourceTestRule.builder()
-        .addResource(new GoalResource(createGoal, getGoals, deleteGoal, updateGoal))
+    public static final ResourceTestRule RESOURCES = ResourceTestRule.builder()
+        .addResource(new GoalResource(CREATE_GOAL, GET_GOALS, DELETE_GOAL, UPDATE_GOAL))
         .setMapper(ObjectMappers.OBJECT_MAPPER)
         .build();
-    private static final TypeReference<List<Goal>> TYPE_REF = new TypeReference<List<Goal>>() {
-    };
 
     @After
     public void tearDown() throws Exception {
-        reset(createGoal, getGoals, updateGoal, deleteGoal);
+        reset(CREATE_GOAL, GET_GOALS, UPDATE_GOAL, DELETE_GOAL);
     }
 
     @Test
     public void addsGoal() throws Exception {
-        Goal create = ImmutableGoal.builder()
-            .type(TYPE)
-            .date(DATE)
-            .timeOfDay(TIME_OF_DAY)
-            .duration(DURATION)
-            .distance(DISTANCE)
-            .notes(NOTES)
-            .build();
+        RESOURCES.target("/goals").request()
+            .post(Entity.entity(GOAL, MediaType.APPLICATION_JSON_TYPE));
 
-        resources.target("/goals").request()
-            .post(Entity.entity(create, MediaType.APPLICATION_JSON_TYPE));
-
-        verify(createGoal).create(create);
+        verify(CREATE_GOAL).create(GOAL);
     }
 
     @Test
     public void getsAllGoals() throws Exception {
-        when(getGoals.getAll()).thenReturn(singletonList(goal));
-        String jsonResult = resources.target("/goals").request().get(String.class);
+        when(GET_GOALS.getAll()).thenReturn(singletonList(GOAL));
+        String jsonResult = RESOURCES.target("/goals").request().get(String.class);
         List<Goal> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TYPE_REF);
-        assertThat(results).containsExactly(goal);
+        assertThat(results).containsExactly(GOAL);
     }
 
     @Test
     public void getsGoalByDate() throws Exception {
-        when(getGoals.get(DATE)).thenReturn(singletonList(goal));
+        when(GET_GOALS.get(DATE)).thenReturn(singletonList(GOAL));
 
-        String jsonResult = resources.target("/goals")
+        String jsonResult = RESOURCES.target("/goals")
             .queryParam("date", DATE).request().get(String.class);
         List<Goal> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TYPE_REF);
-        assertThat(results).containsExactly(goal);
+        assertThat(results).containsExactly(GOAL);
     }
 
     @Test
     public void getsGoalById() throws Exception {
-        when(getGoals.get(ID)).thenReturn(goal);
+        when(GET_GOALS.get(GOAL_ID)).thenReturn(GOAL);
 
-        String jsonResult = resources.target("/goals/" + ID).request().get(String.class);
+        String jsonResult = RESOURCES.target("/goals/" + GOAL_ID).request().get(String.class);
         Goal result = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, Goal.class);
-        assertThat(result).isEqualTo(goal);
+        assertThat(result).isEqualTo(GOAL);
     }
 
     @Test
     public void updatesGoal() throws Exception {
-        resources.target("/goals").request()
-            .put(Entity.entity(goal, MediaType.APPLICATION_JSON_TYPE));
+        RESOURCES.target("/goals").request()
+            .put(Entity.entity(GOAL, MediaType.APPLICATION_JSON_TYPE));
 
-        verify(updateGoal).updateGoal(goal);
+        verify(UPDATE_GOAL).updateGoal(GOAL);
     }
 
     @Test
     public void deletesGoal() throws Exception {
-        resources.target("/goals/" + ID).request().delete();
+        RESOURCES.target("/goals/" + GOAL_ID).request().delete();
 
-        verify(deleteGoal).delete(ID);
+        verify(DELETE_GOAL).delete(GOAL_ID);
     }
 }

@@ -1,29 +1,29 @@
 package com.weizilla.workouts.interactor;
 
-import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.Record;
-import com.weizilla.workouts.entity.RecordAssert;
+import com.weizilla.workouts.entity.TestEntity;
+import com.weizilla.workouts.store.RecordStore;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
-public class CreateRecordTest extends RecordTest {
+public class CreateRecordTest {
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+    @Mock
+    private RecordStore recordStore;
     private CreateRecord createRecord;
     private Record createRecordDto;
 
     @Before
     public void setUp() throws Exception {
-        createRecordDto = ImmutableRecord.builder()
-            .type(TYPE)
-            .outdoor(OUTDOOR)
-            .date(DATE)
-            .rating(RATING)
-            .comment(COMMENT)
-            .distance(DISTANCE)
-            .duration(DURATION)
-            .build();
+        createRecordDto = TestEntity.createRecord();
         createRecord = new CreateRecord(recordStore);
     }
 
@@ -31,13 +31,7 @@ public class CreateRecordTest extends RecordTest {
     public void createShouldReturnNewRecordWithId() {
         Record actual = createRecord.create(createRecordDto);
         assertThat(actual).isNotNull();
-        assertThat(actual.getId()).isNotNull();
-        RecordAssert.assertThat(actual).hasType(TYPE);
-        RecordAssert.assertThat(actual).hasDate(DATE);
-        RecordAssert.assertThat(actual).hasRating(RATING);
-        RecordAssert.assertThat(actual).hasDuration(DURATION);
-        RecordAssert.assertThat(actual).hasComment(COMMENT);
-        RecordAssert.assertThat(actual).hasDistance(DISTANCE);
+        assertThat(actual).isEqualTo(createRecordDto);
     }
 
     @Test

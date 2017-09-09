@@ -1,10 +1,10 @@
 package com.weizilla.workouts.jdbi;
 
 import com.codahale.metrics.MetricRegistry;
-import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
+import com.weizilla.workouts.entity.TestEntity;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Environment;
@@ -13,22 +13,17 @@ import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.util.StringColumnMapper;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import static com.weizilla.workouts.entity.TestEntity.DATE;
+import static com.weizilla.workouts.entity.TestEntity.DISTANCE;
+import static com.weizilla.workouts.entity.TestEntity.DURATION;
+import static com.weizilla.workouts.entity.TestEntity.RATING;
+import static com.weizilla.workouts.entity.TestEntity.RECORD_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RecordDaoTest {
-    protected static final UUID ID = UUID.randomUUID();
-    protected static final String TYPE = "TYPE";
-    protected static final boolean OUTDOOR = true;
-    protected static final LocalDate DATE = LocalDate.now();
-    protected static final int RATING = 3;
-    protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Distance DISTANCE = Distance.ofMiles(1);
-    protected static final String COMMENT = "COMMENT";
     private RecordDao dao;
     private DBI dbi;
     private Record record;
@@ -43,16 +38,7 @@ public class RecordDaoTest {
         dbi.registerArgumentFactory(new LocalDateArgumentFactory());
         dao = dbi.onDemand(RecordDao.class);
 
-        record = ImmutableRecord.builder()
-            .id(ID)
-            .type(TYPE)
-            .outdoor(OUTDOOR)
-            .date(DATE)
-            .rating(RATING)
-            .duration(DURATION)
-            .distance(DISTANCE)
-            .comment(COMMENT)
-            .build();
+        record = TestEntity.createRecord();
     }
 
     @Test
@@ -78,7 +64,7 @@ public class RecordDaoTest {
     public void addAndGetByUuid() throws Exception {
         dao.createTable();
         dao.add(record);
-        Record actual = dao.get(ID);
+        Record actual = dao.get(RECORD_ID);
         assertThat(actual).isEqualTo(record);
     }
 
@@ -117,7 +103,7 @@ public class RecordDaoTest {
             .withComment("NEW COMMENT");
         dao.update(updated);
 
-        Record afterUpdate = dao.get(ID);
+        Record afterUpdate = dao.get(RECORD_ID);
         assertThat(afterUpdate).isEqualTo(updated);
         assertThat(afterUpdate).isNotEqualTo(record);
     }
@@ -126,7 +112,7 @@ public class RecordDaoTest {
     public void deletesRecord() throws Exception {
         dao.createTable();
         dao.add(record);
-        dao.delete(ID);
+        dao.delete(RECORD_ID);
         List<Record> afterDelete = dao.getAll();
         assertThat(afterDelete).isEmpty();
     }
@@ -141,7 +127,7 @@ public class RecordDaoTest {
             .withId(otherId);
         dao.add(otherRecord);
 
-        dao.delete(ID);
+        dao.delete(RECORD_ID);
 
         List<Record> afterDelete = dao.getAll();
         assertThat(afterDelete).containsOnly(otherRecord);

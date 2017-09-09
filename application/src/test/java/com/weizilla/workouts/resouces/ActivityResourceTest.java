@@ -1,10 +1,9 @@
 package com.weizilla.workouts.resouces;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
-import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ObjectMappers;
+import com.weizilla.workouts.entity.TestEntity;
 import com.weizilla.workouts.interactor.GetActivities;
 import com.weizilla.workouts.interactor.UpdateGarminStore;
 import io.dropwizard.testing.junit.ResourceTestRule;
@@ -14,11 +13,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.weizilla.workouts.entity.TestEntity.START;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -27,39 +25,26 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityResourceTest {
-    protected static final long ID = 100;
-    protected static final String TYPE = "TYPE";
-    protected static final LocalDateTime START = LocalDateTime.now();
-    protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Distance DISTANCE = Distance.ofMiles(1);
-    private static final Activity ACTIVITY = ImmutableActivity.builder()
-        .id(ID)
-        .type(TYPE)
-        .start(START)
-        .duration(DURATION)
-        .distance(DISTANCE)
-        .build();
-
-    private static final GetActivities getActivities = mock(GetActivities.class);
-    private static final UpdateGarminStore updateGarminStore = mock(UpdateGarminStore.class);
+    private static final Activity ACTIVITY = TestEntity.createActivity();
+    private static final GetActivities GET_ACTIVITIES = mock(GetActivities.class);
+    private static final UpdateGarminStore UPDATE_GARMIN_STORE = mock(UpdateGarminStore.class);
+    private static final TypeReference<List<Activity>> TYPE_REF = new TypeReference<List<Activity>>() { };
 
     @ClassRule
-    public static final ResourceTestRule resources = ResourceTestRule.builder()
-        .addResource(new ActivityResource(getActivities, updateGarminStore))
+    public static final ResourceTestRule RESOURCES = ResourceTestRule.builder()
+        .addResource(new ActivityResource(GET_ACTIVITIES, UPDATE_GARMIN_STORE))
         .setMapper(ObjectMappers.OBJECT_MAPPER)
         .build();
-    private static final TypeReference<List<Activity>> TYPE_REF = new TypeReference<List<Activity>>() {
-    };
 
     @After
     public void tearDown() throws Exception {
-        reset(getActivities, updateGarminStore);
+        reset(GET_ACTIVITIES, UPDATE_GARMIN_STORE);
     }
 
     @Test
     public void getsAllActivities() throws Exception {
-        when(getActivities.getAll()).thenReturn(singletonList(ACTIVITY));
-        String jsonResult = resources.target("/activities").request().get(String.class);
+        when(GET_ACTIVITIES.getAll()).thenReturn(singletonList(ACTIVITY));
+        String jsonResult = RESOURCES.target("/activities").request().get(String.class);
         List<Activity> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TYPE_REF);
         assertThat(results).containsExactly(ACTIVITY);
     }
@@ -67,9 +52,9 @@ public class ActivityResourceTest {
     @Test
     public void getsActivitiesByDate() throws Exception {
         LocalDate date = START.toLocalDate();
-        when(getActivities.get(date)).thenReturn(singletonList(ACTIVITY));
+        when(GET_ACTIVITIES.get(date)).thenReturn(singletonList(ACTIVITY));
 
-        String jsonResult = resources.target("/activities")
+        String jsonResult = RESOURCES.target("/activities")
             .queryParam("date", date).request().get(String.class);
         List<Activity> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TYPE_REF);
         assertThat(results).containsExactly(ACTIVITY);

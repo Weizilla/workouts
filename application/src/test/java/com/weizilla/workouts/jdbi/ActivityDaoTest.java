@@ -1,10 +1,10 @@
 package com.weizilla.workouts.jdbi;
 
 import com.codahale.metrics.MetricRegistry;
-import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ObjectMappers;
+import com.weizilla.workouts.entity.TestEntity;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Environment;
@@ -13,28 +13,22 @@ import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.util.StringColumnMapper;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.weizilla.workouts.entity.TestEntity.ACTIVITY_ID;
+import static com.weizilla.workouts.entity.TestEntity.START;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ActivityDaoTest {
-    protected static final long ID = 100;
-    protected static final String TYPE = "TYPE";
-    protected static final LocalDateTime START = LocalDateTime.now();
-    protected static final Duration DURATION = Duration.ofHours(1);
-    protected static final Distance DISTANCE = Distance.ofMiles(1);
     private ActivityDao dao;
     private DBI dbi;
     private Activity activity;
 
     @Before
     public void setUp() throws Exception {
-        Environment environment =
-            new Environment("test-env", ObjectMappers.OBJECT_MAPPER, null, new MetricRegistry(), null);
+        Environment environment = new Environment("test-env", ObjectMappers.OBJECT_MAPPER, null, new MetricRegistry(), null);
         DataSourceFactory dataSourceFactory = new DataSourceFactory();
         dataSourceFactory.setDriverClass("org.sqlite.JDBC");
         dataSourceFactory.setUrl("jdbc:sqlite::memory:");
@@ -43,13 +37,7 @@ public class ActivityDaoTest {
         dbi.registerArgumentFactory(new LocalDateTimeArgumentFactory());
         dao = dbi.onDemand(ActivityDao.class);
 
-        activity = ImmutableActivity.builder()
-            .id(ID)
-            .type(TYPE)
-            .start(START)
-            .duration(DURATION)
-            .distance(DISTANCE)
-            .build();
+        activity = TestEntity.createActivity();
     }
 
     @Test
@@ -67,7 +55,7 @@ public class ActivityDaoTest {
     public void addAndGetById() throws Exception {
         dao.createTable();
         dao.add(activity);
-        Activity actual = dao.get(ID);
+        Activity actual = dao.get(ACTIVITY_ID);
         assertThat(actual).isEqualTo(activity);
     }
 
@@ -75,14 +63,14 @@ public class ActivityDaoTest {
     public void addAllAndGetById() throws Exception {
         int num = 3;
         List<Activity> activities = IntStream.range(0, num)
-            .mapToObj(i -> ImmutableActivity.copyOf(activity).withId(ID + i))
+            .mapToObj(i -> ImmutableActivity.copyOf(activity).withId(ACTIVITY_ID + i))
             .collect(Collectors.toList());
 
         dao.createTable();
         dao.addAll(activities);
 
         for (int i = 0; i < num; i++) {
-            Activity actual = dao.get(ID + i);
+            Activity actual = dao.get(ACTIVITY_ID + i);
             assertThat(actual).isEqualTo(activities.get(i));
         }
     }
@@ -91,7 +79,7 @@ public class ActivityDaoTest {
     public void addAllAndGetAll() throws Exception {
         int num = 3;
         List<Activity> activities = IntStream.range(0, num)
-            .mapToObj(i -> ImmutableActivity.copyOf(activity).withId(ID + i))
+            .mapToObj(i -> ImmutableActivity.copyOf(activity).withId(ACTIVITY_ID + i))
             .collect(Collectors.toList());
 
         dao.createTable();

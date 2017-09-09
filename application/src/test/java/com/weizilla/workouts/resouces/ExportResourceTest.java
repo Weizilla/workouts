@@ -1,12 +1,10 @@
 package com.weizilla.workouts.resouces;
 
-import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.entity.Export;
-import com.weizilla.workouts.entity.ImmutableActivity;
-import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
+import com.weizilla.workouts.entity.TestEntity;
 import com.weizilla.workouts.store.GarminStore;
 import com.weizilla.workouts.store.MemoryGarminStore;
 import com.weizilla.workouts.store.MemoryRecordStore;
@@ -16,34 +14,13 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExportResourceTest {
-    private static final Activity ACTIVITY = ImmutableActivity.builder()
-        .id(100L)
-        .type("TYPE")
-        .start(LocalDateTime.now())
-        .duration(Duration.ofHours(1))
-        .distance(Distance.ofMiles(1))
-        .build();
-
-    private static final Record RECORD = ImmutableRecord.builder()
-        .id(UUID.randomUUID())
-        .type("TYPE")
-        .date(LocalDate.now())
-        .outdoor(true)
-        .duration(Duration.ofHours(1))
-        .distance(Distance.ofMiles(1))
-        .rating(3)
-        .comment("COMMENT")
-        .build();
-
+    private static final Activity ACTIVITY = TestEntity.createActivity();
+    private static final Record RECORD = TestEntity.createRecord();
     private static final GarminStore GARMIN_STORE = new MemoryGarminStore();
     private static final RecordStore RECORD_STORE = new MemoryRecordStore();
 
