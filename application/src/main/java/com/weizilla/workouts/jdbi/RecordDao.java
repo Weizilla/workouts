@@ -22,7 +22,8 @@ public interface RecordDao extends RecordStore {
         "duration TEXT, " +
         "distance TEXT, " +
         "rating INTEGER, " +
-        "comment TEXT " +
+        "comment TEXT, " +
+        "created_time INTEGER NOT NULL " +
         ")")
     void createTable();
 
@@ -31,8 +32,8 @@ public interface RecordDao extends RecordStore {
     List<Record> getAll();
 
     @Override
-    @SqlUpdate("INSERT INTO records (id, type, outdoor, date, duration, distance, rating, comment) " +
-        "VALUES (:id, :type, :outdoor, :date, :duration, :distance, :rating, :comment)")
+    @SqlUpdate("INSERT INTO records (id, type, outdoor, date, duration, distance, rating, comment, created_time) " +
+        "VALUES (:id, :type, :outdoor, :date, :duration, :distance, :rating, :comment, :createdTime)")
     void add(@BindBean Record record);
 
     @Override
@@ -51,7 +52,8 @@ public interface RecordDao extends RecordStore {
         "duration = :duration," +
         "distance = :distance," +
         "rating = :rating," +
-        "comment = :comment " +
+        "comment = :comment, " +
+        "created_time = :createdTime " +
         "WHERE id = :id")
     void update(@BindBean Record record);
 

@@ -8,6 +8,7 @@ import com.weizilla.workouts.config.WorkoutsConfiguration;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.guice.WorkoutsModule;
 import com.weizilla.workouts.jdbi.ActivityDao;
+import com.weizilla.workouts.jdbi.InstantArgumentFactory;
 import com.weizilla.workouts.jdbi.LocalDateArgumentFactory;
 import com.weizilla.workouts.jdbi.LocalDateTimeArgumentFactory;
 import com.weizilla.workouts.jdbi.RecordDao;
@@ -75,6 +76,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "sqlite");
         jdbi.registerArgumentFactory(new LocalDateArgumentFactory());
         jdbi.registerArgumentFactory(new LocalDateTimeArgumentFactory());
+        jdbi.registerArgumentFactory(new InstantArgumentFactory());
 
         RecordDao recordDao = jdbi.onDemand(RecordDao.class);
         recordDao.createTable();

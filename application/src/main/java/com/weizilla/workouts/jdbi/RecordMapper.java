@@ -9,6 +9,7 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ public class RecordMapper implements ResultSetMapper<Record> {
             .duration(Duration.parse(resultSet.getString("duration")))
             .distance(Distance.parse(resultSet.getString("distance")))
             .rating(resultSet.getInt("rating"))
+            .createdTime(Instant.ofEpochSecond(resultSet.getLong("created_time")))
             .build();
         return record;
     }

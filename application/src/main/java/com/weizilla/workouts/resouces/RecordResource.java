@@ -60,13 +60,15 @@ public class RecordResource {
     }
 
     @PUT
-    public void update(@NotNull Record record) {
+    public Record update(@NotNull Record record) {
         updateRecord.updateRecord(record);
+        return record;
     }
 
     @DELETE
     @Path("{id}")
-    public void deleteById(@PathParam("id") UUID id) {
+    public UUID deleteById(@PathParam("id") UUID id) {
         deleteRecord.delete(id);
+        return id;
     }
 }

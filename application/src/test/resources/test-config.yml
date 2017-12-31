@@ -1,0 +1,24 @@
+database:
+  driverClass: org.sqlite.JDBC
+  url: "jdbc:sqlite:file::memory:?cache=shared"
+
+server:
+  rootPath: /api/
+  applicationConnectors:
+  - type: http
+    port: 8080
+
+logging:
+  level: INFO
+  loggers:
+    com.weizilla.workouts: DEBUG
+
+garmin:
+  credentials:
+    username: GARMIN_USERNAME
+    password: GARMIN_PASSWORD
+  urlBases:
+    followTicket: https://connect.garmin.com
+    getActivities: https://connect.garmin.com
+    login: https://sso.garmin.com
+    ltLookup: https://sso.garmin.com
