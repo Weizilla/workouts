@@ -36,6 +36,8 @@ public class RecordDaoTest {
         dataSourceFactory.setUrl("jdbc:sqlite::memory:");
         dbi = new DBIFactory().build(environment, dataSourceFactory, "sqlite");
         dbi.registerArgumentFactory(new LocalDateArgumentFactory());
+        dbi.registerArgumentFactory(new InstantArgumentFactory());
+        dbi.registerArgumentFactory(new LocalDateTimeArgumentFactory());
         dao = dbi.onDemand(RecordDao.class);
 
         record = TestEntity.createRecord();
