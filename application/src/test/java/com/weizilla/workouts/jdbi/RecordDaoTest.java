@@ -6,7 +6,6 @@ import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.TestEntity;
 import io.dropwizard.db.DataSourceFactory;
-import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Environment;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,10 +33,7 @@ public class RecordDaoTest {
         DataSourceFactory dataSourceFactory = new DataSourceFactory();
         dataSourceFactory.setDriverClass("org.sqlite.JDBC");
         dataSourceFactory.setUrl("jdbc:sqlite::memory:");
-        dbi = new DBIFactory().build(environment, dataSourceFactory, "sqlite");
-        dbi.registerArgumentFactory(new LocalDateArgumentFactory());
-        dbi.registerArgumentFactory(new InstantArgumentFactory());
-        dbi.registerArgumentFactory(new LocalDateTimeArgumentFactory());
+        dbi = DbiFactory.createDbi(environment, dataSourceFactory);
         dao = dbi.onDemand(RecordDao.class);
 
         record = TestEntity.createRecord();

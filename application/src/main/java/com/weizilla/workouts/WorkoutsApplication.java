@@ -8,9 +8,7 @@ import com.weizilla.workouts.config.WorkoutsConfiguration;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.guice.WorkoutsModule;
 import com.weizilla.workouts.jdbi.ActivityDao;
-import com.weizilla.workouts.jdbi.InstantArgumentFactory;
-import com.weizilla.workouts.jdbi.LocalDateArgumentFactory;
-import com.weizilla.workouts.jdbi.LocalDateTimeArgumentFactory;
+import com.weizilla.workouts.jdbi.DbiFactory;
 import com.weizilla.workouts.jdbi.RecordDao;
 import com.weizilla.workouts.resouces.ActivityResource;
 import com.weizilla.workouts.resouces.BuildResource;
@@ -21,7 +19,6 @@ import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
-import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -71,12 +68,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
-
-        DBIFactory factory = new DBIFactory();
-        DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "sqlite");
-        jdbi.registerArgumentFactory(new LocalDateArgumentFactory());
-        jdbi.registerArgumentFactory(new LocalDateTimeArgumentFactory());
-        jdbi.registerArgumentFactory(new InstantArgumentFactory());
+        DBI jdbi = DbiFactory.createDbi(environment, configuration.getDataSourceFactory());
 
         RecordDao recordDao = jdbi.onDemand(RecordDao.class);
         recordDao.createTable();

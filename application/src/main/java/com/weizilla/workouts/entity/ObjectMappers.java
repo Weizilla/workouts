@@ -63,7 +63,7 @@ public class ObjectMappers {
         @Override
         public void serialize(Duration duration, JsonGenerator jsonGenerator,
             SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
-            jsonGenerator.writeString(duration.toString());
+            jsonGenerator.writeNumber(duration.getSeconds());
         }
     }
 
@@ -79,7 +79,7 @@ public class ObjectMappers {
         @Override
         public void serialize(Distance distance, JsonGenerator jsonGenerator,
             SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
-            jsonGenerator.writeString(distance.toString());
+            jsonGenerator.writeNumber(distance.getDistanceMeter());
         }
     }
 
@@ -87,8 +87,7 @@ public class ObjectMappers {
         @Override
         public Distance deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
                 throws IOException, JsonProcessingException {
-            String input = jsonParser.getText();
-            return Distance.parse(input);
+            return Distance.ofMeters(jsonParser.getLongValue());
         }
     }
 }

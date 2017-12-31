@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 @WorkoutsStyle
 public interface Activity extends Entry<Long> {
 
-    LocalDateTime getStart();
+    LocalDateTime getStartTime();
 
     @Derived
     @Override
     default LocalDate getDate() {
-        return getStart().toLocalDate();
+        return getStartTime().toLocalDate();
     }
 
     Duration getDuration();

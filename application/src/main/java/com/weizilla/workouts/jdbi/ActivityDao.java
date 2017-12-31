@@ -18,20 +18,21 @@ public interface ActivityDao extends GarminStore {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS activities (" +
         "id INTEGER PRIMARY KEY, " +
         "type TEXT NOT NULL, " +
-        "start TEXT NOT NULL, " +
+        "start_time TEXT NOT NULL, " +
         "date TEXT NOT NULL, " +
-        "duration TEXT, " +
-        "distance TEXT " +
+        "duration INTEGER, " +
+        "distance INTEGER, " +
+        "created_time INTEGER NOT NULL " +
         ")")
     void createTable();
 
     @Override
-    @SqlUpdate("INSERT INTO activities (id, type, start, date, duration, distance) " +
-        "VALUES (:id, :type, :start, :date, :duration, :distance)")
+    @SqlUpdate("INSERT INTO activities (id, type, start_time, date, duration, distance, created_time) " +
+        "VALUES (:id, :type, :startTime, :date, :duration, :distance, :createdTime)")
     void add(@BindBean Activity activity);
 
-    @SqlBatch("INSERT INTO activities (id, type, start, date, duration, distance) " +
-        "VALUES (:id, :type, :start, :date, :duration, :distance)")
+    @SqlBatch("INSERT INTO activities (id, type, start_time, date, duration, distance, created_time) " +
+        "VALUES (:id, :type, :startTime, :date, :duration, :distance, :createdTime)")
     void addAll(@BindBean Collection<Activity> activities);
 
     @Override

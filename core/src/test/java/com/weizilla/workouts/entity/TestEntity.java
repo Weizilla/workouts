@@ -43,7 +43,7 @@ public class TestEntity {
         return ImmutableActivity.builder()
             .id(ACTIVITY_ID)
             .type(TYPE)
-            .start(START)
+            .startTime(START)
             .duration(DURATION)
             .distance(DISTANCE)
             .build();

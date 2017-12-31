@@ -48,7 +48,7 @@ public class UpdateGarminStore {
         return ImmutableActivity.builder()
             .id(fromGarmin.getId())
             .type(fromGarmin.getType())
-            .start(fromGarmin.getStart())
+            .startTime(fromGarmin.getStart())
             .distance(fromGarmin.getDistance())
             .duration(fromGarmin.getDuration())
             .build();

@@ -58,7 +58,7 @@ public class GenerateWorkoutStatTest {
         activity = ImmutableActivity.builder()
             .id(garminId)
             .type(type)
-            .start(start)
+            .startTime(start)
             .duration(duration)
             .distance(distance)
             .build();
@@ -289,7 +289,7 @@ public class GenerateWorkoutStatTest {
         long newGarminId = garminId + 100;
         Activity newActivity = ImmutableActivity.copyOf(activity)
             .withId(newGarminId)
-            .withStart(newStart);
+            .withStartTime(newStart);
         garminStore.add(newActivity);
 
         List<Workout> workouts = generateWorkoutStat.getAll();

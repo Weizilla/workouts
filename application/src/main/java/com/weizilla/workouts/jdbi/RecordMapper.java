@@ -22,8 +22,8 @@ public class RecordMapper implements ResultSetMapper<Record> {
             .outdoor(resultSet.getBoolean("outdoor"))
             .comment(resultSet.getString("comment"))
             .date(LocalDate.parse(resultSet.getString("date")))
-            .duration(Duration.parse(resultSet.getString("duration")))
-            .distance(Distance.parse(resultSet.getString("distance")))
+            .duration(Duration.ofSeconds(resultSet.getLong("duration")))
+            .distance(Distance.ofMeters(resultSet.getLong("distance")))
             .rating(resultSet.getInt("rating"))
             .createdTime(Instant.ofEpochSecond(resultSet.getLong("created_time")))
             .build();

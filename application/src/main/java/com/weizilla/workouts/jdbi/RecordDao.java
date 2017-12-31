@@ -19,8 +19,8 @@ public interface RecordDao extends RecordStore {
         "type TEXT NOT NULL, " +
         "outdoor INTEGER NOT NULL, " +
         "date TEXT NOT NULL, " +
-        "duration TEXT, " +
-        "distance TEXT, " +
+        "duration INTEGER, " +
+        "distance INTEGER, " +
         "rating INTEGER, " +
         "comment TEXT, " +
         "created_time INTEGER NOT NULL " +

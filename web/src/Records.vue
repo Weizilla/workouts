@@ -50,7 +50,7 @@
         <input id="newRecordDistanceValue" class="form-control" type="number"
             v-model="newRecord['distanceValue']">
 
-        <div class="radio" v-for="unit in distanceUnits">
+        <div class="radio" v-for="(m, unit) in distanceUnits">
           <label>
             <input type="radio" name="units" v-model="newRecord['distanceUnit']" v-bind:value="unit">
             {{ unit }}
@@ -114,7 +114,7 @@
                 records: [],
                 workouts: [],
                 types: [],
-                distanceUnits: ["mi", "km", "m", "yd"],
+                distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
                 newRecord: {},
                 host: "http://localhost:8080",
                 //host: ""
@@ -143,15 +143,21 @@
                 })
             },
             addRecord: function () {
-                let durationHr = (this.newRecord['durationHr'] || "0") + "H";
-                let durationMin = (this.newRecord['durationMin'] || "0") + "M";
+                let durationHr = parseInt(this.newRecord['durationHr'] || "0");
+                let durationMin = parseInt(this.newRecord['durationMin'] || "0");
+                let duration = (durationHr * 60 + durationMin) * 60;
+
+                let distanceValue = parseInt(this.newRecord["distanceValue"] || "0");
+                let distanceMultiplier = this.distanceUnits[this.newRecord["distanceUnit"]];
+                let distance = distanceValue * distanceMultiplier;
+
                 let postData = {
                     type: this.newRecord['type'],
                     outdoor: this.newRecord['outdoor'] === true,
                     date: moment(this.newRecord['date']).format("YYYY-MM-DD"),
                     rating: this.newRecord['rating'],
-                    duration: "PT" + durationHr + durationMin,
-                    distance: this.newRecord['distanceValue'] + " " + this.newRecord['distanceUnit'],
+                    duration: duration,
+                    distance: distance,
                     comment: this.newRecord['comment']
                 };
                 console.log(JSON.stringify(postData));
