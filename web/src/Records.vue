@@ -1,7 +1,7 @@
 <template>
   <div>
   <div>
-    <form>
+    <form v-on:submit.prevent>
       <div class="form-group">
         <label for="newRecordType">Type</label>
         <div id="newRecordType">
@@ -64,7 +64,8 @@
             v-model="newRecord['comment']"></textarea>
       </div>
 
-      <button class="btn btn-primary btn-lg btn-block" v-on:click="addRecord">Add</button>
+      <button class="btn btn-primary btn-lg btn-block"
+          v-on:click="addRecord">Add</button>
     </form>
   </div>
 
