@@ -143,8 +143,8 @@
                 })
             },
             addRecord: function () {
-                let durationHr = (this.newRecord['DurationHr'] || "0") + "H";
-                let durationMin = (this.newRecord['DurationMin'] || "0") + "M";
+                let durationHr = (this.newRecord['durationHr'] || "0") + "H";
+                let durationMin = (this.newRecord['durationMin'] || "0") + "M";
                 let postData = {
                     type: this.newRecord['type'],
                     outdoor: this.newRecord['outdoor'] === true,
