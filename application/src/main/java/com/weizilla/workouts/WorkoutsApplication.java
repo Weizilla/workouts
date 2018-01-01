@@ -9,10 +9,12 @@ import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.guice.WorkoutsModule;
 import com.weizilla.workouts.jdbi.ActivityDao;
 import com.weizilla.workouts.jdbi.DbiFactory;
+import com.weizilla.workouts.jdbi.GoalDao;
 import com.weizilla.workouts.jdbi.RecordDao;
 import com.weizilla.workouts.resouces.ActivityResource;
 import com.weizilla.workouts.resouces.BuildResource;
 import com.weizilla.workouts.resouces.ExportResource;
+import com.weizilla.workouts.resouces.GoalResource;
 import com.weizilla.workouts.resouces.RecordResource;
 import com.weizilla.workouts.resouces.WorkoutResource;
 import io.dropwizard.Application;
@@ -76,10 +78,13 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         ActivityDao activityDao = jdbi.onDemand(ActivityDao.class);
         activityDao.createTable();
 
+        GoalDao goalDao = jdbi.onDemand(GoalDao.class);
+        goalDao.createTable();
+
         Credentials credentials = configuration.getGarmin().getCredentials();
         checkGarminCredentials(credentials);
         WorkoutsModule module = new WorkoutsModule(configuration.getGarmin().getUrlBases(),
-            credentials, activityDao, recordDao);
+            credentials, activityDao, recordDao, goalDao);
 
         environment.jersey().register(new BuildResource());
 
@@ -88,6 +93,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         environment.jersey().register(injector.getInstance(RecordResource.class));
         environment.jersey().register(injector.getInstance(ExportResource.class));
         environment.jersey().register(injector.getInstance(WorkoutResource.class));
+        environment.jersey().register(injector.getInstance(GoalResource.class));
         environment.jersey().register(new ExceptionManager());
     }
 

@@ -15,7 +15,8 @@ public class UpdateGoal {
         this.store = store;
     }
 
-    public void updateGoal(Goal goal) {
+    public Goal updateGoal(Goal goal) {
         store.update(goal);
+        return goal;
     }
 }

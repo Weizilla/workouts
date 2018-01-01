@@ -61,13 +61,13 @@ public class GoalResource {
     }
 
     @PUT
-    public void update(@NotNull Goal record) {
-        updateGoal.updateGoal(record);
+    public Goal update(@NotNull Goal record) {
+        return updateGoal.updateGoal(record);
     }
 
     @DELETE
     @Path("{id}")
-    public void deleteById(@PathParam("id") UUID id) {
-        deleteGoal.delete(id);
+    public UUID deleteById(@PathParam("id") UUID id) {
+        return deleteGoal.delete(id);
     }
 }
