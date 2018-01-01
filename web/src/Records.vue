@@ -60,7 +60,7 @@
       </div>
 
       <div class="form-group row">
-        <label class="col-2 col-form-label" for="newRecordDistanceValue">Distance (Value)</label>
+        <label class="col-2 col-form-label" for="newRecordDistanceValue">Distance</label>
         <div class="col">
           <input id="newRecordDistanceValue" class="form-control" type="number"
               v-model="newRecord['distanceValue']">
