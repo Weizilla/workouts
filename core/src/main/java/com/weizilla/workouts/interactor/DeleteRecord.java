@@ -15,7 +15,8 @@ public class DeleteRecord {
         this.store = store;
     }
 
-    public void delete(UUID id) {
+    public UUID delete(UUID id) {
         store.delete(id);
+        return id;
     }
 }

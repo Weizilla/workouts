@@ -19,8 +19,6 @@ import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +26,7 @@ import java.util.List;
 
 import static com.weizilla.workouts.entity.TestEntity.DATE;
 import static com.weizilla.workouts.entity.TestEntity.RECORD_ID;
+import static com.weizilla.workouts.test.TestUtils.toEntity;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -146,10 +145,6 @@ public class RecordResourceIntTest {
 
         results = readRecordList(getsAllResponse);
         assertThat(results).isEmpty();
-    }
-
-    private static Entity<Record> toEntity(Record record) {
-        return Entity.entity(record, MediaType.APPLICATION_JSON_TYPE);
     }
 
     private static List<Record> readRecordList(Response response) throws IOException {

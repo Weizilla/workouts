@@ -15,7 +15,8 @@ public class UpdateRecord {
         this.store = store;
     }
 
-    public void updateRecord(Record record) {
+    public Record updateRecord(Record record) {
         store.update(record);
+        return record;
     }
 }
