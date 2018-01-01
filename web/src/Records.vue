@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="container-fluid">
   <div>
     <form v-on:submit.prevent>
-      <div class="form-group">
-        <label for="newRecordType">Type</label>
-        <div id="newRecordType">
+      <div class="form-group row">
+        <label class="col-2" for="newRecordType">Type</label>
+        <div class="col-10" id="newRecordType">
           <div class="radio" v-for="type in types">
             <label>
               <input type="radio" name="types" v-model="newRecord['type']" v-bind:value="type">
@@ -17,55 +17,70 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="newRecordOutdoor">Outdoor?</label>
-        <input id="newRecordOutdoor" class="form-control" type="checkbox"
-            v-model="newRecord['outdoor']">
-      </div>
-
-      <div class="form-group">
-        <label for="newRecordDate">Date</label>
-        <input id="newRecordDate" class="form-control" type="date"
-            v-model="newRecord['date']">
-      </div>
-
-      <div class="form-group">
-        <label for="newRecordRating">Rating (1-5)</label>
-        <input id="newRecordRating" class="form-control" type="number"
-            v-model="newRecord['rating']">
-      </div>
-
-      <div class="form-group">
-        <label for="newRecordDurationHr">Duration (hr)</label>
-        <input id="newRecordDurationHr" class="form-control" type="number"
-            v-model="newRecord['durationHr']">
-
-        <label for="newRecordDurationMin">Duration (min)</label>
-        <input id="newRecordDurationMin" class="form-control" type="number"
-            v-model="newRecord['durationMin']">
-      </div>
-
-      <div class="form-group">
-        <label for="newRecordDistanceValue">Distance (Value)</label>
-        <input id="newRecordDistanceValue" class="form-control" type="number"
-            v-model="newRecord['distanceValue']">
-
-        <div class="radio" v-for="(m, unit) in distanceUnits">
-          <label>
-            <input type="radio" name="units" v-model="newRecord['distanceUnit']" v-bind:value="unit">
-            {{ unit }}
-          </label>
+      <div class="form-group row">
+        <label class="col-sm-2" for="newRecordOutdoor">Outdoor</label>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input id="newRecordOutdoor" class="form-control form-check-input" type="checkbox" v-model="newRecord['outdoor']">
+            <label class="form-check-label" for="newRecordOutdoor">True</label>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="newRecordComment">Comment</label>
-        <textarea id="newRecordComment" class="form-control"
-            v-model="newRecord['comment']"></textarea>
+      <div class="form-group row">
+        <label class="col-2 col-form-label" for="newRecordDate">Date</label>
+        <div class="col-10">
+          <input id="newRecordDate" class="form-control" type="date"
+              v-model="newRecord['date']">
+        </div>
       </div>
 
-      <button class="btn btn-primary btn-lg btn-block"
-          v-on:click="addRecord">Add</button>
+      <div class="form-group row">
+        <label class="col-2 col-form-label" for="newRecordRating">Rating (1-5)</label>
+        <div class="col-10">
+        <input id="newRecordRating" class="form-control" type="number"
+            v-model="newRecord['rating']">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-2 col-form-label">Duration</label>
+        <div class="col-10 input-group">
+          <input id="newRecordDurationHr" class="form-control" type="number" v-model="newRecord['durationHr']">
+
+          <div class="input-group-append">
+            <span class="input-group-text">Hr</span>
+          </div>
+          <input id="newRecordDurationMin" class="form-control" type="number" v-model="newRecord['durationMin']">
+
+          <div class="input-group-append">
+            <span class="input-group-text">Sec</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-2 col-form-label" for="newRecordDistanceValue">Distance (Value)</label>
+        <div class="col">
+          <input id="newRecordDistanceValue" class="form-control" type="number"
+              v-model="newRecord['distanceValue']">
+        </div>
+        <div class="col-auto">
+          <div class="form-check form-check-inline" v-for="(m, unit) in distanceUnits">
+            <input class="form-check-input" type="radio" name="units" v-model="newRecord['distanceUnit']" v-bind:value="unit">
+            <label class="form-check-label">{{ unit }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-2" for="newRecordComment">Comment</label>
+        <div class="col-10">
+          <textarea id="newRecordComment" class="form-control" v-model="newRecord['comment']"></textarea>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg btn-block" v-on:click="addRecord">Add</button>
     </form>
   </div>
 
@@ -115,7 +130,7 @@
                 records: [],
                 workouts: [],
                 types: [],
-                distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
+                distanceUnits: {"mile": 1609.34, "km": 1000, "meter": 1, "yard": 0.9144},
                 newRecord: {},
                 host: "http://localhost:8080",
                 //host: ""
@@ -175,3 +190,5 @@
         }
     }
 </script>
+
+<style src="./assets/bootstrap.min.css"></style>

@@ -170,5 +170,5 @@
 }
 </script>
 
-<!--<style src="./assets/bootstrap.min.css"></style>-->
+<style src="./assets/bootstrap.min.css"></style>
 
