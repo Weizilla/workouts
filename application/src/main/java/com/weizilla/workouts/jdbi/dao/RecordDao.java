@@ -1,4 +1,4 @@
-package com.weizilla.workouts.jdbi;
+package com.weizilla.workouts.jdbi.dao;
 
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.store.RecordStore;

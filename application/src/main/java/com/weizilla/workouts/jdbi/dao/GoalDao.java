@@ -1,4 +1,4 @@
-package com.weizilla.workouts.jdbi;
+package com.weizilla.workouts.jdbi.dao;
 
 import com.weizilla.workouts.entity.Goal;
 import com.weizilla.workouts.store.GoalStore;

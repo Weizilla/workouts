@@ -1,4 +1,4 @@
-package com.weizilla.workouts.jdbi;
+package com.weizilla.workouts.jdbi.dbi;
 
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi.DBIFactory;

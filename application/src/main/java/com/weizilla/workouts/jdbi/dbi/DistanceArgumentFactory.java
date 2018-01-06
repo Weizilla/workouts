@@ -1,4 +1,4 @@
-package com.weizilla.workouts.jdbi;
+package com.weizilla.workouts.jdbi.dbi;
 
 import com.weizilla.distance.Distance;
 import org.skife.jdbi.v2.StatementContext;

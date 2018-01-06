@@ -5,6 +5,8 @@ import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.TestEntity;
+import com.weizilla.workouts.jdbi.dao.RecordDao;
+import com.weizilla.workouts.jdbi.dbi.DbiFactory;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.setup.Environment;
 import org.junit.Before;
