@@ -25,6 +25,7 @@ To see your applications health enter url `http://localhost:8081/healthcheck`
 ## To Do
 
 Product
+0. Figure out single or multiple Goals/Records per type per day
 0. Day stats
 0. Week stats
 1. Month stats

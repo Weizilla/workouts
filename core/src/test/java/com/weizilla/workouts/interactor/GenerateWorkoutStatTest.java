@@ -4,6 +4,7 @@ import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.entity.Goal;
 import com.weizilla.workouts.entity.ImmutableActivity;
+import com.weizilla.workouts.entity.ImmutableGoal;
 import com.weizilla.workouts.entity.ImmutableRecord;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.TestEntity;
@@ -22,6 +23,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.weizilla.workouts.entity.TestEntity.DATE;
 import static com.weizilla.workouts.entity.TestEntity.DISTANCE;
@@ -239,8 +241,6 @@ public class GenerateWorkoutStatTest {
 
     @Test
     public void combinesActivityDurationsIfMultipleMatches() {
-        record = ImmutableRecord.copyOf(record).withDuration(null);
-
         List<Activity> activities = new ArrayList<>();
         int totalDuration = 0;
         for (long i = 1; i < 10; i++) {
@@ -253,7 +253,6 @@ public class GenerateWorkoutStatTest {
         Duration expected = Duration.ofHours(totalDuration);
 
         garminStore.addAll(activities);
-        recordStore.add(record);
 
         List<Workout> workouts = generateWorkoutStat.get(DATE);
         assertThat(workouts).hasSize(1);
@@ -264,8 +263,6 @@ public class GenerateWorkoutStatTest {
 
     @Test
     public void combinesActivityDistancesIfMultipleMatches() {
-        record = ImmutableRecord.copyOf(record).withDistance(null);
-
         List<Activity> activities = new ArrayList<>();
         double totalDistance = 0;
         for (long i = 1; i < 10; i++) {
@@ -277,7 +274,6 @@ public class GenerateWorkoutStatTest {
         Distance expected = Distance.ofKilometers(totalDistance);
 
         garminStore.addAll(activities);
-        recordStore.add(record);
 
         List<Workout> workouts = generateWorkoutStat.get(DATE);
         assertThat(workouts).hasSize(1);
@@ -285,7 +281,53 @@ public class GenerateWorkoutStatTest {
         Workout workout = workouts.get(0);
         WorkoutAssert.assertThat(workout).hasTotalDistance(expected);
     }
-//
+
+    @Test
+    public void combinesGoalDurationsIfMultipleMatches() throws Exception {
+        List<Goal> goals = new ArrayList<>();
+        int totalDuration = 0;
+        for (long i = 1; i < 10; i++) {
+            Goal multiple = ImmutableGoal.copyOf(goal)
+                .withId(UUID.randomUUID())
+                .withDuration(Duration.ofHours(i));
+            goals.add(multiple);
+            totalDuration += i;
+        }
+        Duration expected = Duration.ofHours(totalDuration);
+
+        goalStore.addAll(goals);
+
+        List<Workout> workouts = generateWorkoutStat.get(DATE);
+        assertThat(workouts).hasSize(1);
+
+        Workout workout = workouts.get(0);
+        WorkoutAssert.assertThat(workout).hasGoalDuration(expected);
+    }
+
+    @Test
+    public void combinesGoalDistancesIfMultipleMatches() {
+        List<Goal> goals = new ArrayList<>();
+        double totalDistance = 0;
+        for (long i = 1; i < 10; i++) {
+            Distance dist = Distance.ofKilometers(i);
+            Goal multiple = ImmutableGoal.copyOf(goal)
+                .withId(UUID.randomUUID())
+                .withDistance(dist);
+            goals.add(multiple);
+            totalDistance += i;
+        }
+        Distance expected = Distance.ofKilometers(totalDistance);
+
+        goalStore.addAll(goals);
+
+        List<Workout> workouts = generateWorkoutStat.get(DATE);
+        assertThat(workouts).hasSize(1);
+
+        Workout workout = workouts.get(0);
+        WorkoutAssert.assertThat(workout).hasGoalDistance(expected);
+    }
+
+    //
 //    @Test
 //    public void useEarliestStartDateFromActivities() {
 //

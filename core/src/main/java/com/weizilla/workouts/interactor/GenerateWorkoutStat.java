@@ -107,6 +107,14 @@ public class GenerateWorkoutStat {
                 .map(Activity::getDistance)
                 .reduce(Distance::plus).orElse(null);
 
+        Duration goalDuration = goals.stream()
+            .map(Goal::getDuration)
+            .reduce(Duration::plus).orElse(null);
+
+        Distance goalDistance = goals.stream()
+            .map(Goal::getDistance)
+            .reduce(Distance::plus).orElse(null);
+
         Workout workout = ImmutableWorkout.builder()
             .record(record)
             .type(type)
@@ -114,6 +122,8 @@ public class GenerateWorkoutStat {
             .goal(goal)
             .totalDuration(totalDuration)
             .totalDistance(totalDistance)
+            .goalDuration(goalDuration)
+            .goalDistance(goalDistance)
             .addAllActivities(activities)
             .build();
 
