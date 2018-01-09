@@ -61,5 +61,6 @@ Packaging and deployment
 8. Https
 
 Testing
+0. Fix local integration test errors with address in use. Put Int tests in surefire int maven goal? 
 1. Integration tests w/ web ui
 2. Combine JS and Java code coverage in Coveralls.io
