@@ -8,6 +8,7 @@ import org.immutables.value.Value.Default;
 import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.immutables.value.Value.Immutable;
@@ -29,18 +30,13 @@ public interface Workout extends Entry<UUID> {
 
     List<Activity> getActivities();
 
-    @Nullable
-    Goal getGoal();
+    Optional<Goal> getGoal();
 
-    @Nullable
-    Distance getTotalDistance();
+    Optional<Distance> getTotalDistance();
 
-    @Nullable
-    Duration getTotalDuration();
+    Optional<Duration> getTotalDuration();
 
-    @Nullable
-    Distance getGoalDistance();
+    Optional<Distance> getGoalDistance();
 
-    @Nullable
-    Duration getGoalDuration();
+    Optional<Duration> getGoalDuration();
 }
