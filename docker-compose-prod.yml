@@ -7,6 +7,6 @@ services:
     volumes:
       - /data:/data
     environment:
-      GARMIN_USERNAME:
-      GARMIN_PASSWORD:
+      - GARMIN_USERNAME
+      - GARMIN_PASSWORD
 
