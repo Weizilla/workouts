@@ -8,13 +8,11 @@ import Goals from './Goals.vue';
 import 'moment';
 import 'moment-timezone';
 import VueResource from 'vue-resource'
-
-function utcToChicago(utcDateTime) {
-    return moment.tz(utcDateTime, "UTC").clone().tz("America/Chicago").format();
-}
+import mixins from './mixins';
 
 Vue.use(VueResource);
 Vue.use(VueRouter);
+Vue.mixin(mixins);
 
 const routes = [
     { path: '/records', component: Records},

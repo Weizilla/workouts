@@ -132,14 +132,12 @@
                 types: [],
                 distanceUnits: {"mile": 1609.34, "km": 1000, "meter": 1, "yard": 0.9144},
                 newRecord: {},
-                host: "http://localhost:8080",
-                //host: ""
             };
         },
         created: function () {
-            this.$http.get(this.host + "/api/build").then(response => {
+            this.$http.get(this.host() + "/api/build").then(response => {
                 let buildInfo = response.data;
-                this.buildTime = utcToChicago(buildInfo["git.build.time"]);
+                this.buildTime = this.utcToChicago(buildInfo["git.build.time"]);
                 this.commitId = buildInfo["git.commit.id.abbrev"];
             }, response => {
                 let msg = "Error: " + response;
@@ -149,7 +147,7 @@
         },
         methods: {
             refreshRecords: function () {
-                this.$http.get(this.host + "/api/records/").then(response => {
+                this.$http.get(this.host() + "/api/records/").then(response => {
                     this.records = response.data;
                     this.message = "Got " + this.records.length + " records";
                 }, response => {
@@ -177,7 +175,7 @@
                     comment: this.newRecord['comment']
                 };
                 console.log(JSON.stringify(postData));
-                this.$http.post(this.host + "/api/records/", postData).then(response => {
+                this.$http.post(this.host() + "/api/records/", postData).then(response => {
                     let newRecord = response.data;
                     console.log("Added record: ", newRecord);
                     this.refreshRecords();

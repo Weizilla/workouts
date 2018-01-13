@@ -92,14 +92,12 @@
                 newRecordDistanceUnit: null,
                 newRecordRating: null,
                 newRecordComment: null,
-                host: "http://localhost:8080",
-                //host: ""
             };
     },
     created: function () {
-        this.$http.get(this.host + "/api/build").then(response => {
+        this.$http.get(this.host() + "/api/build").then(response => {
             let buildInfo = response.data;
-            this.buildTime = utcToChicago(buildInfo["git.build.time"]);
+            this.buildTime = this.utcToChicago(buildInfo["git.build.time"]);
             this.commitId = buildInfo["git.commit.id.abbrev"];
         }, response => {
             let msg = "Error: " + response;
@@ -109,12 +107,12 @@
     },
     methods: {
         updateGarmin: function () {
-            this.$http.get(this.host + "/api/activities/update").then(response => {
+            this.$http.get(this.host() + "/api/activities/update").then(response => {
                 this.message = response.data;
             })
         },
         refreshGarmin: function () {
-            this.$http.get(this.host + "/api/activities/").then(response => {
+            this.$http.get(this.host() + "/api/activities/").then(response => {
                 this.activities = response.data;
                 this.message = "Got " + this.activities.length + " activities";
             }, response => {
@@ -124,7 +122,7 @@
             })
         },
         refreshRecords: function () {
-            this.$http.get(this.host + "/api/records/").then(response => {
+            this.$http.get(this.host() + "/api/records/").then(response => {
                 this.records = response.data;
                 this.message = "Got " + this.records.length + " records";
             }, response => {
@@ -146,7 +144,7 @@
                 comment: this.newRecordComment
             };
             console.log(JSON.stringify(postData));
-            this.$http.post(this.host + "/api/records/", postData).then(response => {
+            this.$http.post(this.host() + "/api/records/", postData).then(response => {
                 let newRecord = response.data;
                 console.log("Added record: ", newRecord);
                 this.refreshRecords();
@@ -157,7 +155,7 @@
             });
         },
         refreshWorkouts: function () {
-            this.$http.get(this.host + "/api/workouts").then(response => {
+            this.$http.get(this.host() + "/api/workouts").then(response => {
                 this.workouts = response.data;
                 this.message = "Got " + this.workouts.length + " workouts";
             }, response => {

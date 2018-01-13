@@ -121,14 +121,12 @@
                 types: [],
                 distanceUnits: {"mile": 1609.34, "km": 1000, "meter": 1, "yard": 0.9144},
                 newGoal: {},
-                host: "http://localhost:8080",
-                //host: ""
             };
         },
         created: function () {
-            this.$http.get(this.host + "/api/build").then(response => {
+            this.$http.get(this.host() + "/api/build").then(response => {
                 let buildInfo = response.data;
-                this.buildTime = utcToChicago(buildInfo["git.build.time"]);
+                this.buildTime = this.utcToChicago(buildInfo["git.build.time"]);
                 this.commitId = buildInfo["git.commit.id.abbrev"];
             }, response => {
                 let msg = "Error: " + response;
@@ -138,7 +136,7 @@
         },
         methods: {
             refreshGoals: function () {
-                this.$http.get(this.host + "/api/goals/").then(response => {
+                this.$http.get(this.host() + "/api/goals/").then(response => {
                     this.goals = response.data;
                     this.message = "Got " + this.goals.length + " goals";
                 }, response => {
@@ -166,7 +164,7 @@
                     notes: this.newGoal['notes']
                 };
                 console.log(JSON.stringify(postData));
-                this.$http.post(this.host + "/api/goals/", postData).then(response => {
+                this.$http.post(this.host() + "/api/goals/", postData).then(response => {
                     let newGoal = response.data;
                     console.log("Added goal: ", newGoal);
                     this.refreshGoals();
