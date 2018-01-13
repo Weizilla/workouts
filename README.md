@@ -65,3 +65,4 @@ Testing
 0. Fix local integration test errors with address in use. Put Int tests in surefire int maven goal? 
 1. Integration tests w/ web ui
 2. Combine JS and Java code coverage in Coveralls.io
+3. Fix coveralls error: `[ERROR] Failed to execute goal org.eluder.coveralls:coveralls-maven-plugin:4.3.0:report (default-cli) on project workouts: I/O operation failed: No source found for com/weizilla/workouts/entity/ImmutableActivity.java -> [Help 1]`
