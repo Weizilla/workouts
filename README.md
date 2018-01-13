@@ -49,9 +49,10 @@ UI
 6. Show calendar for adding records
 7. Radio button for rating
 8. Edit and delete goals, workouts
+9. Keep previous data when changing tabs
 
 Packaging and deployment
-1. Configure hitting localhost:8080 running local, no host when packaged
+1. Use same index.html in web folder and dropwizard folder
 2. Fix deploy script. Needs Garmin credentials as env var which isn't passed into ssh remote command
 3. Import workout logger data
 4. Monitor daily export 
