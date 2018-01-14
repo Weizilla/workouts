@@ -7,20 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<div id="app">
-  MAIN APP
-  <p>
-    <router-link to="/">Home</router-link>
-  </p>
-  <p>
-    <router-link to="/records">Records</router-link>
-  </p>
-  <p>
-    <router-link to="/goals">Goals</router-link>
-  </p>
-
-  <router-view></router-view>
-    <!-- Dropwizard only version which uses "build.js" in same directory -->
-    <script src="/build.js"></script>
-  </body>
+  <div id="app" class="container-fluid">
+    <navbar></navbar>
+    <router-view></router-view>
+    <buildinfo></buildinfo>
+  </div>
+  <!-- Dropwizard only version which uses "build.js" in same directory -->
+  <script src="/build.js"></script>
+</body>
 </html>
