@@ -6,6 +6,8 @@ import com.weizilla.workouts.interactor.DeleteGoal;
 import com.weizilla.workouts.interactor.GetGoals;
 import com.weizilla.workouts.interactor.UpdateGoal;
 import io.dropwizard.jersey.jsr310.LocalDateParam;
+import io.dropwizard.jersey.params.AbstractParam;
+import io.dropwizard.jersey.params.IntParam;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,9 +22,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Path("/goals/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -50,8 +55,21 @@ public class GoalResource {
     }
 
     @GET
-    public List<Goal> getByDate(@QueryParam("date") Optional<LocalDateParam> date) {
-        return date.map(d -> getGoals.get(d.get())).orElseGet(getGoals::getAll);
+    public Map<LocalDate, List<Goal>> getByDate(
+            @QueryParam("date") Optional<LocalDateParam> date,
+            @QueryParam("numDays") Optional<IntParam> numDays) {
+
+        List<Goal> goals;
+        if (date.isPresent() || numDays.isPresent()) {
+            LocalDate startDate = date.map(LocalDateParam::get).orElse(LocalDate.now());
+            int num = numDays.map(AbstractParam::get).orElse(1);
+            goals = getGoals.get(startDate, num);
+        } else {
+            goals = getGoals.getAll();
+        }
+
+        return goals.stream()
+            .collect(Collectors.groupingBy(Goal::getDate, Collectors.toList()));
     }
 
     @GET

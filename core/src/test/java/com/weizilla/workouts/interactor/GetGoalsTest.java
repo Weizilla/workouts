@@ -41,13 +41,13 @@ public class GetGoalsTest {
     @Test
     public void getShouldReturnPlanByDate() throws Exception {
         goalStore.add(goal);
-        List<Goal> actual = getGoals.get(DATE);
+        List<Goal> actual = getGoals.get(DATE, 1);
         assertThat(actual).containsExactly(goal);
     }
 
     @Test
     public void getShouldReturnEmptyListIfNoPlansFound() throws Exception {
-        List<Goal> actual = getGoals.get(DATE);
+        List<Goal> actual = getGoals.get(DATE, 1);
         assertThat(actual).isEmpty();
     }
 

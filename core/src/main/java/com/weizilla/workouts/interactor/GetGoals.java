@@ -8,6 +8,8 @@ import javax.inject.Singleton;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Singleton
 public class GetGoals {
@@ -22,8 +24,11 @@ public class GetGoals {
         return store.get(id);
     }
 
-    public List<Goal> get(LocalDate date) {
-        return store.get(date);
+    public List<Goal> get(LocalDate date, int numDays) {
+        return IntStream.range(0, numDays)
+            .mapToObj(date::plusDays)
+            .flatMap(d -> store.get(d).stream())
+            .collect(Collectors.toList());
     }
 
     public List<Goal> getAll() {

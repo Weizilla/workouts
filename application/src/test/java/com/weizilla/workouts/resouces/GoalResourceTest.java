@@ -8,6 +8,7 @@ import com.weizilla.workouts.interactor.CreateGoal;
 import com.weizilla.workouts.interactor.DeleteGoal;
 import com.weizilla.workouts.interactor.GetGoals;
 import com.weizilla.workouts.interactor.UpdateGoal;
+import com.weizilla.workouts.test.TestUtils;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
 import org.junit.ClassRule;
@@ -17,7 +18,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static com.weizilla.workouts.entity.TestEntity.DATE;
 import static com.weizilla.workouts.entity.TestEntity.GOAL_ID;
@@ -60,25 +63,25 @@ public class GoalResourceTest {
     public void getsAllGoals() throws Exception {
         when(GET_GOALS.getAll()).thenReturn(singletonList(GOAL));
         String jsonResult = RESOURCES.target("/goals").request().get(String.class);
-        List<Goal> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TYPE_REF);
-        assertThat(results).containsExactly(GOAL);
+        Map<LocalDate, List<Goal>> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TestUtils.MAP_GOALS);
+        assertThat(results).containsEntry(DATE, singletonList(GOAL));
     }
 
     @Test
     public void getsGoalByDate() throws Exception {
-        when(GET_GOALS.get(DATE)).thenReturn(singletonList(GOAL));
+        when(GET_GOALS.get(DATE, 1)).thenReturn(singletonList(GOAL));
 
         String jsonResult = RESOURCES.target("/goals")
             .queryParam("date", DATE).request().get(String.class);
-        List<Goal> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TYPE_REF);
-        assertThat(results).containsExactly(GOAL);
+        Map<LocalDate, List<Goal>> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TestUtils.MAP_GOALS);
+        assertThat(results).containsEntry(DATE, singletonList(GOAL));
     }
 
     @Test
     public void getsGoalById() throws Exception {
         when(GET_GOALS.get(GOAL_ID)).thenReturn(GOAL);
 
-        String jsonResult = RESOURCES.target("/goals/" + GOAL_ID).request().get(String.class);
+        String jsonResult = RESOURCES.target("/goals/").path(GOAL_ID.toString()).request().get(String.class);
         Goal result = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, Goal.class);
         assertThat(result).isEqualTo(GOAL);
     }
@@ -93,7 +96,7 @@ public class GoalResourceTest {
 
     @Test
     public void deletesGoal() throws Exception {
-        RESOURCES.target("/goals/" + GOAL_ID).request().delete();
+        RESOURCES.target("/goals/").path(GOAL_ID.toString()).request().delete();
 
         verify(DELETE_GOAL).delete(GOAL_ID);
     }
