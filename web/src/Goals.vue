@@ -27,11 +27,13 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-sm-2" for="newGoalTimeOfDay">Time Of Day</label>
-          <div class="col-sm-10">
-            <div class="form-check">
-              <input id="newGoalTimeOfDay" class="form-control form-check-input" type="text" v-model="newGoal['timeOfDay']">
-            </div>
+          <label class="col-2">Time</label>
+          <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
+            <template v-for="timeOfDay in timesOfDay">
+              <label class="btn form-control btn-secondary" v-bind:class="newGoal['timeOfDay'] === timeOfDay ? 'active' : ''">
+                <input type="radio" name="options" v-model="newGoal['timeOfDay']" v-bind:value="timeOfDay">{{timeOfDay}}
+              </label>
+            </template>
           </div>
         </div>
 
@@ -46,22 +48,23 @@
             <input id="newGoalDurationMin" class="form-control" type="number" v-model="newGoal['durationMin']">
 
             <div class="input-group-append">
-              <span class="input-group-text">Sec</span>
+              <span class="input-group-text">Min</span>
             </div>
           </div>
         </div>
 
         <div class="form-group row">
           <label class="col-2 col-form-label" for="newGoalDistanceValue">Distance</label>
-          <div class="col">
+          <div class="col-10 input-group">
             <input id="newGoalDistanceValue" class="form-control" type="number"
                 v-model="newGoal['distanceValue']">
-          </div>
-          <div class="col-auto">
-            <div class="form-check form-check-inline" v-for="(m, unit) in distanceUnits">
-              <input class="form-check-input" type="radio" name="units" v-model="newGoal['distanceUnit']" v-bind:value="unit">
-              <label class="form-check-label">{{ unit }}</label>
-            </div>
+            <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
+                <template v-for="(m, unit) in distanceUnits">
+                  <label class="btn form-control btn-secondary" v-bind:class="newGoal['distanceUnit'] === unit ? 'active' : ''">
+                    <input type="radio" name="options" v-model="newGoal['distanceUnit']" v-bind:value="unit">{{unit}}
+                  </label>
+                </template>
+              </div>
           </div>
         </div>
 
@@ -117,7 +120,8 @@
                 message: "Started",
                 goals: [],
                 types: [],
-                distanceUnits: {"mile": 1609.34, "km": 1000, "meter": 1, "yard": 0.9144},
+                timesOfDay: ["Morning", "Afternoon", "Evening"],
+                distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
                 newGoal: {},
             };
         },
@@ -144,7 +148,7 @@
                 let postData = {
                     type: this.newGoal['type'],
                     date: moment(this.newGoal['date']).format("YYYY-MM-DD"),
-                    timeOfDay: this.newGoal['timeOfDay'],
+                    timeOfDay: this.newGoal['timeOfDay'].toUpperCase(),
                     rating: this.newGoal['rating'],
                     duration: duration,
                     distance: distance,

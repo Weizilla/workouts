@@ -19,12 +19,14 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-sm-2" for="newRecordOutdoor">Outdoor</label>
-          <div class="col-sm-10">
-            <div class="form-check">
-              <input id="newRecordOutdoor" class="form-control form-check-input" type="checkbox" v-model="newRecord['outdoor']">
-              <label class="form-check-label" for="newRecordOutdoor">True</label>
-            </div>
+          <label class="col-2 col-form-label">Outdoor</label>
+          <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn form-control btn-secondary" v-bind:class="newRecord['outdoor'] === 'true' ? 'active' : ''">
+              <input type="radio" name="options" v-model="newRecord['outdoor']" value="true">Outside
+            </label>
+            <label class="btn form-control btn-secondary" v-bind:class="newRecord['outdoor'] === 'false' ? 'active' : ''">
+              <input type="radio" name="options" v-model="newRecord['outdoor']" value="false">Inside
+            </label>
           </div>
         </div>
 
@@ -37,10 +39,13 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-2 col-form-label" for="newRecordRating">Rating (1-5)</label>
-          <div class="col-10">
-            <input id="newRecordRating" class="form-control" type="number"
-                v-model="newRecord['rating']">
+          <label class="col-2 col-form-label">Rating</label>
+          <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
+            <template v-for="n in 5">
+              <label class="btn form-control btn-secondary" v-bind:class="newRecord['rating'] === n ? 'active' : ''">
+                <input type="radio" name="options" v-model="newRecord['rating']" v-bind:value="n">{{n}}
+              </label>
+            </template>
           </div>
         </div>
 
@@ -55,21 +60,23 @@
             <input id="newRecordDurationMin" class="form-control" type="number" v-model="newRecord['durationMin']">
 
             <div class="input-group-append">
-              <span class="input-group-text">Sec</span>
+              <span class="input-group-text">Min</span>
             </div>
           </div>
         </div>
 
         <div class="form-group row">
           <label class="col-2 col-form-label" for="newRecordDistanceValue">Distance</label>
-          <div class="col">
+          <div class="col-10 input-group">
             <input id="newRecordDistanceValue" class="form-control" type="number"
                 v-model="newRecord['distanceValue']">
-          </div>
-          <div class="col-auto">
-            <div class="form-check form-check-inline" v-for="(m, unit) in distanceUnits">
-              <input class="form-check-input" type="radio" name="units" v-model="newRecord['distanceUnit']" v-bind:value="unit">
-              <label class="form-check-label">{{ unit }}</label>
+
+          <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
+              <template v-for="(m, unit) in distanceUnits">
+                <label class="btn form-control btn-secondary" v-bind:class="newRecord['distanceUnit'] === unit ? 'active' : ''">
+                  <input type="radio" name="options" v-model="newRecord['distanceUnit']" v-bind:value="unit">{{unit}}
+                </label>
+              </template>
             </div>
           </div>
         </div>
@@ -128,7 +135,7 @@
                 message: "Started",
                 records: [],
                 types: [],
-                distanceUnits: {"mile": 1609.34, "km": 1000, "meter": 1, "yard": 0.9144},
+                distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
                 newRecord: {},
             };
         },
@@ -154,7 +161,7 @@
 
                 let postData = {
                     type: this.newRecord['type'],
-                    outdoor: this.newRecord['outdoor'] === true,
+                    outdoor: this.newRecord['outdoor'] === 'true',
                     date: moment(this.newRecord['date']).format("YYYY-MM-DD"),
                     rating: this.newRecord['rating'],
                     duration: duration,
