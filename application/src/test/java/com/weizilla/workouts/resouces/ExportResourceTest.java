@@ -2,11 +2,14 @@ package com.weizilla.workouts.resouces;
 
 import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.entity.Export;
+import com.weizilla.workouts.entity.Goal;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.TestEntity;
 import com.weizilla.workouts.store.GarminStore;
+import com.weizilla.workouts.store.GoalStore;
 import com.weizilla.workouts.store.MemoryGarminStore;
+import com.weizilla.workouts.store.MemoryGoalStore;
 import com.weizilla.workouts.store.MemoryRecordStore;
 import com.weizilla.workouts.store.RecordStore;
 import io.dropwizard.testing.junit.ResourceTestRule;
@@ -21,12 +24,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExportResourceTest {
     private static final Activity ACTIVITY = TestEntity.createActivity();
     private static final Record RECORD = TestEntity.createRecord();
+    private static final Goal GOAL = TestEntity.createGoal();
     private static final GarminStore GARMIN_STORE = new MemoryGarminStore();
     private static final RecordStore RECORD_STORE = new MemoryRecordStore();
+    private static final GoalStore GOAL_STORE = new MemoryGoalStore();
 
     @ClassRule
     public static final ResourceTestRule RESOURCES = ResourceTestRule.builder()
-        .addResource(new ExportResource(GARMIN_STORE, RECORD_STORE))
+        .addResource(new ExportResource(GOAL_STORE, GARMIN_STORE, RECORD_STORE))
         .setMapper(ObjectMappers.OBJECT_MAPPER)
         .build();
 
@@ -34,12 +39,14 @@ public class ExportResourceTest {
     public static void setUp() throws Exception {
         GARMIN_STORE.add(ACTIVITY);
         RECORD_STORE.add(RECORD);
+        GOAL_STORE.add(GOAL);
     }
 
     @Test
     public void getsAllDataForExport() throws Exception {
         Instant now = Instant.now();
         Export export = RESOURCES.target("/export").request().get(Export.class);
+        assertThat(export.getGoals()).containsExactly(GOAL);
         assertThat(export.getActivities()).containsExactly(ACTIVITY);
         assertThat(export.getRecords()).containsExactly(RECORD);
         assertThat(export.getGenerated()).isBetween(now.minusSeconds(10), now.plusSeconds(10));
