@@ -16,6 +16,7 @@ import com.weizilla.workouts.resouces.BuildResource;
 import com.weizilla.workouts.resouces.ExportResource;
 import com.weizilla.workouts.resouces.GoalResource;
 import com.weizilla.workouts.resouces.RecordResource;
+import com.weizilla.workouts.resouces.TypesResource;
 import com.weizilla.workouts.resouces.WorkoutResource;
 import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
@@ -91,6 +92,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         Injector injector = Guice.createInjector(module);
         environment.jersey().register(injector.getInstance(ActivityResource.class));
         environment.jersey().register(injector.getInstance(RecordResource.class));
+        environment.jersey().register(injector.getInstance(TypesResource.class));
         environment.jersey().register(injector.getInstance(ExportResource.class));
         environment.jersey().register(injector.getInstance(WorkoutResource.class));
         environment.jersey().register(injector.getInstance(GoalResource.class));

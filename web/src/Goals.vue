@@ -5,12 +5,13 @@
       <form v-on:submit.prevent>
         <div class="form-group row">
           <label class="col-2" for="newGoalType">Type</label>
-          <div class="col-10" id="newGoalType">
-            <div class="radio" v-for="type in types">
-              <label>
-                <input type="radio" name="types" v-model="newGoal['type']" v-bind:value="type">
-                {{ type }}
-              </label>
+          <div class="col-10">
+            <div class="btn-group-vertical btn-block btn-group-toggle" data-toggle="buttons" id="newGoalType">
+              <template v-for="type in types">
+                <label class="btn form-control btn-secondary" v-bind:class="newGoal['type'] === type ? 'active' : ''">
+                  <input type="radio" name="types" v-model="newGoal['type']" v-bind:value="type">{{ type }}
+                </label>
+              </template>
             </div>
             <div>
               <input class="form-control" type="text" v-model="newGoal['type']">
@@ -124,6 +125,16 @@
                 distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
                 newGoal: {},
             };
+        },
+        created: function() {
+            this.$http.get(this.host() + "/api/types/").then(response => {
+                this.types = response.data;
+                this.message = "Got " + this.types.length + " types";
+            }, response => {
+                let msg = "Error: " + response;
+                console.log(msg);
+                this.message = msg;
+            })
         },
         methods: {
             refreshGoals: function () {

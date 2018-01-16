@@ -5,13 +5,14 @@
       <form v-on:submit.prevent>
         <div class="form-group row">
           <label class="col-2" for="newRecordType">Type</label>
-          <div class="col-10" id="newRecordType">
-            <div class="radio" v-for="type in types">
-              <label>
-                <input type="radio" name="types" v-model="newRecord['type']" v-bind:value="type">
-                {{ type }}
+          <div class="col-10">
+           <div class="btn-group-vertical btn-block btn-group-toggle" data-toggle="buttons" id="newRecordType">
+            <template v-for="type in types">
+              <label class="btn form-control btn-secondary" v-bind:class="newRecord['type'] === type ? 'active' : ''">
+                <input type="radio" name="types" v-model="newRecord['type']" v-bind:value="type">{{ type }}
               </label>
-            </div>
+            </template>
+           </div>
             <div>
               <input class="form-control" type="text" v-model="newRecord['type']">
             </div>
@@ -134,10 +135,20 @@
             return {
                 message: "Started",
                 records: [],
-                types: [],
+                types: ["swim", "bike", "run"],
                 distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
                 newRecord: {},
             };
+        },
+        created: function() {
+            this.$http.get(this.host() + "/api/types/").then(response => {
+                this.types = response.data;
+                this.message = "Got " + this.types.length + " types";
+            }, response => {
+                let msg = "Error: " + response;
+                console.log(msg);
+                this.message = msg;
+            })
         },
         methods: {
             refreshRecords: function () {
