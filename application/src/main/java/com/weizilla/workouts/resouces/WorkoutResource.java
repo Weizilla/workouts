@@ -1,6 +1,6 @@
 package com.weizilla.workouts.resouces;
 
-import com.weizilla.workouts.entity.Workout;
+import com.weizilla.workouts.entity.WorkoutStat;
 import com.weizilla.workouts.interactor.GenerateWorkoutStat;
 import io.dropwizard.jersey.jsr310.LocalDateParam;
 
@@ -28,7 +28,7 @@ public class WorkoutResource {
     }
 
     @GET
-    public List<Workout> get(@QueryParam("date") Optional<LocalDateParam> date) {
+    public List<WorkoutStat> get(@QueryParam("date") Optional<LocalDateParam> date) {
         return date.map(d -> generateWorkoutStat.get(d.get())).orElse(generateWorkoutStat.getAll());
     }
 }

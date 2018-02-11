@@ -3,10 +3,11 @@ package com.weizilla.workouts.interactor;
 import com.google.common.collect.Sets;
 import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
+import com.weizilla.workouts.entity.Completion;
 import com.weizilla.workouts.entity.Goal;
-import com.weizilla.workouts.entity.ImmutableWorkout;
+import com.weizilla.workouts.entity.ImmutableWorkoutStat;
 import com.weizilla.workouts.entity.Record;
-import com.weizilla.workouts.entity.Workout;
+import com.weizilla.workouts.entity.WorkoutStat;
 import com.weizilla.workouts.store.GarminStore;
 import com.weizilla.workouts.store.GoalStore;
 import com.weizilla.workouts.store.RecordStore;
@@ -17,10 +18,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -32,15 +33,18 @@ public class GenerateWorkoutStat {
     private final RecordStore recordStore;
     private final GarminStore garminStore;
     private final GoalStore goalStore;
+    private final CompletionCalculator completionCalculator;
 
     @Inject
-    public GenerateWorkoutStat(RecordStore recordStore, GarminStore garminStore, GoalStore goalStore) {
+    public GenerateWorkoutStat(RecordStore recordStore, GarminStore garminStore, GoalStore goalStore,
+            CompletionCalculator completionCalculator) {
         this.recordStore = recordStore;
         this.garminStore = garminStore;
         this.goalStore = goalStore;
+        this.completionCalculator = completionCalculator;
     }
 
-    public List<Workout> getAll() {
+    public List<WorkoutStat> getAll() {
         Set<LocalDate> allDates = new TreeSet<>();
         recordStore.getAll().stream()
             .map(Record::getDate)
@@ -57,7 +61,7 @@ public class GenerateWorkoutStat {
             .collect(Collectors.toList());
     }
 
-    public List<Workout> get(LocalDate date) {
+    public List<WorkoutStat> get(LocalDate date) {
         Map<String, List<Record>> records = recordStore.get(date).stream()
             .collect(Collectors.groupingBy(Record::getType, Collectors.toList()));
         Map<String, List<Activity>> activities = garminStore.get(date).stream()
@@ -67,7 +71,7 @@ public class GenerateWorkoutStat {
 
         Set<String> allTypes = Sets.union(Sets.union(records.keySet(), activities.keySet()), goals.keySet());
 
-        List<Workout> workouts = allTypes.stream()
+        List<WorkoutStat> workouts = allTypes.stream()
             .map(t -> create(t, date,
                 records.getOrDefault(t, Collections.emptyList()),
                 activities.getOrDefault(t, Collections.emptyList()),
@@ -78,7 +82,7 @@ public class GenerateWorkoutStat {
         return workouts;
     }
 
-    private static Optional<Workout> create(String type, LocalDate date,
+    private Optional<WorkoutStat> create(String type, LocalDate date,
             List<Record> records, List<Activity> activities, List<Goal> goals) {
 
         if (records.isEmpty() && activities.isEmpty() && goals.isEmpty()) {
@@ -109,17 +113,22 @@ public class GenerateWorkoutStat {
 
         Duration goalDuration = goals.stream()
             .map(Goal::getDuration)
+            .filter(Objects::nonNull)
             .reduce(Duration::plus).orElse(null);
 
         Distance goalDistance = goals.stream()
             .map(Goal::getDistance)
+            .filter(Objects::nonNull)
             .reduce(Distance::plus).orElse(null);
 
-        Workout workout = ImmutableWorkout.builder()
+        Completion completion = completionCalculator.calculate(goal, totalDuration, totalDistance);
+
+        WorkoutStat workout = ImmutableWorkoutStat.builder()
             .record(record)
             .type(type)
             .date(date)
             .goal(goal)
+            .completion(completion)
             .totalDuration(totalDuration)
             .totalDistance(totalDistance)
             .goalDuration(goalDuration)
@@ -128,9 +137,5 @@ public class GenerateWorkoutStat {
             .build();
 
         return Optional.of(workout);
-    }
-
-    private static boolean isNullOrEmpty(Collection<?> collection) {
-        return collection == null || collection.isEmpty();
     }
 }

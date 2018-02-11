@@ -25,6 +25,7 @@ public class TestEntity {
     public static final String COMMENT = "COMMENT";
     public static final String NOTES = "NOTES";
     public static final TimeOfDay TIME_OF_DAY = TimeOfDay.MORNING;
+    public static final Completion COMPLETION = Completion.ALL;
 
     public static Record createRecord() {
         return ImmutableRecord.builder()
@@ -49,8 +50,8 @@ public class TestEntity {
             .build();
     }
 
-    public static Workout createWorkout() {
-        return ImmutableWorkout.builder()
+    public static WorkoutStat createWorkout() {
+        return ImmutableWorkoutStat.builder()
             .id(WORKOUT_ID)
             .type(TYPE)
             .date(DATE)
@@ -58,6 +59,7 @@ public class TestEntity {
             .totalDuration(DURATION)
             .goalDistance(GOAL_DISTANCE)
             .goalDuration(GOAL_DURATION)
+            .completion(COMPLETION)
             .addActivities(createActivity())
             .record(createRecord())
             .goal(createGoal())
@@ -73,6 +75,30 @@ public class TestEntity {
             .timeOfDay(TIME_OF_DAY)
             .distance(GOAL_DISTANCE)
             .duration(GOAL_DURATION)
+            .build();
+    }
+
+    public static Goal createGoal(LocalDate date) {
+        return ImmutableGoal.builder()
+            .id(GOAL_ID)
+            .type(TYPE)
+            .date(date)
+            .notes(NOTES)
+            .timeOfDay(TIME_OF_DAY)
+            .distance(GOAL_DISTANCE)
+            .duration(GOAL_DURATION)
+            .build();
+    }
+
+    public static Goal createGoal(Duration duration, Distance distance) {
+        return ImmutableGoal.builder()
+            .id(GOAL_ID)
+            .type(TYPE)
+            .date(DATE)
+            .notes(NOTES)
+            .timeOfDay(TIME_OF_DAY)
+            .distance(distance)
+            .duration(duration)
             .build();
     }
 }

@@ -13,10 +13,10 @@ import java.util.UUID;
 import static org.immutables.value.Value.Immutable;
 
 @Immutable
-@JsonSerialize(as = ImmutableWorkout.class)
-@JsonDeserialize(as = ImmutableWorkout.class)
+@JsonSerialize(as = ImmutableWorkoutStat.class)
+@JsonDeserialize(as = ImmutableWorkoutStat.class)
 @WorkoutsStyle
-public interface Workout extends Entry<UUID> {
+public interface WorkoutStat extends Entry<UUID> {
 
     @Default
     @Override
@@ -28,6 +28,8 @@ public interface Workout extends Entry<UUID> {
     Record getRecord();
 
     List<Activity> getActivities();
+
+    Completion getCompletion();
 
     @Nullable
     Goal getGoal();
