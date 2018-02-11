@@ -2,14 +2,13 @@ package com.weizilla.workouts.interactor;
 
 import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Completion;
-import com.weizilla.workouts.entity.Goal;
-import com.weizilla.workouts.entity.TestEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,8 +37,10 @@ public class CompletionCalculatorParameterTest {
 
     @Test
     public void testCalculator() {
-        Goal goal = TestEntity.createGoal(goalDuration, goalDistance);
-        Completion completion = calculator.calculate(goal, totalDuration, totalDistance);
+        Completion completion = calculator.calculate(Optional.ofNullable(goalDuration),
+            Optional.ofNullable(goalDistance),
+            Optional.ofNullable(totalDuration),
+            Optional.ofNullable( totalDistance));
         assertThat(completion).isEqualTo(expected);
     }
 

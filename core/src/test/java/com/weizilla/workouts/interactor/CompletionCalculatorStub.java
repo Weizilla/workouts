@@ -2,9 +2,9 @@ package com.weizilla.workouts.interactor;
 
 import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Completion;
-import com.weizilla.workouts.entity.Goal;
 
 import java.time.Duration;
+import java.util.Optional;
 
 public class CompletionCalculatorStub extends CompletionCalculator {
     private final Completion result;
@@ -14,7 +14,8 @@ public class CompletionCalculatorStub extends CompletionCalculator {
     }
 
     @Override
-    public Completion calculate(Goal goal, Duration actualDuration, Distance actualDistance) {
+    public Completion calculate(Optional<Duration> goalDuration, Optional<Distance> goalDistance,
+            Optional<Duration> actualDuration, Optional<Distance> actualDistance) {
         return result;
     }
 }

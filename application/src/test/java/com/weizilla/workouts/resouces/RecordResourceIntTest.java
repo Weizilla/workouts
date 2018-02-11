@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import static com.weizilla.workouts.entity.TestEntity.DATE;
 import static com.weizilla.workouts.entity.TestEntity.RECORD_ID;
@@ -63,6 +64,19 @@ public class RecordResourceIntTest {
         InputStream responseStream = (InputStream) response.getEntity();
         Record result = ObjectMappers.OBJECT_MAPPER.readValue(responseStream, Record.class);
         assertThat(result).isEqualTo(RECORD);
+    }
+
+    @Test
+    public void addsRecordWithoutOptinalValues() throws Exception {
+        Record withoutOptionals = ImmutableRecord.copyOf(RECORD)
+            .withDistance(Optional.empty())
+            .withDuration(Optional.empty());
+        Response response = client.target(baseUrl).request().post(toEntity(withoutOptionals));
+
+        assertThat(response.getStatus()).isEqualTo(SC_OK);
+        InputStream responseStream = (InputStream) response.getEntity();
+        Record result = ObjectMappers.OBJECT_MAPPER.readValue(responseStream, Record.class);
+        assertThat(result).isEqualTo(withoutOptionals);
     }
 
     @Test

@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -92,20 +91,27 @@ public class GenerateWorkoutStat {
             return Optional.empty();
         }
 
-        Goal goal = goals.isEmpty() ? null : goals.get(0);
+        Optional<Goal> goal = goals.isEmpty() ? Optional.empty() : Optional.of(goals.get(0));
         if (goals.size() > 1) {
             logger.warn("Can only match one goal per type for {}", date);
         }
 
-        //TODO maybe can use optional in builder?
-        Duration totalDuration = sumDuration(records, Record::getDuration)
-            .orElse(sumDuration(activities, Activity::getDuration).orElse(null));
-        Distance totalDistance = sumDistance(records, Record::getDistance)
-            .orElse(sumDistance(activities, Activity::getDistance).orElse(null));
-        Duration goalDuration = sumDuration(goals, Goal::getDuration).orElse(null);
-        Distance goalDistance = sumDistance(goals, Goal::getDistance).orElse(null);
+        Optional<Duration> totalDuration = sumDuration(records, Record::getDuration)
+            .map(Optional::of)
+            .orElse(sumDuration(activities, a -> Optional.of(a.getDuration())));
+        Optional<Distance> totalDistance = sumDistance(records, Record::getDistance)
+            .map(Optional::of)
+            .orElse(sumDistance(activities, a -> Optional.of(a.getDistance())));
 
-        Completion completion = completionCalculator.calculate(goal, totalDuration, totalDistance);
+        Optional<Duration> goalDuration = sumDuration(goals, Goal::getDuration);
+        Optional<Distance> goalDistance = sumDistance(goals, Goal::getDistance);
+
+        Completion completion;
+        if (date.isAfter(LocalDate.now())) {
+            completion = Completion.GOAL;
+        } else {
+            completion = completionCalculator.calculate(goalDuration, goalDistance, totalDuration, totalDistance);
+        }
 
         WorkoutStat workout = ImmutableWorkoutStat.builder()
             .records(records)
@@ -123,15 +129,15 @@ public class GenerateWorkoutStat {
         return Optional.of(workout);
     }
 
-    private static <T> Optional<Duration> sumDuration(Collection<T> collection, Function<T, Duration> mapper) {
+    private static <T> Optional<Duration> sumDuration(Collection<T> collection, Function<T, Optional<Duration>> mapper) {
         return sum(collection, mapper, Duration::plus);
     }
 
-    private static <T> Optional<Distance> sumDistance(Collection<T> collection, Function<T, Distance> mapper) {
+    private static <T> Optional<Distance> sumDistance(Collection<T> collection, Function<T, Optional<Distance>> mapper) {
         return sum(collection, mapper, Distance::plus);
     }
 
-    private static <T, R> Optional<R> sum(Collection<T> collection, Function<T, R> extractFunction,
+    private static <T, R> Optional<R> sum(Collection<T> collection, Function<T, Optional<R>> extractFunction,
             BinaryOperator<R> accumulator) {
         if (collection == null || collection.isEmpty()) {
             return Optional.empty();
@@ -139,7 +145,8 @@ public class GenerateWorkoutStat {
 
         return collection.stream()
             .map(extractFunction)
-            .filter(Objects::nonNull)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .reduce(accumulator);
     }
 }

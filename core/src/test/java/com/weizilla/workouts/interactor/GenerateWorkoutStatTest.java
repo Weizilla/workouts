@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.weizilla.workouts.entity.TestEntity.DATE;
@@ -114,7 +115,7 @@ public class GenerateWorkoutStatTest {
         WorkoutStat workout = workouts.get(0);
         WorkoutStatAssert.assertThat(workout).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
-        WorkoutStatAssert.assertThat(workout).hasGoal(goal);
+        WorkoutStatAssert.assertThat(workout).hasGoal(Optional.of(goal));
     }
 
     @Test
@@ -131,7 +132,7 @@ public class GenerateWorkoutStatTest {
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
         WorkoutStatAssert.assertThat(workout).hasOnlyRecords(record);
         WorkoutStatAssert.assertThat(workout).hasOnlyActivities(activity);
-        WorkoutStatAssert.assertThat(workout).hasGoal(goal);
+        WorkoutStatAssert.assertThat(workout).hasGoal(Optional.of(goal));
     }
 
     @Test
@@ -149,14 +150,14 @@ public class GenerateWorkoutStatTest {
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
         WorkoutStatAssert.assertThat(workout).hasOnlyRecords(newType);
         WorkoutStatAssert.assertThat(workout).hasNoActivities();
-        WorkoutStatAssert.assertThat(workout).hasGoal(null);
+        WorkoutStatAssert.assertThat(workout).hasGoal(Optional.empty());
 
         WorkoutStat workout2 = workouts.get(1);
         WorkoutStatAssert.assertThat(workout2).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout2).hasDate(DATE);
         WorkoutStatAssert.assertThat(workout2).hasNoRecords();
         WorkoutStatAssert.assertThat(workout2).hasOnlyActivities(activity);
-        WorkoutStatAssert.assertThat(workout2).hasGoal(goal);
+        WorkoutStatAssert.assertThat(workout2).hasGoal(Optional.of(goal));
     }
 
     @Test
@@ -175,14 +176,14 @@ public class GenerateWorkoutStatTest {
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
         WorkoutStatAssert.assertThat(workout).hasNoRecords();
         WorkoutStatAssert.assertThat(workout).hasOnlyActivities(activity);
-        WorkoutStatAssert.assertThat(workout).hasGoal(goal);
+        WorkoutStatAssert.assertThat(workout).hasGoal(Optional.of(goal));
 
         WorkoutStat workout2 = workouts.get(1);
         WorkoutStatAssert.assertThat(workout2).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout2).hasDate(newDate);
         WorkoutStatAssert.assertThat(workout2).hasOnlyRecords(newRecord);
         WorkoutStatAssert.assertThat(workout2).hasNoActivities();
-        WorkoutStatAssert.assertThat(workout2).hasGoal(null);
+        WorkoutStatAssert.assertThat(workout2).hasGoal(Optional.empty());
     }
 
     @Test
@@ -197,13 +198,13 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasTotalDuration(recordDuration);
+        WorkoutStatAssert.assertThat(workout).hasTotalDuration(Optional.of(recordDuration));
         assertThat(workout.getTotalDuration()).isNotEqualTo(DURATION);
     }
 
     @Test
     public void usesActivityDurationIfNoneInRecord() {
-        record = ImmutableRecord.copyOf(record).withDuration(null);
+        record = ImmutableRecord.copyOf(record).withDuration(Optional.empty());
 
         garminStore.add(activity);
         recordStore.add(record);
@@ -212,7 +213,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasTotalDuration(DURATION);
+        WorkoutStatAssert.assertThat(workout).hasTotalDuration(Optional.of(DURATION));
     }
 
     @Test
@@ -227,13 +228,13 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasTotalDistance(recordDistance);
+        WorkoutStatAssert.assertThat(workout).hasTotalDistance(Optional.of(recordDistance));
         assertThat(workout.getTotalDistance()).isNotEqualTo(DISTANCE);
     }
 
     @Test
     public void useActivityDistanceIfNoneInRecord() {
-        record = ImmutableRecord.copyOf(record).withDistance(null);
+        record = ImmutableRecord.copyOf(record).withDistance(Optional.empty());
 
         garminStore.add(activity);
         recordStore.add(record);
@@ -242,7 +243,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasTotalDistance(DISTANCE);
+        WorkoutStatAssert.assertThat(workout).hasTotalDistance(Optional.of(DISTANCE));
     }
 
     @Test
@@ -264,7 +265,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasTotalDuration(expected);
+        WorkoutStatAssert.assertThat(workout).hasTotalDuration(Optional.of(expected));
     }
 
     @Test
@@ -287,7 +288,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasTotalDistance(expected);
+        WorkoutStatAssert.assertThat(workout).hasTotalDistance(Optional.of(expected));
     }
 
     @Test
@@ -309,7 +310,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasTotalDuration(expected);
+        WorkoutStatAssert.assertThat(workout).hasTotalDuration(Optional.of(expected));
     }
 
     @Test
@@ -330,7 +331,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasTotalDistance(expected);
+        WorkoutStatAssert.assertThat(workout).hasTotalDistance(Optional.of(expected));
     }
 
     @Test
@@ -352,7 +353,7 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasGoalDuration(expected);
+        WorkoutStatAssert.assertThat(workout).hasGoalDuration(Optional.of(expected));
     }
 
     @Test
@@ -375,7 +376,40 @@ public class GenerateWorkoutStatTest {
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
-        WorkoutStatAssert.assertThat(workout).hasGoalDistance(expected);
+        WorkoutStatAssert.assertThat(workout).hasGoalDistance(Optional.of(expected));
+    }
+
+
+    @Test
+    public void completionIsGoalIfGoalIsInFuture() throws Exception {
+        LocalDate future = LocalDate.now().plusDays(1);
+        Record futureRecord = ImmutableRecord.copyOf(record).withDate(future);
+        recordStore.add(futureRecord);
+        assertCompletion(future, Completion.GOAL);
+    }
+
+
+    @Test
+    public void completionIsAllIfNoGoalWithDuration() throws Exception {
+        Record durationOnly = ImmutableRecord.copyOf(record).withDuration(Optional.empty());
+        recordStore.add(durationOnly);
+        assertThat(completion).isEqualTo(Completion.ALL);
+    }
+
+    @Test
+    public void completionIsAllIfNoGoalWithDistance() throws Exception {
+        Record distanceOnly = ImmutableRecord.copyOf(record).withDistance(Optional.empty());
+        recordStore.add(distanceOnly);
+        assertThat(completion).isEqualTo(Completion.ALL);
+    }
+
+    @Test
+    public void completionIsAllIfNoGoalDistanceOrDuration() throws Exception {
+        Record noOptionals = ImmutableRecord.copyOf(record)
+            .withDuration(Optional.empty())
+            .withDistance(Optional.empty());
+        recordStore.add(noOptionals);
+        assertThat(completion).isEqualTo(Completion.ALL);
     }
 
     @Test

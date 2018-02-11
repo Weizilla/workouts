@@ -6,8 +6,8 @@ import com.weizilla.distance.Distance;
 import org.immutables.value.Value.Default;
 import org.immutables.value.Value.Immutable;
 
-import javax.annotation.Nullable;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 
 @Immutable
@@ -24,13 +24,9 @@ public interface Goal extends Entry<UUID> {
 
     TimeOfDay getTimeOfDay();
 
+    Optional<Duration> getDuration();
+
+    Optional<Distance> getDistance();
+
     String getNotes();
-
-    //TODO use optional
-    @Nullable
-    Duration getDuration();
-
-    //TODO use optional
-    @Nullable
-    Distance getDistance();
 }

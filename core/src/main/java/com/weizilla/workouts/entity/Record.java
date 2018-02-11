@@ -6,8 +6,8 @@ import com.weizilla.distance.Distance;
 import org.immutables.value.Value.Default;
 import org.immutables.value.Value.Immutable;
 
-import javax.annotation.Nullable;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 
 @Immutable
@@ -26,12 +26,9 @@ public interface Record extends Entry<UUID> {
 
     int getRating();
 
-    @Nullable
-    Duration getDuration();
+    Optional<Duration> getDuration();
 
-    @Nullable
-    Distance getDistance();
+    Optional<Distance> getDistance();
 
-    @Nullable
     String getComment();
 }

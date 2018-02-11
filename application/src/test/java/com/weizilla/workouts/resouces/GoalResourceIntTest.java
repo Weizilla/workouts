@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.weizilla.workouts.entity.TestEntity.DATE;
@@ -73,6 +74,20 @@ public class GoalResourceIntTest {
         InputStream responseStream = (InputStream) response.getEntity();
         Goal result = ObjectMappers.OBJECT_MAPPER.readValue(responseStream, Goal.class);
         assertThat(result).isEqualTo(GOAL);
+    }
+
+    @Test
+    public void addsGoalWithoutOptionalValues() throws Exception {
+        Goal withouOptionals = ImmutableGoal.copyOf(GOAL)
+            .withDistance(Optional.empty())
+            .withDuration(Optional.empty());
+
+        Response response = client.target(baseUrl).request().post(toEntity(withouOptionals));
+
+        assertThat(response.getStatus()).isEqualTo(SC_OK);
+        InputStream responseStream = (InputStream) response.getEntity();
+        Goal result = ObjectMappers.OBJECT_MAPPER.readValue(responseStream, Goal.class);
+        assertThat(result).isEqualTo(withouOptionals);
     }
 
     @Test
