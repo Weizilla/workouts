@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -89,42 +92,23 @@ public class GenerateWorkoutStat {
             return Optional.empty();
         }
 
-        Record record = records.isEmpty() ? null : records.get(0);
-        if (records.size() > 1) {
-            logger.warn("Can only match one record per type for {}", date);
-        }
-
         Goal goal = goals.isEmpty() ? null : goals.get(0);
         if (goals.size() > 1) {
             logger.warn("Can only match one goal per type for {}", date);
         }
 
-        Duration totalDuration = record != null && record.getDuration() != null
-            ? record.getDuration()
-            : activities.stream()
-                .map(Activity::getDuration)
-                .reduce(Duration::plus).orElse(null);
-
-        Distance totalDistance = record != null && record.getDistance() != null
-            ? record.getDistance()
-            : activities.stream()
-                .map(Activity::getDistance)
-                .reduce(Distance::plus).orElse(null);
-
-        Duration goalDuration = goals.stream()
-            .map(Goal::getDuration)
-            .filter(Objects::nonNull)
-            .reduce(Duration::plus).orElse(null);
-
-        Distance goalDistance = goals.stream()
-            .map(Goal::getDistance)
-            .filter(Objects::nonNull)
-            .reduce(Distance::plus).orElse(null);
+        //TODO maybe can use optional in builder?
+        Duration totalDuration = sumDuration(records, Record::getDuration)
+            .orElse(sumDuration(activities, Activity::getDuration).orElse(null));
+        Distance totalDistance = sumDistance(records, Record::getDistance)
+            .orElse(sumDistance(activities, Activity::getDistance).orElse(null));
+        Duration goalDuration = sumDuration(goals, Goal::getDuration).orElse(null);
+        Distance goalDistance = sumDistance(goals, Goal::getDistance).orElse(null);
 
         Completion completion = completionCalculator.calculate(goal, totalDuration, totalDistance);
 
         WorkoutStat workout = ImmutableWorkoutStat.builder()
-            .record(record)
+            .records(records)
             .type(type)
             .date(date)
             .goal(goal)
@@ -137,5 +121,25 @@ public class GenerateWorkoutStat {
             .build();
 
         return Optional.of(workout);
+    }
+
+    private static <T> Optional<Duration> sumDuration(Collection<T> collection, Function<T, Duration> mapper) {
+        return sum(collection, mapper, Duration::plus);
+    }
+
+    private static <T> Optional<Distance> sumDistance(Collection<T> collection, Function<T, Distance> mapper) {
+        return sum(collection, mapper, Distance::plus);
+    }
+
+    private static <T, R> Optional<R> sum(Collection<T> collection, Function<T, R> extractFunction,
+            BinaryOperator<R> accumulator) {
+        if (collection == null || collection.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return collection.stream()
+            .map(extractFunction)
+            .filter(Objects::nonNull)
+            .reduce(accumulator);
     }
 }

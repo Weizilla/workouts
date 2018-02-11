@@ -24,8 +24,7 @@ public interface WorkoutStat extends Entry<UUID> {
         return UUID.randomUUID();
     }
 
-    @Nullable
-    Record getRecord();
+    List<Record> getRecords();
 
     List<Activity> getActivities();
 

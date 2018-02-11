@@ -61,7 +61,7 @@ public class TestEntity {
             .goalDuration(GOAL_DURATION)
             .completion(COMPLETION)
             .addActivities(createActivity())
-            .record(createRecord())
+            .addRecords(createRecord())
             .goal(createGoal())
             .build();
     }

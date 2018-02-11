@@ -101,7 +101,7 @@ public class GenerateWorkoutStatTest {
         WorkoutStat workout = workouts.get(0);
         WorkoutStatAssert.assertThat(workout).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
-        WorkoutStatAssert.assertThat(workout).hasRecord(record);
+        WorkoutStatAssert.assertThat(workout).hasOnlyRecords(record);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class GenerateWorkoutStatTest {
         WorkoutStat workout = workouts.get(0);
         WorkoutStatAssert.assertThat(workout).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
-        WorkoutStatAssert.assertThat(workout).hasRecord(record);
+        WorkoutStatAssert.assertThat(workout).hasOnlyRecords(record);
         WorkoutStatAssert.assertThat(workout).hasOnlyActivities(activity);
         WorkoutStatAssert.assertThat(workout).hasGoal(goal);
     }
@@ -147,14 +147,14 @@ public class GenerateWorkoutStatTest {
         WorkoutStat workout = workouts.get(0);
         WorkoutStatAssert.assertThat(workout).hasType("NEW TYPE");
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
-        WorkoutStatAssert.assertThat(workout).hasRecord(newType);
+        WorkoutStatAssert.assertThat(workout).hasOnlyRecords(newType);
         WorkoutStatAssert.assertThat(workout).hasNoActivities();
         WorkoutStatAssert.assertThat(workout).hasGoal(null);
 
         WorkoutStat workout2 = workouts.get(1);
         WorkoutStatAssert.assertThat(workout2).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout2).hasDate(DATE);
-        WorkoutStatAssert.assertThat(workout2).hasRecord(null);
+        WorkoutStatAssert.assertThat(workout2).hasNoRecords();
         WorkoutStatAssert.assertThat(workout2).hasOnlyActivities(activity);
         WorkoutStatAssert.assertThat(workout2).hasGoal(goal);
     }
@@ -173,14 +173,14 @@ public class GenerateWorkoutStatTest {
         WorkoutStat workout = workouts.get(0);
         WorkoutStatAssert.assertThat(workout).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
-        WorkoutStatAssert.assertThat(workout).hasRecord(null);
+        WorkoutStatAssert.assertThat(workout).hasNoRecords();
         WorkoutStatAssert.assertThat(workout).hasOnlyActivities(activity);
         WorkoutStatAssert.assertThat(workout).hasGoal(goal);
 
         WorkoutStat workout2 = workouts.get(1);
         WorkoutStatAssert.assertThat(workout2).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout2).hasDate(newDate);
-        WorkoutStatAssert.assertThat(workout2).hasRecord(newRecord);
+        WorkoutStatAssert.assertThat(workout2).hasOnlyRecords(newRecord);
         WorkoutStatAssert.assertThat(workout2).hasNoActivities();
         WorkoutStatAssert.assertThat(workout2).hasGoal(null);
     }
@@ -243,6 +243,51 @@ public class GenerateWorkoutStatTest {
 
         WorkoutStat workout = workouts.get(0);
         WorkoutStatAssert.assertThat(workout).hasTotalDistance(DISTANCE);
+    }
+
+    @Test
+    public void combinesRecordDurationsIfMultipleMatches() {
+        List<Record> records = new ArrayList<>();
+        int totalDuration = 0;
+        for (long i = 1; i < 10; i++) {
+            Record multiple = ImmutableRecord.copyOf(record)
+                .withId(UUID.randomUUID())
+                .withDuration(Duration.ofHours(i));
+            records.add(multiple);
+            totalDuration += i;
+        }
+        Duration expected = Duration.ofHours(totalDuration);
+
+        recordStore.addAll(records);
+
+        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        assertThat(workouts).hasSize(1);
+
+        WorkoutStat workout = workouts.get(0);
+        WorkoutStatAssert.assertThat(workout).hasTotalDuration(expected);
+    }
+
+    @Test
+    public void combinesRecordDistancesIfMultipleMatches() {
+        List<Record> records = new ArrayList<>();
+        double totalDistance = 0;
+        for (long i = 1; i < 10; i++) {
+            Distance dist = Distance.ofKilometers(i);
+            Record multiple = ImmutableRecord.copyOf(record)
+                .withId(UUID.randomUUID())
+                .withDistance(dist);
+            records.add(multiple);
+            totalDistance += i;
+        }
+        Distance expected = Distance.ofKilometers(totalDistance);
+
+        recordStore.addAll(records);
+
+        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        assertThat(workouts).hasSize(1);
+
+        WorkoutStat workout = workouts.get(0);
+        WorkoutStatAssert.assertThat(workout).hasTotalDistance(expected);
     }
 
     @Test
@@ -349,20 +394,4 @@ public class GenerateWorkoutStatTest {
         WorkoutStat workout = workouts.get(0);
         WorkoutStatAssert.assertThat(workout).hasCompletion(completion);
     }
-
-    //
-//    @Test
-//    public void useEarliestStartDateFromActivities() {
-//
-//    }
-//
-//    @Test
-//    public void matchesMultipleTypesAtSameTime() {
-//
-//    }
-//
-//    @Test
-//    public void usesActivityTypeMappingFile() {
-//
-//    }
 }
