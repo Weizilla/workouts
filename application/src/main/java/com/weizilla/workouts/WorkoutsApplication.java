@@ -17,7 +17,7 @@ import com.weizilla.workouts.resouces.ExportResource;
 import com.weizilla.workouts.resouces.GoalResource;
 import com.weizilla.workouts.resouces.RecordResource;
 import com.weizilla.workouts.resouces.TypesResource;
-import com.weizilla.workouts.resouces.WorkoutResource;
+import com.weizilla.workouts.resouces.DayStatResource;
 import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -94,7 +94,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
         environment.jersey().register(injector.getInstance(RecordResource.class));
         environment.jersey().register(injector.getInstance(TypesResource.class));
         environment.jersey().register(injector.getInstance(ExportResource.class));
-        environment.jersey().register(injector.getInstance(WorkoutResource.class));
+        environment.jersey().register(injector.getInstance(DayStatResource.class));
         environment.jersey().register(injector.getInstance(GoalResource.class));
         environment.jersey().register(new ExceptionManager());
     }
