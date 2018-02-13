@@ -4,7 +4,9 @@ import com.google.common.collect.Sets;
 import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.entity.Completion;
+import com.weizilla.workouts.entity.DayStat;
 import com.weizilla.workouts.entity.Goal;
+import com.weizilla.workouts.entity.ImmutableDayStat;
 import com.weizilla.workouts.entity.ImmutableWorkoutStat;
 import com.weizilla.workouts.entity.Record;
 import com.weizilla.workouts.entity.WorkoutStat;
@@ -29,16 +31,17 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+//TODO probably needs to be split into multiple classes
 @Singleton
-public class GenerateWorkoutStat {
-    private static final Logger logger = LoggerFactory.getLogger(GenerateWorkoutStat.class);
+public class WorkoutStatGenerator {
+    private static final Logger logger = LoggerFactory.getLogger(WorkoutStatGenerator.class);
     private final RecordStore recordStore;
     private final GarminStore garminStore;
     private final GoalStore goalStore;
     private final CompletionCalculator completionCalculator;
 
     @Inject
-    public GenerateWorkoutStat(RecordStore recordStore, GarminStore garminStore, GoalStore goalStore,
+    public WorkoutStatGenerator(RecordStore recordStore, GarminStore garminStore, GoalStore goalStore,
             CompletionCalculator completionCalculator) {
         this.recordStore = recordStore;
         this.garminStore = garminStore;
@@ -46,7 +49,7 @@ public class GenerateWorkoutStat {
         this.completionCalculator = completionCalculator;
     }
 
-    public List<WorkoutStat> getAll() {
+    public List<DayStat> generateAll() {
         Set<LocalDate> allDates = new TreeSet<>();
         recordStore.getAll().stream()
             .map(Record::getDate)
@@ -59,11 +62,13 @@ public class GenerateWorkoutStat {
             .forEach(allDates::add);
 
         return allDates.stream()
-            .flatMap(d -> get(d).stream())
+            .map(this::generate)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .collect(Collectors.toList());
     }
 
-    public List<WorkoutStat> get(LocalDate date) {
+    public Optional<DayStat> generate(LocalDate date) {
         Map<String, List<Record>> records = recordStore.get(date).stream()
             .collect(Collectors.groupingBy(Record::getType, Collectors.toList()));
         Map<String, List<Activity>> activities = garminStore.get(date).stream()
@@ -74,23 +79,35 @@ public class GenerateWorkoutStat {
         Set<String> allTypes = Sets.union(Sets.union(records.keySet(), activities.keySet()), goals.keySet());
 
         List<WorkoutStat> workouts = allTypes.stream()
-            .map(t -> create(t, date,
+            .map(t -> generate(t, date,
                 records.getOrDefault(t, Collections.emptyList()),
                 activities.getOrDefault(t, Collections.emptyList()),
                 goals.getOrDefault(t, Collections.emptyList())))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .collect(Collectors.toList());
-        return workouts;
+
+        if (! workouts.isEmpty()) {
+            Completion completion = calcCompletion(workouts);
+            DayStat dayStat = ImmutableDayStat.builder()
+                .addAllWorkoutStats(workouts)
+                .completion(completion)
+                .date(date)
+                .build();
+            return Optional.of(dayStat);
+        } else {
+            return Optional.empty();
+        }
     }
 
-    private Optional<WorkoutStat> create(String type, LocalDate date,
-            List<Record> records, List<Activity> activities, List<Goal> goals) {
+    private Optional<WorkoutStat> generate(String type, LocalDate date,
+        List<Record> records, List<Activity> activities, List<Goal> goals) {
 
         if (records.isEmpty() && activities.isEmpty() && goals.isEmpty()) {
             return Optional.empty();
         }
 
+        //TODO better handling. Either all goals or just one goal
         Optional<Goal> goal = goals.isEmpty() ? Optional.empty() : Optional.of(goals.get(0));
         if (goals.size() > 1) {
             logger.warn("Can only match one goal per type for {}", date);
@@ -148,5 +165,13 @@ public class GenerateWorkoutStat {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .reduce(accumulator);
+    }
+
+    private static Completion calcCompletion(List<WorkoutStat> workouts) {
+        Set<Completion> all = workouts.stream()
+            .map(WorkoutStat::getCompletion)
+            .collect(Collectors.toSet());
+
+        return all.size() == 1 ? workouts.get(0).getCompletion() : Completion.SOME;
     }
 }

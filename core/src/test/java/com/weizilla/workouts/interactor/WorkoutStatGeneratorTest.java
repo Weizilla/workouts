@@ -3,6 +3,7 @@ package com.weizilla.workouts.interactor;
 import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
 import com.weizilla.workouts.entity.Completion;
+import com.weizilla.workouts.entity.DayStat;
 import com.weizilla.workouts.entity.Goal;
 import com.weizilla.workouts.entity.ImmutableActivity;
 import com.weizilla.workouts.entity.ImmutableGoal;
@@ -33,11 +34,11 @@ import static com.weizilla.workouts.entity.TestEntity.DURATION;
 import static com.weizilla.workouts.entity.TestEntity.TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GenerateWorkoutStatTest {
+public class WorkoutStatGeneratorTest {
     private RecordStore recordStore;
     private GarminStore garminStore;
     private GoalStore goalStore;
-    private GenerateWorkoutStat generateWorkoutStat;
+    private WorkoutStatGenerator generator;
     private Activity activity;
     private Record record;
     private Goal goal;
@@ -55,20 +56,20 @@ public class GenerateWorkoutStatTest {
         completion = Completion.ALL;
         completionCalculator = new CompletionCalculatorStub(completion);
 
-        generateWorkoutStat = new GenerateWorkoutStat(recordStore, garminStore, goalStore, completionCalculator);
+        generator = new WorkoutStatGenerator(recordStore, garminStore, goalStore, completionCalculator);
     }
 
     @Test
     public void returnsEmptyListWithNothing() {
-        assertThat(generateWorkoutStat.get(DATE)).isEmpty();
-        assertThat(generateWorkoutStat.getAll()).isEmpty();
+        assertThat(generator.generate(DATE)).isEmpty();
+        assertThat(generator.generateAll()).isEmpty();
     }
 
     @Test
     public void returnsActivityForGivenDate() {
         garminStore.add(activity);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -83,7 +84,7 @@ public class GenerateWorkoutStatTest {
         Activity activity2 = TestEntity.createActivity();
         garminStore.add(activity2);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -96,7 +97,7 @@ public class GenerateWorkoutStatTest {
     public void returnsRecordsForGivenDate() {
         recordStore.add(record);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -109,7 +110,7 @@ public class GenerateWorkoutStatTest {
     public void returnsGoalForGivenDate() {
         goalStore.add(goal);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -124,7 +125,7 @@ public class GenerateWorkoutStatTest {
         recordStore.add(record);
         goalStore.add(goal);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -142,7 +143,7 @@ public class GenerateWorkoutStatTest {
         recordStore.add(newType);
         goalStore.add(goal);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(2);
 
         WorkoutStat workout = workouts.get(0);
@@ -168,17 +169,17 @@ public class GenerateWorkoutStatTest {
         recordStore.add(newRecord);
         goalStore.add(goal);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.getAll();
-        assertThat(workouts).hasSize(2);
+        List<DayStat> dayStats = generator.generateAll();
+        assertThat(dayStats).hasSize(2);
 
-        WorkoutStat workout = workouts.get(0);
+        WorkoutStat workout = dayStats.get(0).getWorkoutStats().get(0);
         WorkoutStatAssert.assertThat(workout).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout).hasDate(DATE);
         WorkoutStatAssert.assertThat(workout).hasNoRecords();
         WorkoutStatAssert.assertThat(workout).hasOnlyActivities(activity);
         WorkoutStatAssert.assertThat(workout).hasGoal(Optional.of(goal));
 
-        WorkoutStat workout2 = workouts.get(1);
+        WorkoutStat workout2 = dayStats.get(1).getWorkoutStats().get(0);
         WorkoutStatAssert.assertThat(workout2).hasType(TYPE);
         WorkoutStatAssert.assertThat(workout2).hasDate(newDate);
         WorkoutStatAssert.assertThat(workout2).hasOnlyRecords(newRecord);
@@ -194,7 +195,7 @@ public class GenerateWorkoutStatTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -209,7 +210,7 @@ public class GenerateWorkoutStatTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -224,7 +225,7 @@ public class GenerateWorkoutStatTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -239,7 +240,7 @@ public class GenerateWorkoutStatTest {
         garminStore.add(activity);
         recordStore.add(record);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -261,7 +262,7 @@ public class GenerateWorkoutStatTest {
 
         recordStore.addAll(records);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -284,7 +285,7 @@ public class GenerateWorkoutStatTest {
 
         recordStore.addAll(records);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -306,7 +307,7 @@ public class GenerateWorkoutStatTest {
 
         garminStore.addAll(activities);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -319,7 +320,9 @@ public class GenerateWorkoutStatTest {
         double totalDistance = 0;
         for (long i = 1; i < 10; i++) {
             Distance dist = Distance.ofKilometers(i);
-            Activity multiple = ImmutableActivity.copyOf(activity).withId(i).withDistance(dist);
+            Activity multiple = ImmutableActivity.copyOf(activity)
+                .withId(i)
+                .withDistance(dist);
             activities.add(multiple);
             totalDistance += i;
         }
@@ -327,7 +330,7 @@ public class GenerateWorkoutStatTest {
 
         garminStore.addAll(activities);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -349,7 +352,7 @@ public class GenerateWorkoutStatTest {
 
         goalStore.addAll(goals);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -372,7 +375,7 @@ public class GenerateWorkoutStatTest {
 
         goalStore.addAll(goals);
 
-        List<WorkoutStat> workouts = generateWorkoutStat.get(DATE);
+        List<WorkoutStat> workouts = generate(DATE);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
@@ -385,7 +388,7 @@ public class GenerateWorkoutStatTest {
         LocalDate future = LocalDate.now().plusDays(1);
         Record futureRecord = ImmutableRecord.copyOf(record).withDate(future);
         recordStore.add(futureRecord);
-        assertCompletion(future, Completion.GOAL);
+        assertWorkoutCompletion(future, Completion.GOAL);
     }
 
 
@@ -414,18 +417,21 @@ public class GenerateWorkoutStatTest {
 
     @Test
     public void usesCompletionFromCalculator() throws Exception {
-
         goalStore.add(goal);
         recordStore.add(record);
 
-        assertCompletion(DATE, completion);
+        assertWorkoutCompletion(DATE, completion);
     }
 
-    private void assertCompletion(LocalDate date, Completion completion) {
-        List<WorkoutStat> workouts = generateWorkoutStat.get(date);
+    private void assertWorkoutCompletion(LocalDate date, Completion completion) {
+        List<WorkoutStat> workouts = generate(date);
         assertThat(workouts).hasSize(1);
 
         WorkoutStat workout = workouts.get(0);
         WorkoutStatAssert.assertThat(workout).hasCompletion(completion);
+    }
+
+    private List<WorkoutStat> generate(LocalDate date) {
+        return generator.generate(date).get().getWorkoutStats();
     }
 }
