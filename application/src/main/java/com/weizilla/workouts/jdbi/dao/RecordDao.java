@@ -21,8 +21,8 @@ public interface RecordDao extends RecordStore {
         "date TEXT NOT NULL, " +
         "duration INTEGER, " +
         "distance INTEGER, " +
-        "rating INTEGER, " +
-        "comment TEXT, " +
+        "rating INTEGER NOT NULL, " +
+        "comment TEXT NOT NULL, " +
         "created_time INTEGER NOT NULL " +
         ")")
     void createTable();

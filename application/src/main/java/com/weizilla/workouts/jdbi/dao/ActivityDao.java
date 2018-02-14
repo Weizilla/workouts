@@ -20,8 +20,8 @@ public interface ActivityDao extends GarminStore {
         "type TEXT NOT NULL, " +
         "start_time TEXT NOT NULL, " +
         "date TEXT NOT NULL, " +
-        "duration INTEGER, " +
-        "distance INTEGER, " +
+        "duration INTEGER NOT NULL, " +
+        "distance INTEGER NOT NULL, " +
         "created_time INTEGER NOT NULL " +
         ")")
     void createTable();
