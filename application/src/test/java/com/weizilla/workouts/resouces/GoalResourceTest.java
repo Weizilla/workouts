@@ -1,6 +1,5 @@
 package com.weizilla.workouts.resouces;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.weizilla.workouts.entity.Goal;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.entity.TestEntity;
@@ -18,9 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 import static com.weizilla.workouts.entity.TestEntity.DATE;
 import static com.weizilla.workouts.entity.TestEntity.GOAL_ID;
@@ -38,7 +35,6 @@ public class GoalResourceTest {
     private static final GetGoals GET_GOALS = mock(GetGoals.class);
     private static final UpdateGoal UPDATE_GOAL = mock(UpdateGoal.class);
     private static final DeleteGoal DELETE_GOAL = mock(DeleteGoal.class);
-    private static final TypeReference<List<Goal>> TYPE_REF = new TypeReference<List<Goal>>() { };
 
     @ClassRule
     public static final ResourceTestRule RESOURCES = ResourceTestRule.builder()
@@ -63,8 +59,8 @@ public class GoalResourceTest {
     public void getsAllGoals() throws Exception {
         when(GET_GOALS.getAll()).thenReturn(singletonList(GOAL));
         String jsonResult = RESOURCES.target("/goals").request().get(String.class);
-        Map<LocalDate, List<Goal>> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TestUtils.MAP_GOALS);
-        assertThat(results).containsEntry(DATE, singletonList(GOAL));
+        List<Goal> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TestUtils.LIST_GOALS);
+        assertThat(results).containsExactly(GOAL);
     }
 
     @Test
@@ -73,8 +69,8 @@ public class GoalResourceTest {
 
         String jsonResult = RESOURCES.target("/goals")
             .queryParam("date", DATE).request().get(String.class);
-        Map<LocalDate, List<Goal>> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TestUtils.MAP_GOALS);
-        assertThat(results).containsEntry(DATE, singletonList(GOAL));
+        List<Goal> results = ObjectMappers.OBJECT_MAPPER.readValue(jsonResult, TestUtils.LIST_GOALS);
+        assertThat(results).containsExactly(GOAL);
     }
 
     @Test

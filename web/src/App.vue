@@ -39,16 +39,31 @@
             }
         },
         created: function () {
-            let today = moment().format("YYYY-MM-DD");
-            let vm = this;
-            this.$http.get(this.host() + "/api/goals/?date=" + today + "&numDays=7").then(response => {
-                vm.goals = response.data;
-            }, response => {
-                let msg = "Error: " + response;
-                console.log(msg);
-                this.message = msg;
-            });
+          this.refreshGoals();
         },
+        methods: {
+            refreshGoals: function() {
+                let today = moment().format("YYYY-MM-DD");
+                let vm = this;
+                this.$http.get(this.host() + "/api/goals/?date=" + today + "&numDays=7").then(response => {
+                    vm.goals = {};
+                    for (let i = 0; i < response.data.length; i++) {
+                        let goal = response.data[i];
+                        let date = goal.date;
+                        if (date in vm.goals) {
+                            vm.goals[date].push(goal);
+                        } else {
+                            vm.goals[date] = [goal];
+                        }
+                    }
+                    console.log(vm.goals);
+                }, response => {
+                    let msg = "Error: " + response;
+                    console.log(msg);
+                    this.message = msg;
+                });
+            }
+        }
     }
 </script>
 

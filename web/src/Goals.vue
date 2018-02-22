@@ -127,16 +127,20 @@
             };
         },
         created: function() {
-            this.$http.get(this.host() + "/api/types/").then(response => {
-                this.types = response.data;
-                this.message = "Got " + this.types.length + " types";
-            }, response => {
-                let msg = "Error: " + response;
-                console.log(msg);
-                this.message = msg;
-            })
+            this.refreshTypes();
+            this.refreshGoals();
         },
         methods: {
+            refreshTypes: function() {
+                this.$http.get(this.host() + "/api/types/").then(response => {
+                    this.types = response.data;
+                    this.message = "Got " + this.types.length + " types";
+                }, response => {
+                    let msg = "Error: " + response;
+                    console.log(msg);
+                    this.message = msg;
+                })
+            },
             refreshGoals: function () {
                 this.$http.get(this.host() + "/api/goals/").then(response => {
                     this.goals = response.data;

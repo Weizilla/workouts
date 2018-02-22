@@ -24,10 +24,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Path("/goals/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -55,11 +53,11 @@ public class GoalResource {
     }
 
     @GET
-    public Map<LocalDate, List<Goal>> getByDate(
-            @QueryParam("date") Optional<LocalDateParam> date,
+    public List<Goal> getByDate(@QueryParam("date") Optional<LocalDateParam> date,
             @QueryParam("numDays") Optional<IntParam> numDays) {
 
         List<Goal> goals;
+
         if (date.isPresent() || numDays.isPresent()) {
             LocalDate startDate = date.map(LocalDateParam::get).orElse(LocalDate.now());
             int num = numDays.map(AbstractParam::get).orElse(1);
@@ -68,8 +66,7 @@ public class GoalResource {
             goals = getGoals.getAll();
         }
 
-        return goals.stream()
-            .collect(Collectors.groupingBy(Goal::getDate, Collectors.toList()));
+        return goals;
     }
 
     @GET

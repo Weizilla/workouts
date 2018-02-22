@@ -141,16 +141,20 @@
             };
         },
         created: function() {
-            this.$http.get(this.host() + "/api/types/").then(response => {
-                this.types = response.data;
-                this.message = "Got " + this.types.length + " types";
-            }, response => {
-                let msg = "Error: " + response;
-                console.log(msg);
-                this.message = msg;
-            })
+            this.refreshTypes();
+            this.refreshRecords();
         },
         methods: {
+            refreshTypes: function() {
+                this.$http.get(this.host() + "/api/types/").then(response => {
+                    this.types = response.data;
+                    this.message = "Got " + this.types.length + " types";
+                }, response => {
+                    let msg = "Error: " + response;
+                    console.log(msg);
+                    this.message = msg;
+                });
+            },
             refreshRecords: function () {
                 this.$http.get(this.host() + "/api/records/").then(response => {
                     this.records = response.data;

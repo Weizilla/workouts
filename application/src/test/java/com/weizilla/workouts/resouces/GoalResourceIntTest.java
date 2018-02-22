@@ -25,10 +25,8 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -92,46 +90,45 @@ public class GoalResourceIntTest {
 
     @Test
     public void getsAllGoals() throws Exception {
-        Map<LocalDate, List<Goal>> expected = addGoals();
+        List<Goal> expected = addGoals();
 
         Response getsAllResponse = client.target(baseUrl).request().get();
         assertThat(getsAllResponse.getStatus()).isEqualTo(SC_OK);
 
-        Map<LocalDate, List<Goal>> results = readGoalMap(getsAllResponse);
+        List<Goal> results = readGoalList(getsAllResponse);
         assertThat(results).isEqualTo(expected);
     }
 
     @Test
     public void getsGoalByDate() throws Exception {
-        Map<LocalDate, List<Goal>> expected = addGoals();
+        List<Goal> added = addGoals();
+        Goal expected = added.get(4);
 
         LocalDate date = DATE.plusDays(4);
         Response getsAllResponse = client.target(baseUrl).queryParam("date", date).request().get();
         assertThat(getsAllResponse.getStatus()).isEqualTo(SC_OK);
 
-        Map<LocalDate, List<Goal>> results = readGoalMap(getsAllResponse);
+        List<Goal> results = readGoalList(getsAllResponse);
         assertThat(results).hasSize(1);
-        assertThat(results.get(date)).isEqualTo(expected.get(date));
+        assertThat(results.get(0)).isEqualTo(expected);
     }
 
     @Test
     public void getsGoalsByNumOfDays() throws Exception {
-        Map<LocalDate, List<Goal>> expected = addGoals();
+        List<Goal> added = addGoals();
+        List<Goal> expected = added.subList(0, 4);
 
         Response getsAllResponse = client.target(baseUrl).queryParam("numDays", 4).request().get();
         assertThat(getsAllResponse.getStatus()).isEqualTo(SC_OK);
 
-        Map<LocalDate, List<Goal>> results = readGoalMap(getsAllResponse);
-        assertThat(results).hasSize(4);
-        for (int i = 0; i < 4; i++) {
-            LocalDate date = LocalDate.now().plusDays(i);
-            assertThat(results.get(date)).isEqualTo(expected.get(date));
-        }
+        List<Goal> results = readGoalList(getsAllResponse);
+        assertThat(results).isEqualTo(expected);
     }
 
     @Test
     public void getsGoalsByDateAndNumOfDays() throws Exception {
-        Map<LocalDate, List<Goal>> expected = addGoals();
+        List<Goal> added = addGoals();
+        List<Goal> expected = added.subList(3, 7);
 
         Response getsAllResponse = client.target(baseUrl)
             .queryParam("numDays", 4)
@@ -139,12 +136,8 @@ public class GoalResourceIntTest {
             .request().get();
         assertThat(getsAllResponse.getStatus()).isEqualTo(SC_OK);
 
-        Map<LocalDate, List<Goal>> results = readGoalMap(getsAllResponse);
-        assertThat(results).hasSize(4);
-        for (int i = 0; i < 4; i++) {
-            LocalDate date = LocalDate.now().plusDays(3 + i);
-            assertThat(results.get(date)).isEqualTo(expected.get(date));
-        }
+        List<Goal> results = readGoalList(getsAllResponse);
+        assertThat(results).isEqualTo(expected);
     }
 
     @Test
@@ -201,12 +194,12 @@ public class GoalResourceIntTest {
         assertThat(getGoalResponse.getStatus()).isEqualTo(SC_NO_CONTENT);
     }
 
-    private static Map<LocalDate, List<Goal>> addGoals() {
-        Map<LocalDate, List<Goal>> expected = new HashMap<>(10);
+    private static List<Goal> addGoals() {
+        List<Goal> expected = new ArrayList<>(10);
         for (int i = 0; i < 10; i++) {
             LocalDate date = DATE.plusDays(i);
             Goal goal = ImmutableGoal.copyOf(GOAL).withId(UUID.randomUUID()).withDate(date);
-            expected.put(date, Collections.singletonList(goal));
+            expected.add(goal);
 
             Response createResponse = client.target(baseUrl).request().post(toEntity(goal));
             assertThat(createResponse.getStatus()).isEqualTo(SC_OK);
@@ -219,8 +212,8 @@ public class GoalResourceIntTest {
         return ObjectMappers.OBJECT_MAPPER.readValue(responseStream, Goal.class);
     }
 
-    private static Map<LocalDate, List<Goal>> readGoalMap(Response response) throws IOException {
+    private static List<Goal> readGoalList(Response response) throws IOException {
         InputStream responseStream = (InputStream) response.getEntity();
-        return ObjectMappers.OBJECT_MAPPER.readValue(responseStream, TestUtils.MAP_GOALS);
+        return ObjectMappers.OBJECT_MAPPER.readValue(responseStream, TestUtils.LIST_GOALS);
     }
 }

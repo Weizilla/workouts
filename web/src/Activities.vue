@@ -34,6 +34,9 @@
                 activities: [],
             };
         },
+        created: function() {
+            this.refreshGarmin();
+        },
         methods: {
             updateGarmin: function () {
                 this.$http.get(this.host() + "/api/activities/update").then(response => {
