@@ -4,29 +4,27 @@
     <table class="table table-striped table-hover">
       <thead>
       <tr>
-        <!--<th>Date</th>-->
+        <th>Date</th>
         <th>Type</th>
-        <th>Start Time</th>
-        <th>Rating</th>
-        <th>Duration</th>
-        <th>Distance</th>
-        <th>Comment</th>
-        <th>Record Id</th>
-        <th>Garmin Ids</th>
+        <th>Completion</th>
+        <th>Total Distance</th>
+        <th>Goal Distance</th>
+        <th>Total Duration</th>
+        <th>Goal Duration</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="workout in workouts">
-        <!--<td>{{ workout.date }}</td>-->
-        <td>{{ workout.type }}</td>
-        <td>{{ workout.startTime }}</td>
-        <td>{{ workout.rating }}</td>
-        <td>{{ workout.duration }}</td>
-        <td>{{ workout.distance }}</td>
-        <td>{{ workout.comment }}</td>
-        <td>{{ workout.recordId }}</td>
-        <td>{{ workout.garminIds }}</td>
-      </tr>
+      <template v-for="stat in workouts">
+        <tr v-for="workout in stat.workoutStats">
+          <td>{{ workout.date }}</td>
+          <td>{{ workout.type }}</td>
+          <td>{{ workout.completion }}</td>
+          <td>{{ workout.totalDistance }}</td>
+          <td>{{ workout.goalDistance }}</td>
+          <td>{{ workout.totalDuration }}</td>
+          <td>{{ workout.goalDuration }}</td>
+        </tr>
+      </template>
       </tbody>
     </table>
     <button v-on:click="refreshWorkouts">Refresh Workouts</button>
@@ -41,9 +39,12 @@
                 workouts: [],
             };
         },
+        created: function() {
+          this.refreshWorkouts();
+        },
         methods: {
             refreshWorkouts: function () {
-                this.$http.get(this.host() + "/api/workouts").then(response => {
+                this.$http.get(this.host() + "/api/stats").then(response => {
                     this.workouts = response.data;
                     this.message = "Got " + this.workouts.length + " workouts";
                 }, response => {
