@@ -8,7 +8,7 @@
           <div class="col-10">
            <div class="btn-group-vertical btn-block btn-group-toggle" data-toggle="buttons" id="newRecordType">
             <template v-for="type in types">
-              <label class="btn form-control btn-secondary" v-bind:class="newRecord['type'] === type ? 'active' : ''">
+              <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['type'] === type ? 'active' : ''">
                 <input type="radio" name="types" v-model="newRecord['type']" v-bind:value="type">{{ type }}
               </label>
             </template>
@@ -22,10 +22,10 @@
         <div class="form-group row">
           <label class="col-2 col-form-label">Outdoor</label>
           <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn form-control btn-secondary" v-bind:class="newRecord['outdoor'] === 'true' ? 'active' : ''">
+            <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['outdoor'] === 'true' ? 'active' : ''">
               <input type="radio" name="options" v-model="newRecord['outdoor']" value="true">Outside
             </label>
-            <label class="btn form-control btn-secondary" v-bind:class="newRecord['outdoor'] === 'false' ? 'active' : ''">
+            <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['outdoor'] === 'false' ? 'active' : ''">
               <input type="radio" name="options" v-model="newRecord['outdoor']" value="false">Inside
             </label>
           </div>
@@ -43,7 +43,7 @@
           <label class="col-2 col-form-label">Rating</label>
           <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
             <template v-for="n in 5">
-              <label class="btn form-control btn-secondary" v-bind:class="newRecord['rating'] === n ? 'active' : ''">
+              <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['rating'] === n ? 'active' : ''">
                 <input type="radio" name="options" v-model="newRecord['rating']" v-bind:value="n">{{n}}
               </label>
             </template>
@@ -74,7 +74,7 @@
 
           <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
               <template v-for="(m, unit) in distanceUnits">
-                <label class="btn form-control btn-secondary" v-bind:class="newRecord['distanceUnit'] === unit ? 'active' : ''">
+                <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['distanceUnit'] === unit ? 'active' : ''">
                   <input type="radio" name="options" v-model="newRecord['distanceUnit']" v-bind:value="unit">{{unit}}
                 </label>
               </template>

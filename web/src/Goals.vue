@@ -8,7 +8,7 @@
           <div class="col-10">
             <div class="btn-group-vertical btn-block btn-group-toggle" data-toggle="buttons" id="newGoalType">
               <template v-for="type in types">
-                <label class="btn form-control btn-secondary" v-bind:class="newGoal['type'] === type ? 'active' : ''">
+                <label class="btn form-control btn-outline-secondary" v-bind:class="newGoal['type'] === type ? 'active' : ''">
                   <input type="radio" name="types" v-model="newGoal['type']" v-bind:value="type">{{ type }}
                 </label>
               </template>
@@ -31,7 +31,7 @@
           <label class="col-2">Time</label>
           <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
             <template v-for="timeOfDay in timesOfDay">
-              <label class="btn form-control btn-secondary" v-bind:class="newGoal['timeOfDay'] === timeOfDay ? 'active' : ''">
+              <label class="btn form-control btn-outline-secondary" v-bind:class="newGoal['timeOfDay'] === timeOfDay ? 'active' : ''">
                 <input type="radio" name="options" v-model="newGoal['timeOfDay']" v-bind:value="timeOfDay">{{timeOfDay}}
               </label>
             </template>
@@ -61,7 +61,7 @@
                 v-model="newGoal['distanceValue']">
             <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
                 <template v-for="(m, unit) in distanceUnits">
-                  <label class="btn form-control btn-secondary" v-bind:class="newGoal['distanceUnit'] === unit ? 'active' : ''">
+                  <label class="btn form-control btn-outline-secondary" v-bind:class="newGoal['distanceUnit'] === unit ? 'active' : ''">
                     <input type="radio" name="options" v-model="newGoal['distanceUnit']" v-bind:value="unit">{{unit}}
                   </label>
                 </template>
