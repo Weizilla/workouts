@@ -1,5 +1,6 @@
 package com.weizilla.workouts.interactor;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.weizilla.distance.Distance;
 import com.weizilla.workouts.entity.Activity;
@@ -35,6 +36,14 @@ import java.util.stream.Collectors;
 @Singleton
 public class WorkoutStatGenerator {
     private static final Logger logger = LoggerFactory.getLogger(WorkoutStatGenerator.class);
+    private static final Map<String, String> GARMIN_TYPES = new ImmutableMap.Builder<String, String>()
+        .put("lap_swimming", "swim")
+        .put("indoor_cycling", "bike")
+        .put("cycling", "bike")
+        .put("running", "run")
+        .put("treadmill_running", "run")
+        .build();
+
     private final RecordStore recordStore;
     private final GarminStore garminStore;
     private final GoalStore goalStore;
@@ -72,7 +81,7 @@ public class WorkoutStatGenerator {
         Map<String, List<Record>> records = recordStore.get(date).stream()
             .collect(Collectors.groupingBy(Record::getType, Collectors.toList()));
         Map<String, List<Activity>> activities = garminStore.get(date).stream()
-            .collect(Collectors.groupingBy(Activity::getType, Collectors.toList()));
+            .collect(Collectors.groupingBy(WorkoutStatGenerator::mapGarminType, Collectors.toList()));
         Map<String, List<Goal>> goals = goalStore.get(date).stream()
             .collect(Collectors.groupingBy(Goal::getType, Collectors.toList()));
 
@@ -98,6 +107,10 @@ public class WorkoutStatGenerator {
         } else {
             return Optional.empty();
         }
+    }
+
+    private static String mapGarminType(Activity activity) {
+        return GARMIN_TYPES.getOrDefault(activity.getType(), activity.getType());
     }
 
     private Optional<WorkoutStat> generate(String type, LocalDate date,

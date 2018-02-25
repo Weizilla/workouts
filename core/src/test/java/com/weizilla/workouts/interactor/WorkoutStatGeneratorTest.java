@@ -427,6 +427,19 @@ public class WorkoutStatGeneratorTest {
         assertWorkoutCompletion(DATE, completion);
     }
 
+    @Test
+    public void mapGarminActivityTypes() throws Exception {
+        Activity withType = ImmutableActivity.copyOf(activity)
+            .withType("lap_swimming");
+        garminStore.add(withType);
+
+        List<WorkoutStat> workouts = generate(DATE);
+        assertThat(workouts).hasSize(1);
+
+        WorkoutStat workout = workouts.get(0);
+        WorkoutStatAssert.assertThat(workout).hasType("swim");
+    }
+
     private void assertWorkoutCompletion(LocalDate date, Completion completion) {
         List<WorkoutStat> workouts = generate(date);
         assertThat(workouts).hasSize(1);
