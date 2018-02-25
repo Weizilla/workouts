@@ -24,6 +24,7 @@ const routes = [
     { path: '/records', component: Records},
     { path: '/goals', component: Goals},
     { path: '/workouts', component: Workouts},
+    { name: 'workouts', path: '/workouts/:date', component: Workouts},
     { path: '/activities', component: Activities},
     { path: '/', component: App},
 ];

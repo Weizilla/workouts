@@ -15,11 +15,20 @@
       </tr>
       </thead>
       <tr v-for="w in 3">
-        <td v-for="d in 7" v-bind:class="getCompletionClass(w, d)">{{dates[d - 1 + (w - 1) * 7].format("M/D")}}</td>
+        <template v-for="d in 7" >
+          <td v-bind:class="getCompletionClass(w, d)">
+            {{dates[d - 1 + (w - 1) * 7].format("M/D")}}
+            <router-link class="nav-link" v-bind:to="{name: 'workouts', params: {'date': dates[d - 1 + (w - 1) * 7].format('YYYY-MM-DD')}}">Stats</router-link>
+          </td>
+        </template>
       </tr>
     </table>
-    <button class="btn btn-secondary btn-lg btn-block" v-on:click="refreshWorkouts">Refresh Workouts</button>
 
+    <div>
+      Day {{this.workouts[$route.params.date]}}
+    </div>
+
+    <button class="btn btn-secondary btn-lg btn-block" v-on:click="refreshWorkouts">Refresh Workouts</button>
     <table class="table table-striped table-hover">
       <thead>
       <tr>
