@@ -6,7 +6,7 @@
       <tr>
         <th>Id</th>
         <th>Type</th>
-        <th>Start</th>
+        <th>Date</th>
         <th>Duration</th>
         <th>Distance</th>
       </tr>
@@ -15,7 +15,7 @@
       <tr v-for="activity in activities">
         <td>{{ activity.id }}</td>
         <td>{{ activity.type }}</td>
-        <td>{{ activity.start }}</td>
+        <td>{{ activity.date }}</td>
         <td>{{ activity.duration }}</td>
         <td>{{ activity.distance }}</td>
       </tr>
