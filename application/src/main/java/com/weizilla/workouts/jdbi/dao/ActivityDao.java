@@ -15,6 +15,10 @@ import java.util.List;
 
 @RegisterMapper(ActivityMapper.class)
 public interface ActivityDao extends GarminStore {
+
+    String INSERT_SQL = "INSERT OR REPLACE INTO activities (id, type, start_time, date, duration, distance, created_time) " +
+        "VALUES (:id, :type, :startTime, :date, :duration, :distance, :createdTime)";
+
     @SqlUpdate("CREATE TABLE IF NOT EXISTS activities (" +
         "id INTEGER PRIMARY KEY, " +
         "type TEXT NOT NULL, " +
@@ -27,12 +31,10 @@ public interface ActivityDao extends GarminStore {
     void createTable();
 
     @Override
-    @SqlUpdate("INSERT INTO activities (id, type, start_time, date, duration, distance, created_time) " +
-        "VALUES (:id, :type, :startTime, :date, :duration, :distance, :createdTime)")
+    @SqlUpdate(INSERT_SQL)
     void add(@BindBean Activity activity);
 
-    @SqlBatch("INSERT INTO activities (id, type, start_time, date, duration, distance, created_time) " +
-        "VALUES (:id, :type, :startTime, :date, :duration, :distance, :createdTime)")
+    @SqlBatch(INSERT_SQL)
     void addAll(@BindBean Collection<Activity> activities);
 
     @Override
