@@ -126,6 +126,8 @@ public class WorkoutStatGenerator {
         Completion completion;
         if (date.isAfter(LocalDate.now())) {
             completion = Completion.GOAL;
+        } else if (goal.isPresent() && records.isEmpty() && activities.isEmpty()) {
+            completion = Completion.NONE;
         } else {
             completion = completionCalculator.calculate(goalDuration, goalDistance, totalDuration, totalDistance);
         }

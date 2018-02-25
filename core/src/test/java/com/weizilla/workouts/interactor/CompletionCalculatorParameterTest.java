@@ -47,7 +47,7 @@ public class CompletionCalculatorParameterTest {
     @Parameters(name = "{index}: Goal ({0},{1}) Target({2},{3}) = {4}")
     public static Object[][] parameters() {
         return new Object[][] {
-            // no goal means ALL completed
+            // no goal duration or distance means ALL completed
             new Object[]{null, null, null, null, Completion.ALL},
             new Object[]{null, null, DURATION, null, Completion.ALL},
             new Object[]{null, null, null, DISTANCE, Completion.ALL},

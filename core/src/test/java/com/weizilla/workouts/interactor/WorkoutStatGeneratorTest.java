@@ -382,7 +382,6 @@ public class WorkoutStatGeneratorTest {
         WorkoutStatAssert.assertThat(workout).hasGoalDistance(Optional.of(expected));
     }
 
-
     @Test
     public void completionIsGoalIfGoalIsInFuture() throws Exception {
         LocalDate future = LocalDate.now().plusDays(1);
@@ -391,19 +390,18 @@ public class WorkoutStatGeneratorTest {
         assertWorkoutCompletion(future, Completion.GOAL);
     }
 
-
     @Test
     public void completionIsAllIfNoGoalWithDuration() throws Exception {
         Record durationOnly = ImmutableRecord.copyOf(record).withDuration(Optional.empty());
         recordStore.add(durationOnly);
-        assertThat(completion).isEqualTo(Completion.ALL);
+        assertWorkoutCompletion(DATE, Completion.ALL);
     }
 
     @Test
     public void completionIsAllIfNoGoalWithDistance() throws Exception {
         Record distanceOnly = ImmutableRecord.copyOf(record).withDistance(Optional.empty());
         recordStore.add(distanceOnly);
-        assertThat(completion).isEqualTo(Completion.ALL);
+        assertWorkoutCompletion(DATE, Completion.ALL);
     }
 
     @Test
@@ -412,7 +410,13 @@ public class WorkoutStatGeneratorTest {
             .withDuration(Optional.empty())
             .withDistance(Optional.empty());
         recordStore.add(noOptionals);
-        assertThat(completion).isEqualTo(Completion.ALL);
+        assertWorkoutCompletion(DATE, Completion.ALL);
+    }
+
+    @Test
+    public void completionIsNoneIfGoalButNoRecord() throws Exception {
+        goalStore.add(goal);
+        assertWorkoutCompletion(DATE, Completion.NONE);
     }
 
     @Test
