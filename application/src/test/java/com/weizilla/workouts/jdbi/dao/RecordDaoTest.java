@@ -1,4 +1,4 @@
-package com.weizilla.workouts.jdbi;
+package com.weizilla.workouts.jdbi.dao;
 
 import com.codahale.metrics.MetricRegistry;
 import com.weizilla.workouts.entity.ImmutableRecord;
