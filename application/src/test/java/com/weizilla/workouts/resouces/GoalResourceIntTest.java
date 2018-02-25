@@ -76,16 +76,16 @@ public class GoalResourceIntTest {
 
     @Test
     public void addsGoalWithoutOptionalValues() throws Exception {
-        Goal withouOptionals = ImmutableGoal.copyOf(GOAL)
+        Goal withoutOptionals = ImmutableGoal.copyOf(GOAL)
             .withDistance(Optional.empty())
             .withDuration(Optional.empty());
 
-        Response response = client.target(baseUrl).request().post(toEntity(withouOptionals));
+        Response response = client.target(baseUrl).request().post(toEntity(withoutOptionals));
 
         assertThat(response.getStatus()).isEqualTo(SC_OK);
         InputStream responseStream = (InputStream) response.getEntity();
         Goal result = ObjectMappers.OBJECT_MAPPER.readValue(responseStream, Goal.class);
-        assertThat(result).isEqualTo(withouOptionals);
+        assertThat(result).isEqualTo(withoutOptionals);
     }
 
     @Test

@@ -48,8 +48,8 @@ public class GoalResource {
 
 
     @POST
-    public Goal add(@NotNull Goal record) {
-        return createGoal.create(record);
+    public Goal add(@NotNull Goal goal) {
+        return createGoal.create(goal);
     }
 
     @GET
@@ -76,8 +76,8 @@ public class GoalResource {
     }
 
     @PUT
-    public Goal update(@NotNull Goal record) {
-        return updateGoal.updateGoal(record);
+    public Goal update(@NotNull Goal goal) {
+        return updateGoal.updateGoal(goal);
     }
 
     @DELETE
