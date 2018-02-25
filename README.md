@@ -26,11 +26,9 @@ To see your applications health enter url `http://localhost:8081/healthcheck`
 
 Product
 0. Figure out single or multiple Goals/Records per type per day
-0. Day stats
 0. Week stats
 1. Month stats
 1. Support multi sport 
-2. Show existing types as choices
 3. Add manual % of goal completed to record
 4. Add order to record for day
 5. Most common duration for each type
@@ -42,14 +40,12 @@ Product
 
 UI
 1. Show all workouts on main page
-2. Put Garmin stuff on separate tab
 3. Use components for forms
-4. Make input look good
 5. Proper sizing on mobile
 6. Show calendar for adding records
-7. Radio button for rating
 8. Edit and delete goals, workouts
 9. Keep previous data when changing tabs
+10. Show stats for day selected on calendar
 
 Packaging and deployment
 1. Use same index.html in web folder and dropwizard folder
