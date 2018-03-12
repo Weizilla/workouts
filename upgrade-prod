@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-ssh workouts "./docker-upgrade-prod"
+ssh workouts "cd workouts && ./docker-upgrade-prod"
