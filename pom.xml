@@ -49,11 +49,6 @@
             </dependency>
             <dependency>
                 <groupId>com.weizilla.workouts</groupId>
-                <artifactId>workouts-web</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.weizilla.workouts</groupId>
                 <artifactId>workouts-core</artifactId>
                 <type>test-jar</type>
                 <version>${project.version}</version>
@@ -97,7 +92,6 @@
 
     <modules>
         <module>core</module>
-        <module>web</module>
         <module>application</module>
     </modules>
 

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./clean-and-build-all && ./docker-push && ./upgrade-prod
+./clean-and-build-all && ./docker-push && ./upgrade-prod && ./upgrade-web

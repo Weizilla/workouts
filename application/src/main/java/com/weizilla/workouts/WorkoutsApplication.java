@@ -8,18 +8,17 @@ import com.weizilla.workouts.config.WorkoutsConfiguration;
 import com.weizilla.workouts.entity.ObjectMappers;
 import com.weizilla.workouts.guice.WorkoutsModule;
 import com.weizilla.workouts.jdbi.dao.ActivityDao;
-import com.weizilla.workouts.jdbi.dbi.DbiFactory;
 import com.weizilla.workouts.jdbi.dao.GoalDao;
 import com.weizilla.workouts.jdbi.dao.RecordDao;
+import com.weizilla.workouts.jdbi.dbi.DbiFactory;
 import com.weizilla.workouts.resouces.ActivityResource;
 import com.weizilla.workouts.resouces.BuildResource;
+import com.weizilla.workouts.resouces.DayStatResource;
 import com.weizilla.workouts.resouces.ExportResource;
 import com.weizilla.workouts.resouces.GoalResource;
 import com.weizilla.workouts.resouces.RecordResource;
 import com.weizilla.workouts.resouces.TypesResource;
-import com.weizilla.workouts.resouces.DayStatResource;
 import io.dropwizard.Application;
-import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
@@ -53,9 +52,6 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
     @Override
     public void initialize(Bootstrap<WorkoutsConfiguration> bootstrap) {
         bootstrap.setObjectMapper(ObjectMappers.OBJECT_MAPPER);
-        bootstrap.addBundle(new ConfiguredAssetsBundle("/public/", "/"));
-        // Enable variable substitution with environment variables
-
         bootstrap.setConfigurationSourceProvider(
             new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
                 new EnvironmentVariableSubstitutor()));
@@ -66,7 +62,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
                     Environment environment) throws Exception {
         // Configure CORS parameters
         Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
-        cors.setInitParameter("allowedOrigins", "http://localhost:8000");
+        cors.setInitParameter("allowedOrigins", "http://localhost:8000,http://workouts.weizilla.com");
         cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
         cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cd web && npm run build && aws s3 sync dist s3://workouts.weizilla.com --profile workouts
+

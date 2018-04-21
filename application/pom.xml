@@ -21,10 +21,6 @@
             <artifactId>workouts-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.weizilla.workouts</groupId>
-            <artifactId>workouts-web</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
         </dependency>
