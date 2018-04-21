@@ -1,7 +1,8 @@
-version: "3"
+version: "2"
 services:
   workouts:
     image: weizilla/workouts:latest
+    mem_limit: 256m
     ports:
       - "80:8080"
     volumes:
