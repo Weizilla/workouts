@@ -62,7 +62,7 @@ public class WorkoutsApplication extends Application<WorkoutsConfiguration> {
                     Environment environment) throws Exception {
         // Configure CORS parameters
         Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
-        cors.setInitParameter("allowedOrigins", "http://workouts.weizilla.com");
+        cors.setInitParameter("allowedOrigins", "http://workouts.weizilla.com,http://localhost:8000");
         cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
         cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
