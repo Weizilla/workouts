@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+./clean-and-build-all && ./docker-push && ./upgrade-api && ./upgrade-web
