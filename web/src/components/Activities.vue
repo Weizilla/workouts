@@ -12,7 +12,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="activity in activities">
+      <tr v-for="activity in activities" :key="activity.id">
         <td>{{ activity.id }}</td>
         <td>{{ activity.type }}</td>
         <td>{{ activity.date }}</td>
@@ -21,39 +21,20 @@
       </tr>
       </tbody>
     </table>
-    <button v-on:click="updateGarmin">Update Garmin</button>
-    <button v-on:click="refreshGarmin">Refresh Garmin</button>
+    <button v-on:click="pollActivities">Poll Garmin</button>
+    <button v-on:click="populateActivities">Refresh Garmin</button>
   </div>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                message: "Started",
-                activities: [],
-            };
-        },
-        created: function() {
-            this.refreshGarmin();
-        },
-        methods: {
-            updateGarmin: function () {
-                this.$http.get(this.host() + "/api/activities/update").then(response => {
-                    this.message = response.data;
-                })
-            },
-            refreshGarmin: function () {
-                this.$http.get(this.host() + "/api/activities/").then(response => {
-                    this.activities = response.data;
-                    this.message = "Got " + this.activities.length + " activities";
-                }, response => {
-                    let msg = "Error: " + response;
-                    console.log(msg);
-                    this.message = msg;
-                })
-            },
-        }
-    }
-</script>
+import { mapState, mapActions } from "vuex";
 
+export default {
+  computed: {
+    ...mapState(["activities"])
+  },
+  methods: {
+    ...mapActions(["pollActivities", "populateActivities"])
+  }
+};
+</script>

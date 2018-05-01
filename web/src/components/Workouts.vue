@@ -14,9 +14,9 @@
         <th>S</th>
       </tr>
       </thead>
-      <tr v-for="w in 3">
-        <template v-for="d in 7" >
-          <td v-bind:class="getCompletionClass(w, d)">
+      <tr v-for="w in 3" :key="w">
+        <template v-for="d in 7">
+          <td v-bind:class="getCompletionClass(w, d)" :key="d">
             {{dates[d - 1 + (w - 1) * 7].format("M/D")}}
             <router-link class="nav-link" v-bind:to="{name: 'workouts', params: {'date': dates[d - 1 + (w - 1) * 7].format('YYYY-MM-DD')}}">Stats</router-link>
           </td>
@@ -25,10 +25,10 @@
     </table>
 
     <div>
-      Day {{this.workouts[$route.params.date]}}
+      Day {{$route.params.date}} {{workouts.get($route.params.date)}}
     </div>
 
-    <button class="btn btn-secondary btn-lg btn-block" v-on:click="refreshWorkouts">Refresh Workouts</button>
+    <button class="btn btn-secondary btn-lg btn-block" v-on:click="populateWorkouts">Refresh Workouts</button>
     <table class="table table-striped table-hover">
       <thead>
       <tr>
@@ -42,8 +42,7 @@
       </tr>
       </thead>
       <tbody>
-      <template v-for="stat in workouts">
-        <tr v-for="workout in stat.workoutStats">
+        <tr v-for="workout in allWorkouts" :key="workout.id">
           <td>{{ workout.date }}</td>
           <td>{{ workout.type }}</td>
           <td>{{ workout.completion }}</td>
@@ -52,61 +51,44 @@
           <td>{{ workout.totalDuration }}</td>
           <td>{{ workout.goalDuration }}</td>
         </tr>
-      </template>
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
-    import moment from 'moment';
-    export default {
-        data() {
-            return {
-                message: "Started",
-                workouts: {},
-                dates: [],
-            };
-        },
-        created: function() {
-          this.refreshWorkouts();
+import moment from "moment";
+import { mapState, mapActions, mapGetters } from "vuex";
+import { store } from "../store/store";
 
-          let startDate = moment().startOf("week").subtract(1, "weeks");
-          for (let i = 0; i < 21; i++) {
-              this.dates.push(startDate.clone().add(i, "days"));
-          }
-        },
-        methods: {
-            getCompletionClass: function(week, day) {
-              let d = this.dates[day - 1 + (week - 1) * 7].format("YYYY-MM-DD");
-              let workout = this.workouts[d];
-              if (workout) {
-                  switch (workout.completion) {
-                      case "NONE":
-                          return "bg-danger";
-                      case "SOME":
-                          return "bg-warning";
-                      case "ALL":
-                          return "bg-success";
-                      case "GOAL":
-                          return ["text-light", "bg-primary"];
-                  }
-              }
-            },
-            refreshWorkouts: function () {
-                this.$http.get(this.host() + "/api/stats").then(response => {
-                    this.workouts = {};
-                    for (let i = 0; i < response.data.length; i++) {
-                        let workout = response.data[i];
-                        this.workouts[workout.date] = workout;
-                    }
-                    this.message = "Got " + this.workouts.length + " workouts";
-                }, response => {
-                    let msg = "Error: " + response.data;
-                    console.log(msg);
-                    this.message = msg;
-                })
-            }
-        }
+export default {
+  data() {
+    return {
+      dates: []
+    };
+  },
+  computed: {
+    ...mapState(["workouts"]),
+    ...mapGetters(["allWorkouts"])
+  },
+  created: function() {
+    store.dispatch("populateWorkouts");
+    let startDate = moment()
+      .startOf("week")
+      .subtract(1, "weeks");
+    for (let i = 0; i < 21; i++) {
+      this.dates.push(startDate.clone().add(i, "days"));
     }
+  },
+  methods: {
+    getCompletionClass: function(week, day) {
+      let d = this.dates[day - 1 + (week - 1) * 7].format("YYYY-MM-DD");
+      const workout = this.workouts.get(d);
+      if (workout) {
+        return workout.completionClass;
+      }
+    },
+    ...mapActions(["populateWorkouts"])
+  }
+};
 </script>

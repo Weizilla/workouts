@@ -6,15 +6,19 @@
         <div class="form-group row">
           <label class="col-2" for="newRecordType">Type</label>
           <div class="col-10">
-           <div class="btn-group-vertical btn-block btn-group-toggle" data-toggle="buttons" id="newRecordType">
+           <div class="btn-group-vertical btn-block btn-group-toggle"
+            data-toggle="buttons" id="newRecordType">
             <template v-for="type in types">
-              <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['type'] === type ? 'active' : ''">
-                <input type="radio" name="types" v-model="newRecord['type']" v-bind:value="type">{{ type }}
+              <label class="btn form-control btn-outline-secondary"
+                v-bind:class="newRecordType === type ? 'active' : ''"
+                :key="type">
+                <input type="radio" name="types"
+                  v-model="newRecordType" v-bind:value="type">{{ type }}
               </label>
             </template>
            </div>
             <div>
-              <input class="form-control" type="text" v-model="newRecord['type']">
+              <input class="form-control" type="text" v-model="newRecordType">
             </div>
           </div>
         </div>
@@ -22,11 +26,13 @@
         <div class="form-group row">
           <label class="col-2 col-form-label">Outdoor</label>
           <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['outdoor'] === 'true' ? 'active' : ''">
-              <input type="radio" name="options" v-model="newRecord['outdoor']" value="true">Outside
+            <label class="btn form-control btn-outline-secondary"
+                  v-bind:class="newRecordOutdoor === 'true' ? 'active' : ''">
+              <input type="radio" name="options" v-model="newRecordOutdoor" value="true">Outside
             </label>
-            <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['outdoor'] === 'false' ? 'active' : ''">
-              <input type="radio" name="options" v-model="newRecord['outdoor']" value="false">Inside
+            <label class="btn form-control btn-outline-secondary"
+                v-bind:class="newRecordOutdoor === 'false' ? 'active' : ''">
+              <input type="radio" name="options" v-model="newRecordOutdoor" value="false">Inside
             </label>
           </div>
         </div>
@@ -35,7 +41,7 @@
           <label class="col-2 col-form-label" for="newRecordDate">Date</label>
           <div class="col-10">
             <input id="newRecordDate" class="form-control" type="date"
-                v-model="newRecord['date']">
+                v-model="newRecordDate">
           </div>
         </div>
 
@@ -43,8 +49,11 @@
           <label class="col-2 col-form-label">Rating</label>
           <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
             <template v-for="n in 5">
-              <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['rating'] === n ? 'active' : ''">
-                <input type="radio" name="options" v-model="newRecord['rating']" v-bind:value="n">{{n}}
+              <label class="btn form-control btn-outline-secondary"
+                  v-bind:class="newRecordRating === n ? 'active' : ''"
+                  :key="n">
+                <input type="radio" name="options"
+                    v-model="newRecordRating" v-bind:value="n">{{n}}
               </label>
             </template>
           </div>
@@ -53,12 +62,14 @@
         <div class="form-group row">
           <label class="col-2 col-form-label">Duration</label>
           <div class="col-10 input-group">
-            <input id="newRecordDurationHr" class="form-control" type="number" v-model="newRecord['durationHr']">
+            <input id="newRecordDurationHr" class="form-control" type="number"
+              v-model="newRecordDurationHr">
 
             <div class="input-group-append">
               <span class="input-group-text">Hr</span>
             </div>
-            <input id="newRecordDurationMin" class="form-control" type="number" v-model="newRecord['durationMin']">
+            <input id="newRecordDurationMin" class="form-control" type="number"
+              v-model="newRecordDurationMin">
 
             <div class="input-group-append">
               <span class="input-group-text">Min</span>
@@ -70,12 +81,15 @@
           <label class="col-2 col-form-label" for="newRecordDistanceValue">Distance</label>
           <div class="col-10 input-group">
             <input id="newRecordDistanceValue" class="form-control" type="number"
-                v-model="newRecord['distanceValue']">
+                v-model="newRecordDistanceValue">
 
           <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
               <template v-for="(m, unit) in distanceUnits">
-                <label class="btn form-control btn-outline-secondary" v-bind:class="newRecord['distanceUnit'] === unit ? 'active' : ''">
-                  <input type="radio" name="options" v-model="newRecord['distanceUnit']" v-bind:value="unit">{{unit}}
+                <label class="btn form-control btn-outline-secondary"
+                    v-bind:class="newRecordDistanceUnit === unit ? 'active' : ''"
+                    :key="unit">
+                  <input type="radio" name="options"
+                    v-model="newRecordDistanceUnit" v-bind:value="unit">{{unit}}
                 </label>
               </template>
             </div>
@@ -85,7 +99,8 @@
         <div class="form-group row">
           <label class="col-2" for="newRecordComment">Comment</label>
           <div class="col-10">
-            <textarea id="newRecordComment" class="form-control" v-model="newRecord['comment']"></textarea>
+            <textarea id="newRecordComment" class="form-control"
+              v-model="newRecordComment"></textarea>
           </div>
         </div>
 
@@ -96,7 +111,7 @@
     <hr>
 
     <div>
-      <button class="btn btn-secondary btn-lg btn-block" v-on:click="refreshRecords">Refresh Records</button>
+      <button class="btn btn-secondary btn-lg btn-block" v-on:click="populateAllRecords">Refresh Records</button>
       <h3>Records</h3>
       <table class="table table-striped table-hover">
         <thead>
@@ -112,7 +127,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="record in records">
+        <tr v-for="record in allRecords" :key="record.id">
           <td>{{ record.id }}</td>
           <td>{{ record.type }}</td>
           <td>{{ record.outdoor }}</td>
@@ -129,71 +144,31 @@
 </template>
 
 <script>
-    import moment from 'moment';
-    export default {
-        data() {
-            return {
-                message: "Started",
-                records: [],
-                types: ["swim", "bike", "run"],
-                distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
-                newRecord: {},
-            };
-        },
-        created: function() {
-            this.refreshTypes();
-            this.refreshRecords();
-        },
-        methods: {
-            refreshTypes: function() {
-                this.$http.get(this.host() + "/api/types/").then(response => {
-                    this.types = response.data;
-                    this.message = "Got " + this.types.length + " types";
-                }, response => {
-                    let msg = "Error: " + response;
-                    console.log(msg);
-                    this.message = msg;
-                });
-            },
-            refreshRecords: function () {
-                this.$http.get(this.host() + "/api/records/").then(response => {
-                    this.records = response.data;
-                    this.message = "Got " + this.records.length + " records";
-                }, response => {
-                    let msg = "Error: " + response;
-                    console.log(msg);
-                    this.message = msg;
-                })
-            },
-            addRecord: function () {
-                let durationHr = parseInt(this.newRecord['durationHr'] || "0");
-                let durationMin = parseInt(this.newRecord['durationMin'] || "0");
-                let duration = (durationHr * 60 + durationMin) * 60;
+import moment from "moment";
+import { mapState, mapActions } from "vuex";
+import { store } from "../store/store";
+import { mapFields } from "vuex-map-fields";
 
-                let distanceValue = parseInt(this.newRecord["distanceValue"] || "0");
-                let distanceMultiplier = this.distanceUnits[this.newRecord["distanceUnit"]];
-                let distance = distanceValue * distanceMultiplier;
-
-                let postData = {
-                    type: this.newRecord['type'],
-                    outdoor: this.newRecord['outdoor'] === 'true',
-                    date: moment(this.newRecord['date']).format("YYYY-MM-DD"),
-                    rating: this.newRecord['rating'],
-                    duration: duration,
-                    distance: distance,
-                    comment: this.newRecord['comment']
-                };
-                console.log(JSON.stringify(postData));
-                this.$http.post(this.host() + "/api/records/", postData).then(response => {
-                    let newRecord = response.data;
-                    console.log("Added record: ", newRecord);
-                    this.refreshRecords();
-                }, response => {
-                    let msg = "Error: " + JSON.stringify(response.data);
-                    console.log(msg);
-                    this.message = msg;
-                });
-            },
-        }
-    }
+export default {
+  created: function() {
+    store.dispatch("populateTypes");
+  },
+  computed: {
+    ...mapState(["types", "allRecords", "timesOfDay", "distanceUnits"]),
+    ...mapFields({
+      newRecordType: "newRecord.type",
+      newRecordDate: "newRecord.date",
+      newRecordOutdoor: "newRecord.outdoor",
+      newRecordRating: "newRecord.rating",
+      newRecordDurationHr: "newRecord.durationHr",
+      newRecordDurationMin: "newRecord.durationMin",
+      newRecordDistanceUnit: "newRecord.distanceUnit",
+      newRecordDistanceValue: "newRecord.distanceValue",
+      newRecordComment: "newRecord.comment"
+    })
+  },
+  methods: {
+    ...mapActions(["populateAllRecords", "addRecord"])
+  }
+};
 </script>

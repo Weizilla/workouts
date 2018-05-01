@@ -6,15 +6,18 @@
         <div class="form-group row">
           <label class="col-2" for="newGoalType">Type</label>
           <div class="col-10">
-            <div class="btn-group-vertical btn-block btn-group-toggle" data-toggle="buttons" id="newGoalType">
+            <div class="btn-group-vertical btn-block btn-group-toggle"
+                data-toggle="buttons" id="newGoalType">
               <template v-for="type in types">
-                <label class="btn form-control btn-outline-secondary" v-bind:class="newGoal['type'] === type ? 'active' : ''">
-                  <input type="radio" name="types" v-model="newGoal['type']" v-bind:value="type">{{ type }}
+                <label class="btn form-control btn-outline-secondary"
+                    v-bind:class="newGoalType === type ? 'active' : ''"
+                    :key="type">
+                  <input type="radio" name="types" v-model="newGoalType" v-bind:value="type">{{ type }}
                 </label>
               </template>
             </div>
             <div>
-              <input class="form-control" type="text" v-model="newGoal['type']">
+              <input class="form-control" type="text" v-model="newGoalType">
             </div>
           </div>
         </div>
@@ -23,7 +26,7 @@
           <label class="col-2 col-form-label" for="newGoalDate">Date</label>
           <div class="col-10">
             <input id="newGoalDate" class="form-control" type="date"
-                v-model="newGoal['date']">
+                v-model="newGoalDate">
           </div>
         </div>
 
@@ -31,8 +34,10 @@
           <label class="col-2">Time</label>
           <div class="col-10 btn-group btn-group-toggle" data-toggle="buttons">
             <template v-for="timeOfDay in timesOfDay">
-              <label class="btn form-control btn-outline-secondary" v-bind:class="newGoal['timeOfDay'] === timeOfDay ? 'active' : ''">
-                <input type="radio" name="options" v-model="newGoal['timeOfDay']" v-bind:value="timeOfDay">{{timeOfDay}}
+              <label class="btn form-control btn-outline-secondary"
+                  v-bind:class="newGoalTimeOfDay === timeOfDay ? 'active' : ''"
+                  :key="timeOfDay">
+                <input type="radio" name="options" v-model="newGoalTimeOfDay" v-bind:value="timeOfDay">{{timeOfDay}}
               </label>
             </template>
           </div>
@@ -41,12 +46,12 @@
         <div class="form-group row">
           <label class="col-2 col-form-label">Duration</label>
           <div class="col-10 input-group">
-            <input id="newGoalDurationHr" class="form-control" type="number" v-model="newGoal['durationHr']">
+            <input id="newGoalDurationHr" class="form-control" type="number" v-model="newGoalDurationHr">
 
             <div class="input-group-append">
               <span class="input-group-text">Hr</span>
             </div>
-            <input id="newGoalDurationMin" class="form-control" type="number" v-model="newGoal['durationMin']">
+            <input id="newGoalDurationMin" class="form-control" type="number" v-model="newGoalDurationMin">
 
             <div class="input-group-append">
               <span class="input-group-text">Min</span>
@@ -58,11 +63,13 @@
           <label class="col-2 col-form-label" for="newGoalDistanceValue">Distance</label>
           <div class="col-10 input-group">
             <input id="newGoalDistanceValue" class="form-control" type="number"
-                v-model="newGoal['distanceValue']">
+                v-model="newGoalDistanceValue">
             <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
                 <template v-for="(m, unit) in distanceUnits">
-                  <label class="btn form-control btn-outline-secondary" v-bind:class="newGoal['distanceUnit'] === unit ? 'active' : ''">
-                    <input type="radio" name="options" v-model="newGoal['distanceUnit']" v-bind:value="unit">{{unit}}
+                  <label class="btn form-control btn-outline-secondary"
+                      v-bind:class="newGoalDistanceUnit === unit ? 'active' : ''"
+                      :key="unit">
+                    <input type="radio" name="options" v-model="newGoalDistanceUnit" v-bind:value="unit">{{unit}}
                   </label>
                 </template>
               </div>
@@ -72,7 +79,7 @@
         <div class="form-group row">
           <label class="col-2" for="newGoalNotes">Notes</label>
           <div class="col-10">
-            <textarea id="newGoalNotes" class="form-control" v-model="newGoal['notes']"></textarea>
+            <textarea id="newGoalNotes" class="form-control" v-model="newGoalNotes"></textarea>
           </div>
         </div>
 
@@ -83,7 +90,7 @@
     <hr>
     <div>
       <button class="btn btn-secondary btn-lg btn-block"
-          v-on:click="refreshGoals">Refresh Goals</button>
+          v-on:click="populateAllGoals">Refresh Goals</button>
       <h3>Goals</h3>
       <table class="table table-striped table-hover">
         <thead>
@@ -98,7 +105,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="goal in goals">
+        <tr v-for="goal in allGoals" :key="goal.id">
           <td>{{ goal.id }}</td>
           <td>{{ goal.type }}</td>
           <td>{{ goal.date }}</td>
@@ -114,72 +121,30 @@
 </template>
 
 <script>
-    import moment from 'moment';
-    export default {
-        data() {
-            return {
-                message: "Started",
-                goals: [],
-                types: [],
-                timesOfDay: ["Morning", "Afternoon", "Evening"],
-                distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
-                newGoal: {},
-            };
-        },
-        created: function() {
-            this.refreshTypes();
-            this.refreshGoals();
-        },
-        methods: {
-            refreshTypes: function() {
-                this.$http.get(this.host() + "/api/types/").then(response => {
-                    this.types = response.data;
-                    this.message = "Got " + this.types.length + " types";
-                }, response => {
-                    let msg = "Error: " + response;
-                    console.log(msg);
-                    this.message = msg;
-                })
-            },
-            refreshGoals: function () {
-                this.$http.get(this.host() + "/api/goals/").then(response => {
-                    this.goals = response.data;
-                    this.message = "Got " + this.goals.length + " goals";
-                }, response => {
-                    let msg = "Error: " + response;
-                    console.log(msg);
-                    this.message = msg;
-                })
-            },
-            addGoal: function () {
-                let durationHr = parseInt(this.newGoal['durationHr'] || "0");
-                let durationMin = parseInt(this.newGoal['durationMin'] || "0");
-                let duration = (durationHr * 60 + durationMin) * 60;
+import moment from "moment";
+import { mapState, mapActions } from "vuex";
+import { store } from "../store/store";
+import { mapFields } from "vuex-map-fields";
 
-                let distanceValue = parseInt(this.newGoal["distanceValue"] || "0");
-                let distanceMultiplier = this.distanceUnits[this.newGoal["distanceUnit"]];
-                let distance = distanceValue * distanceMultiplier;
-
-                let postData = {
-                    type: this.newGoal['type'],
-                    date: moment(this.newGoal['date']).format("YYYY-MM-DD"),
-                    timeOfDay: this.newGoal['timeOfDay'].toUpperCase(),
-                    rating: this.newGoal['rating'],
-                    duration: duration,
-                    distance: distance,
-                    notes: this.newGoal['notes']
-                };
-                console.log(JSON.stringify(postData));
-                this.$http.post(this.host() + "/api/goals/", postData).then(response => {
-                    let newGoal = response.data;
-                    console.log("Added goal: ", newGoal);
-                    this.refreshGoals();
-                }, response => {
-                    let msg = "Error: " + JSON.stringify(response.data);
-                    console.log(msg);
-                    this.message = msg;
-                });
-            },
-        }
-    }
+export default {
+  created: function() {
+    store.dispatch("populateTypes");
+  },
+  computed: {
+    ...mapState(["types", "allGoals", "timesOfDay", "distanceUnits"]),
+    ...mapFields({
+      newGoalType: "newGoal.type",
+      newGoalDate: "newGoal.date",
+      newGoalTimeOfDay: "newGoal.timeOfDay",
+      newGoalDurationHr: "newGoal.durationHr",
+      newGoalDurationMin: "newGoal.durationMin",
+      newGoalDistanceUnit: "newGoal.distanceUnit",
+      newGoalDistanceValue: "newGoal.distanceValue",
+      newGoalNotes: "newGoal.notes"
+    })
+  },
+  methods: {
+    ...mapActions(["populateAllGoals", "addGoal"])
+  }
+};
 </script>
