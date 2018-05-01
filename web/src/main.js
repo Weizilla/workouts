@@ -6,6 +6,8 @@ import router from './router';
 import VueResource from "vue-resource";
 import mixins from "./mixins";
 import "bootswatch/dist/cosmo/bootstrap.min.css"
+import Vuex from "vuex";
+import { store } from "./store/store";
 
 Vue.config.productionTip = false;
 
@@ -15,6 +17,7 @@ Vue.mixin(mixins);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>',
