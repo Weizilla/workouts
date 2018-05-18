@@ -156,18 +156,7 @@ export default {
         notes: this.newGoal["notes"]
       };
       console.log(JSON.stringify(postData));
-      this.$http.post(this.host() + "/api/goals/", postData).then(
-        response => {
-          let newGoal = response.data;
-          console.log("Added goal: ", newGoal);
-          this.refreshGoals();
-        },
-        response => {
-          let msg = "Error: " + JSON.stringify(response.data);
-          console.log(msg);
-          this.message = msg;
-        }
-      );
+      store.dispatch("addGoal", postData);
     }
   }
 };

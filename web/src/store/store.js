@@ -45,6 +45,9 @@ const actions = {
     async populateAllGoals({ state, commit }) {
         const goals = await api.getAllGoals();
         commit("setAllGoals", goals);
+    },
+    async addGoal({ state, commit }, newGoal) {
+        await api.addGoal(newGoal);
     }
 }
 
