@@ -14,6 +14,7 @@ const state = {
     buildTime: null,
     commitId: null,
     goals: new Map(),
+    allGoals: [],
     types: [],
 }
 
@@ -40,6 +41,10 @@ const actions = {
     async populateTypes({ state, commit }) {
         const types = await api.getTypes();
         commit("setTypes", types);
+    },
+    async populateAllGoals({ state, commit }) {
+        const goals = await api.getAllGoals();
+        commit("setAllGoals", goals);
     }
 }
 
@@ -54,6 +59,9 @@ const mutations = {
     setTypes(state, types) {
         state.types = types;
     },
+    setAllGoals(state, goals) {
+        state.allGoals = goals;
+    }
 }
 
 export const store = new Vuex.Store({

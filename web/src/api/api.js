@@ -15,6 +15,11 @@ export const api = {
             .then(response => response.data)
             .catch(error => Promise.reject(error));
     },
+    getAllGoals() {
+        return axios.get(host + "/api/goals/")
+            .then(response => response.data)
+            .catch(error => Promise.reject(error));
+    },
     getTypes() {
         return axios.get(host + "/api/types")
             .then(response => response.data)

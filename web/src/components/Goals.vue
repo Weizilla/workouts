@@ -98,7 +98,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="goal in goals">
+        <tr v-for="goal in allGoals">
           <td>{{ goal.id }}</td>
           <td>{{ goal.type }}</td>
           <td>{{ goal.date }}</td>
@@ -121,7 +121,6 @@ export default {
   data() {
     return {
       message: "Started",
-      goals: [],
       timesOfDay: ["Morning", "Afternoon", "Evening"],
       distanceUnits: { mi: 1609.34, km: 1000, m: 1, yd: 0.9144 },
       newGoal: {}
@@ -132,34 +131,11 @@ export default {
     store.dispatch("populateTypes");
   },
   computed: {
-    ...mapState(["types"])
+    ...mapState(["types", "allGoals"])
   },
   methods: {
-    refreshTypes: function() {
-      this.$http.get(this.host() + "/api/types/").then(
-        response => {
-          this.types = response.data;
-          this.message = "Got " + this.types.length + " types";
-        },
-        response => {
-          let msg = "Error: " + response;
-          console.log(msg);
-          this.message = msg;
-        }
-      );
-    },
     refreshGoals: function() {
-      this.$http.get(this.host() + "/api/goals/").then(
-        response => {
-          this.goals = response.data;
-          this.message = "Got " + this.goals.length + " goals";
-        },
-        response => {
-          let msg = "Error: " + response;
-          console.log(msg);
-          this.message = msg;
-        }
-      );
+      store.dispatch("populateAllGoals");
     },
     addGoal: function() {
       let durationHr = parseInt(this.newGoal["durationHr"] || "0");
