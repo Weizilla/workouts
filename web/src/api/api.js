@@ -14,5 +14,10 @@ export const api = {
         return axios.get(host + "/api/goals/?date=" + today + "&numDays=7")
             .then(response => response.data)
             .catch(error => Promise.reject(error));
+    },
+    getTypes() {
+        return axios.get(host + "/api/types")
+            .then(response => response.data)
+            .catch(error => Promise.reject(error));
     }
 }

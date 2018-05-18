@@ -114,72 +114,85 @@
 </template>
 
 <script>
-    import moment from 'moment';
-    export default {
-        data() {
-            return {
-                message: "Started",
-                goals: [],
-                types: [],
-                timesOfDay: ["Morning", "Afternoon", "Evening"],
-                distanceUnits: {"mi": 1609.34, "km": 1000, "m": 1, "yd": 0.9144},
-                newGoal: {},
-            };
+import moment from "moment";
+import { mapState } from "vuex";
+import { store } from "../store/store";
+export default {
+  data() {
+    return {
+      message: "Started",
+      goals: [],
+      timesOfDay: ["Morning", "Afternoon", "Evening"],
+      distanceUnits: { mi: 1609.34, km: 1000, m: 1, yd: 0.9144 },
+      newGoal: {}
+    };
+  },
+  created: function() {
+    //this.refreshGoals();
+    store.dispatch("populateTypes");
+  },
+  computed: {
+    ...mapState(["types"])
+  },
+  methods: {
+    refreshTypes: function() {
+      this.$http.get(this.host() + "/api/types/").then(
+        response => {
+          this.types = response.data;
+          this.message = "Got " + this.types.length + " types";
         },
-        created: function() {
-            this.refreshTypes();
-            this.refreshGoals();
-        },
-        methods: {
-            refreshTypes: function() {
-                this.$http.get(this.host() + "/api/types/").then(response => {
-                    this.types = response.data;
-                    this.message = "Got " + this.types.length + " types";
-                }, response => {
-                    let msg = "Error: " + response;
-                    console.log(msg);
-                    this.message = msg;
-                })
-            },
-            refreshGoals: function () {
-                this.$http.get(this.host() + "/api/goals/").then(response => {
-                    this.goals = response.data;
-                    this.message = "Got " + this.goals.length + " goals";
-                }, response => {
-                    let msg = "Error: " + response;
-                    console.log(msg);
-                    this.message = msg;
-                })
-            },
-            addGoal: function () {
-                let durationHr = parseInt(this.newGoal['durationHr'] || "0");
-                let durationMin = parseInt(this.newGoal['durationMin'] || "0");
-                let duration = (durationHr * 60 + durationMin) * 60;
-
-                let distanceValue = parseInt(this.newGoal["distanceValue"] || "0");
-                let distanceMultiplier = this.distanceUnits[this.newGoal["distanceUnit"]];
-                let distance = distanceValue * distanceMultiplier;
-
-                let postData = {
-                    type: this.newGoal['type'],
-                    date: moment(this.newGoal['date']).format("YYYY-MM-DD"),
-                    timeOfDay: this.newGoal['timeOfDay'].toUpperCase(),
-                    rating: this.newGoal['rating'],
-                    duration: duration,
-                    distance: distance,
-                    notes: this.newGoal['notes']
-                };
-                console.log(JSON.stringify(postData));
-                this.$http.post(this.host() + "/api/goals/", postData).then(response => {
-                    let newGoal = response.data;
-                    console.log("Added goal: ", newGoal);
-                    this.refreshGoals();
-                }, response => {
-                    let msg = "Error: " + JSON.stringify(response.data);
-                    console.log(msg);
-                    this.message = msg;
-                });
-            },
+        response => {
+          let msg = "Error: " + response;
+          console.log(msg);
+          this.message = msg;
         }
+      );
+    },
+    refreshGoals: function() {
+      this.$http.get(this.host() + "/api/goals/").then(
+        response => {
+          this.goals = response.data;
+          this.message = "Got " + this.goals.length + " goals";
+        },
+        response => {
+          let msg = "Error: " + response;
+          console.log(msg);
+          this.message = msg;
+        }
+      );
+    },
+    addGoal: function() {
+      let durationHr = parseInt(this.newGoal["durationHr"] || "0");
+      let durationMin = parseInt(this.newGoal["durationMin"] || "0");
+      let duration = (durationHr * 60 + durationMin) * 60;
+
+      let distanceValue = parseInt(this.newGoal["distanceValue"] || "0");
+      let distanceMultiplier = this.distanceUnits[this.newGoal["distanceUnit"]];
+      let distance = distanceValue * distanceMultiplier;
+
+      let postData = {
+        type: this.newGoal["type"],
+        date: moment(this.newGoal["date"]).format("YYYY-MM-DD"),
+        timeOfDay: this.newGoal["timeOfDay"].toUpperCase(),
+        rating: this.newGoal["rating"],
+        duration: duration,
+        distance: distance,
+        notes: this.newGoal["notes"]
+      };
+      console.log(JSON.stringify(postData));
+      this.$http.post(this.host() + "/api/goals/", postData).then(
+        response => {
+          let newGoal = response.data;
+          console.log("Added goal: ", newGoal);
+          this.refreshGoals();
+        },
+        response => {
+          let msg = "Error: " + JSON.stringify(response.data);
+          console.log(msg);
+          this.message = msg;
+        }
+      );
     }
+  }
+};
 </script>

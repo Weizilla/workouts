@@ -14,6 +14,7 @@ const state = {
     buildTime: null,
     commitId: null,
     goals: new Map(),
+    types: [],
 }
 
 const actions = {
@@ -21,20 +22,24 @@ const actions = {
         const buildInfo = await api.getBuildInfo();
         commit("setBuildInfo", buildInfo);
     },
-    async populateGoals({state, commit}) {
+    async populateGoals({ state, commit }) {
         const goals = await api.getGoals();
         console.log(goals);
         const allGoals = new Map();
         goals.forEach(((goal) => {
             const date = goal.date;
             const collection = allGoals.get(date);
-            if (! collection) {
+            if (!collection) {
                 allGoals.set(date, [goal]);
             } else {
                 collection.push(goal);
             }
         }));
         commit("setGoals", allGoals);
+    },
+    async populateTypes({ state, commit }) {
+        const types = await api.getTypes();
+        commit("setTypes", types);
     }
 }
 
@@ -45,6 +50,9 @@ const mutations = {
     },
     setGoals(state, goals) {
         state.goals = goals;
+    },
+    setTypes(state, types) {
+        state.types = types;
     },
 }
 
