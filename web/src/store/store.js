@@ -12,13 +12,29 @@ function utcToChicago(utcDateTime) {
 
 const state = {
     buildTime: null,
-    commitId: null
+    commitId: null,
+    goals: new Map(),
 }
 
 const actions = {
     async populateBuildInfo({ state, commit }) {
         const buildInfo = await api.getBuildInfo();
         commit("setBuildInfo", buildInfo);
+    },
+    async populateGoals({state, commit}) {
+        const goals = await api.getGoals();
+        console.log(goals);
+        const allGoals = new Map();
+        goals.forEach(((goal) => {
+            const date = goal.date;
+            const collection = allGoals.get(date);
+            if (! collection) {
+                allGoals.set(date, [goal]);
+            } else {
+                collection.push(goal);
+            }
+        }));
+        commit("setGoals", allGoals);
     }
 }
 
@@ -26,7 +42,10 @@ const mutations = {
     setBuildInfo(state, buildInfo) {
         state.buildTime = utcToChicago(buildInfo["git.build.time"]);
         state.commitId = buildInfo["git.commit.id.abbrev"];
-    }
+    },
+    setGoals(state, goals) {
+        state.goals = goals;
+    },
 }
 
 export const store = new Vuex.Store({

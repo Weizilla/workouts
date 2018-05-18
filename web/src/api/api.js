@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 
 const host = process.env.NODE_ENV === 'production' ? 'http://workouts-api.weizilla.com' : 'http://localhost:8080';
 
@@ -8,4 +9,10 @@ export const api = {
             .then(response => response.data)
             .catch(error => Promise.reject(error));
     },
+    getGoals() {
+        let today = moment().format("YYYY-MM-DD");
+        return axios.get(host + "/api/goals/?date=" + today + "&numDays=7")
+            .then(response => response.data)
+            .catch(error => Promise.reject(error));
+    }
 }

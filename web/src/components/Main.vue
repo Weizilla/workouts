@@ -22,12 +22,9 @@
 </template>
 <script>
 import moment from "moment";
+import { mapState } from "vuex";
+import { store } from "../store/store";
 export default {
-  data() {
-    return {
-      goals: {}
-    };
-  },
   computed: {
     weekDates: function() {
       let dates = [];
@@ -38,38 +35,11 @@ export default {
         dates.push(d);
       }
       return dates;
-    }
+    },
+    ...mapState(["goals"])
   },
   created: function() {
-    this.refreshGoals();
-  },
-  methods: {
-    refreshGoals: function() {
-      let today = moment().format("YYYY-MM-DD");
-      let vm = this;
-      this.$http
-        .get(this.host() + "/api/goals/?date=" + today + "&numDays=7")
-        .then(
-          response => {
-            vm.goals = {};
-            for (let i = 0; i < response.data.length; i++) {
-              let goal = response.data[i];
-              let date = goal.date;
-              if (date in vm.goals) {
-                vm.goals[date].push(goal);
-              } else {
-                vm.goals[date] = [goal];
-              }
-            }
-            console.log(vm.goals);
-          },
-          response => {
-            let msg = "Error: " + response;
-            console.log(msg);
-            this.message = msg;
-          }
-        );
-    }
+    this.$store.dispatch("populateGoals");
   }
 };
 </script>
