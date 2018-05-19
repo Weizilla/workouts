@@ -15,9 +15,11 @@
     "bootswatch": "^4.1.1",
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.17",
+    "npm": "^6.0.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-map-fields": "^1.1.7"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -38,7 +40,7 @@
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-import-resolver-webpack": "^0.8.3",
     "eslint-loader": "^1.7.1",
-    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-vue": "^4.0.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
@@ -60,7 +62,7 @@
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.12.0",
-    "webpack-bundle-analyzer": "^2.11.3",
+    "webpack-bundle-analyzer": "^2.12.0",
     "webpack-dev-server": "^2.9.1",
     "webpack-merge": "^4.1.0"
   },
