@@ -12,13 +12,8 @@ function utcToChicago(utcDateTime) {
     return moment.tz(utcDateTime, "UTC").clone().tz("America/Chicago").format();
 }
 
-
-const state = {
-    buildTime: null,
-    commitId: null,
-    timesOfDay: ["Morning", "Afternoon", "Evening"],
-    distanceUnits: { mi: 1609.34, km: 1000, m: 1, yd: 0.9144 },
-    newGoal: {
+function createNewGoal() {
+    return {
         type: undefined,
         date: undefined,
         timeOfDay: undefined,
@@ -27,8 +22,11 @@ const state = {
         distanceUnit: undefined,
         distanceValue: undefined,
         notes: undefined,
-    },
-    newRecord: {
+    };
+}
+
+function createNewRecord() {
+    return {
         type: undefined,
         date: moment().format("YYYY-MM-DD"),
         outdoor: undefined,
@@ -38,7 +36,16 @@ const state = {
         distanceUnit: undefined,
         distanceValue: undefined,
         comment: undefined,
-    },
+    }
+}
+
+const state = {
+    buildTime: null,
+    commitId: null,
+    timesOfDay: ["Morning", "Afternoon", "Evening"],
+    distanceUnits: { mi: 1609.34, km: 1000, m: 1, yd: 0.9144 },
+    newGoal: createNewGoal(),
+    newRecord: createNewRecord(),
     allGoals: [],
     allRecords: [],
     activities: [],
@@ -124,6 +131,7 @@ const actions = {
         };
 
         await api.addGoal(newGoal);
+        commit("resetNewGoal");
     },
     async addRecord({ state, commit }) {
         let durationHr = parseInt(state.newRecord['durationHr'] || "0");
@@ -145,6 +153,7 @@ const actions = {
         };
 
         await api.addRecord(newRecord);
+        commit("resetNewRecord");
     },
     async pollActivities({ state, commit }) {
         await api.pollActivities();
@@ -164,6 +173,12 @@ const mutations = {
     setBuildInfo(state, buildInfo) {
         state.buildTime = utcToChicago(buildInfo["git.build.time"]);
         state.commitId = buildInfo["git.commit.id.abbrev"];
+    },
+    resetNewRecord() {
+        state.newRecord = createNewRecord();
+    },
+    resetNewGoal() {
+        state.newGoal = createNewGoal();
     },
     setGoals(state, goals) {
         state.goals = goals;
