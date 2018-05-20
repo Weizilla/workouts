@@ -15,20 +15,20 @@
       </tr>
       </thead>
       <tr v-for="w in 3" :key="w">
-        <template v-for="d in 7">
-          <td v-bind:class="getCompletionClass(w, d)" :key="d">
-            {{dates[d - 1 + (w - 1) * 7].format("M/D")}}
-            <router-link class="nav-link" v-bind:to="{name: 'workouts', params: {'date': dates[d - 1 + (w - 1) * 7].format('YYYY-MM-DD')}}">Stats</router-link>
-          </td>
-        </template>
+        <router-link v-for="d in 7" class="workoutDay"
+          v-bind:class="computeDateClass(w, d)"
+          :key="d"
+          v-bind:to="getWorkoutRouterLink(w, d)" tag="td">
+            {{getWorkoutDate(w, d, "M/DD")}}
+        </router-link>
       </tr>
     </table>
 
     <div>
-      Day {{$route.params.date}} {{workouts.get($route.params.date)}}
+      {{$route.params.date}} {{workouts.get($route.params.date) || "No workouts"}}
     </div>
 
-    <button class="btn btn-secondary btn-lg btn-block" v-on:click="populateWorkouts">Refresh Workouts</button>
+    <button class="btn btn-secondary btn-lg btn-block" v-on:click="populateAllWorkouts">Refresh Workouts</button>
     <table class="table table-striped table-hover">
       <thead>
       <tr>
@@ -62,33 +62,35 @@ import { mapState, mapActions, mapGetters } from "vuex";
 import { store } from "../store/store";
 
 export default {
-  data() {
-    return {
-      dates: []
-    };
-  },
   computed: {
-    ...mapState(["workouts"]),
-    ...mapGetters(["allWorkouts"])
+    ...mapState(["workouts", "allWorkouts"]),
+    ...mapGetters([
+      "getWorkoutDateClass",
+      "getWorkoutRouterLink",
+      "getWorkoutDate"
+    ])
   },
   created: function() {
     store.dispatch("populateWorkouts");
-    let startDate = moment()
-      .startOf("week")
-      .subtract(1, "weeks");
-    for (let i = 0; i < 21; i++) {
-      this.dates.push(startDate.clone().add(i, "days"));
-    }
   },
   methods: {
-    getCompletionClass: function(week, day) {
-      let d = this.dates[day - 1 + (week - 1) * 7].format("YYYY-MM-DD");
-      const workout = this.workouts.get(d);
-      if (workout) {
-        return workout.completionClass;
-      }
+    computeDateClass: function(w, d) {
+      const classes = this.getWorkoutDateClass(w, d) || [];
+      const date = this.getWorkoutDate(w, d);
+      const selected = this.$route.params.date === date ? ["selectedDay"] : [];
+      selected.push(...classes);
+      return selected;
     },
-    ...mapActions(["populateWorkouts"])
+    ...mapActions(["populateWorkouts", "populateAllWorkouts"])
   }
 };
 </script>
+
+<style scoped>
+.workoutDay {
+  cursor: pointer;
+}
+.selectedDay {
+  border: 1px solid black;
+}
+</style>

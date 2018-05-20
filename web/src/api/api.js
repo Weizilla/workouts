@@ -8,9 +8,11 @@ export const api = {
         return this.getFromApi("build");
     },
     getGoals() {
-        const today = moment().format("YYYY-MM-DD");
-        const path = "goals/?date=" + today + "&numDays=7";
-        return this.getFromApi(path);
+        const params = {
+            date: moment().format("YYYY-MM-DD"),
+            numDays: 7
+        };
+        return this.getFromApi("goals", params);
     },
     getAllGoals() {
         return this.getFromApi("goals");
@@ -21,14 +23,21 @@ export const api = {
     getTypes() {
         return this.getFromApi("types");
     },
-    getWorkouts() {
-        return this.getFromApi("stats");
+    getWorkouts(startDate, numDays) {
+        const params = {};
+        if (startDate) {
+            params["date"] = moment(startDate).format("YYYY-MM-DD")
+        }
+        if (numDays) {
+            params["numDays"] = numDays;
+        }
+        return this.getFromApi("stats", params);
     },
     getActivites() {
         return this.getFromApi("activities");
     },
-    getFromApi(path) {
-        return axios.get(host + "/api/" + path)
+    getFromApi(path, params) {
+        return axios.get(host + "/api/" + path, params)
             .then(response => response.data)
             .catch(error => Promise.reject(error));
     },

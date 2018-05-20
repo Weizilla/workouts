@@ -12,7 +12,6 @@ public class TestEntity {
     public static final UUID RECORD_ID = UUID.randomUUID();
     public static final UUID WORKOUT_ID = UUID.randomUUID();
     public static final UUID GOAL_ID = UUID.randomUUID();
-    public static final UUID DAY_STAT_ID = UUID.randomUUID();
     public static final long ACTIVITY_ID = new Random().nextInt(1000);
     public static final String TYPE = "TYPE";
     public static final boolean OUTDOOR = true;
@@ -105,7 +104,6 @@ public class TestEntity {
 
     public static DayStat createDayStat() {
         return ImmutableDayStat.builder()
-            .id(DAY_STAT_ID)
             .date(DATE)
             .completion(COMPLETION)
             .addWorkoutStats(createWorkout())

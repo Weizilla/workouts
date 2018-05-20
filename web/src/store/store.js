@@ -39,6 +39,15 @@ function createNewRecord() {
     }
 }
 
+function createWorkoutDates() {
+    const dates = [];
+    const startDate = moment().startOf("week").subtract(1, "weeks");
+    for (let i = 0; i < 21; i++) {
+        dates.push(startDate.clone().add(i, "days"));
+    }
+    return dates;
+}
+
 const state = {
     buildTime: null,
     commitId: null,
@@ -49,8 +58,10 @@ const state = {
     allGoals: [],
     allRecords: [],
     activities: [],
+    allWorkouts: [],
     goals: new Map(),
     workouts: new Map(),
+    workoutDates: createWorkoutDates(),
     types: [],
 }
 
@@ -86,18 +97,19 @@ const actions = {
         commit("setAllRecords", records);
     },
     async populateWorkouts({ state, commit }) {
-        const workouts = await api.getWorkouts();
+        const startDate = state.workoutDates[0];
+        const workouts = await api.getWorkouts(startDate, 21);
         const byDate = new Map();
         workouts.forEach((workout) => {
             switch (workout.completion) {
                 case "NONE":
-                    workout.completionClass = "bg-danger";
+                    workout.completionClass = ["bg-danger"];
                     break;
                 case "SOME":
-                    workout.completionClass = "bg-warning";
+                    workout.completionClass = ["bg-warning"];
                     break;
                 case "ALL":
-                    workout.completionClass = "bg-success";
+                    workout.completionClass = ["bg-success"];
                     break;
                 case "GOAL":
                     workout.completionClass = ["text-light", "bg-primary"];
@@ -106,6 +118,12 @@ const actions = {
             byDate.set(workout.date, workout);
         });
         commit("setWorkouts", byDate);
+    },
+    async populateAllWorkouts({ state, commit }) {
+        const workouts = await api.getWorkouts();
+        const allWorkouts = [];
+        workouts.forEach((stat) => allWorkouts.push(...stat.workoutStats));
+        commit("setAllWorkouts", allWorkouts);
     },
     async populateActivities({ state, commit }) {
         const activities = await api.getActivites();
@@ -161,10 +179,25 @@ const actions = {
 }
 
 const getters = {
-    allWorkouts: state => {
-        const all = []
-        state.workouts.forEach((stat) => all.push(...stat.workoutStats));
-        return all;
+    getWorkoutDateClass: (state, getters) => (week, day) => {
+        const date = getters.getWorkoutDate(week, day);
+        const workout = state.workouts.get(date);
+        if (workout) {
+            return workout.completionClass;
+        }
+    },
+    getWorkoutRouterLink: (state, getters) => (week, day) => {
+        return {
+            name: 'workouts',
+            params: {
+                'date': getters.getWorkoutDate(week, day)
+            }
+        }
+    },
+    getWorkoutDate: (state) => (week, day, format) => {
+        const i = day - 1 + (week - 1) * 7;
+        const f = format || "YYYY-MM-DD"
+        return state.workoutDates[i].format(f);
     },
     getField,
 }
@@ -197,6 +230,9 @@ const mutations = {
     },
     setActivites(state, activities) {
         state.activities = activities;
+    },
+    setAllWorkouts(state, workouts) {
+        state.allWorkouts = workouts;
     },
     updateField,
 }

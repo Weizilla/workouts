@@ -31,6 +31,7 @@ import java.util.TreeSet;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 //TODO probably needs to be split into multiple classes
 @Singleton
@@ -72,6 +73,15 @@ public class WorkoutStatGenerator {
 
         return allDates.stream()
             .map(this::generate)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
+    }
+
+    public List<DayStat> generate(LocalDate date, int numDays) {
+        return IntStream.range(0, numDays)
+            .mapToObj(date::plusDays)
+            .map(d -> generate(d))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .collect(Collectors.toList());
